@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "663865499839",
+    "firebase_url": "https://ermes-6ef7c.firebaseio.com",
+    "project_id": "ermes-6ef7c",
+    "storage_bucket": "ermes-6ef7c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663865499839:android:a710a2dfee2c345b",
+        "android_client_info": {
+          "package_name": "com.example.david.ermes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "663865499839-k8k2vrp46ji10t6gkk7vf4rj9t7hmd07.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.david.ermes",
+            "certificate_hash": "be65f2fa5ab129b046094ecd91201ba1fc72be84"
+          }
+        },
+        {
+          "client_id": "663865499839-qcrkb44253k3obo4jcs60prqlhpo80i8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOczZSEWTgXLnaXZHj2QUwNttvLyd42v4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "663865499839-qcrkb44253k3obo4jcs60prqlhpo80i8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
