@@ -5,8 +5,8 @@
     <!-- stringhe generiche -->
     <string name="app_name">Ermes</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_maps">Mappe</string>
+    <string name="title_account">Account</string>
 
 
     <!-- buro gaio -->
