@@ -23,7 +23,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginRight="16dp"
             android:elevation="4dp"
-            android:src="@drawable/ic_person_black_24dp"
+            android:src="@drawable/ic_person_white_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             fab:fab_colorNormal="@color/colorAccent" />
