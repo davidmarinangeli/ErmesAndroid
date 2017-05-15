@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Ermes.iml" filepath="$PROJECT_DIR$/Ermes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ErmesAndroid.iml" filepath="$PROJECT_DIR$/ErmesAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
