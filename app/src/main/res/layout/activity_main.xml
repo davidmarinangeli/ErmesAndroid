@@ -7,7 +7,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.david.ermes.MainActivity">
+    tools:context="com.example.david.ermes.View.activities.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/content"
@@ -15,26 +23,28 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floatingActionButton"
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            fab:fabSize="mini"
-            fab:srcCompat="@drawable/ic_notifications_black_24dp"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="16dp"
             android:layout_marginRight="16dp"
-            app:layout_constraintRight_toRightOf="parent"
+            android:elevation="4dp"
+            android:src="@drawable/ic_person_white_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="16dp" />
+            app:layout_constraintRight_toRightOf="parent"
+            fab:fab_colorNormal="@color/colorAccent" />
+
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="?android:attr/windowBackground"
+        app:itemBackground="@color/white"
+        app:itemIconTint="@color/colorPrimary"
+        app:itemTextColor="@color/colorPrimaryDark"
         app:menu="@menu/navigation" />
 
 </LinearLayout>
