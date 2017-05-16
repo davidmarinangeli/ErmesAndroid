@@ -17,6 +17,7 @@
         app:theme="@style/ToolBarStyle"
 
 
+
         />
 
     <android.support.design.widget.BottomNavigationView
