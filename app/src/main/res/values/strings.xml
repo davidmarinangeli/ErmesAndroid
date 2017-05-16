@@ -1,12 +1,18 @@
 <resources>
 
 
-
     <!-- stringhe generiche -->
     <string name="app_name">Ermes</string>
     <string name="title_home">Home</string>
     <string name="title_maps">Mappe</string>
     <string name="title_account">Account</string>
+    <string name="title_activity_navigation_drawer">NavigationDrawer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
 
 
     <!-- buro gaio -->
