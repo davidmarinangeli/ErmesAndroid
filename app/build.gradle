@@ -29,8 +29,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-
-    //custom libraries
+    // custom libraries
     compile 'com.github.clans:fab:1.6.4'
 
     // android libraries
@@ -46,9 +45,9 @@ dependencies {
 
     // database
     compile 'com.google.firebase:firebase-database:10.2.4'
-
-    // crash reporting
     compile 'com.google.firebase:firebase-crash:10.2.4'
+    compile 'com.wdullaer:materialdatetimepicker:3.2.1'
 }
+
 
 apply plugin: 'com.google.gms.google-services'
