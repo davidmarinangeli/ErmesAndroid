@@ -21,6 +21,7 @@ android {
 
 ext {
     support = "25.3.1"
+    firebase = "10.2.6"
 }
 
 dependencies {
@@ -44,8 +45,10 @@ dependencies {
     // ** FIREBASE **
 
     // database
-    compile 'com.google.firebase:firebase-database:10.2.4'
-    compile 'com.google.firebase:firebase-crash:10.2.4'
+    compile "com.google.firebase:firebase-database:${firebase}"
+    compile "com.google.firebase:firebase-crash:${firebase}"
+    compile "com.google.firebase:firebase-auth:${firebase}"
+    compile "com.google.android.gms:play-services-auth:${firebase}"
     compile 'com.wdullaer:materialdatetimepicker:3.2.1'
 }
 
