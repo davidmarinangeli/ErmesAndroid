@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4CAF50</color>
-    <color name="colorPrimaryDark">#087f23</color>
-    <color name="colorAccent">#448AFF</color>
+
+    <!-- layout colors -->
+    <color name="colorPrimaryLight">#fff350</color>
+    <color name="colorPrimary">#FFC107</color>
+    <color name="colorPrimaryDark">#c79100</color>
+    <color name="colorAccent">#448aff</color>
+    <color name="colorAccentDark">#005ecb</color>
+    <color name="colorAccentLight">#83b9ff</color>
+
+    <!-- misc colors -->
     <color name="white">#FFFFFF</color>
     <color name="bright_foreground_holo_light">#150707</color>
     <color name="button_gray">#757575</color>

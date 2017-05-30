@@ -23,43 +23,61 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/sport_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:src="@drawable/basketball96"
+                android:tint="@color/colorAccent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/ic_beach_access_black_24dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintVertical_bias="0.0" />
+                card_view:layout_constraintLeft_toLeftOf="parent"
+                card_view:layout_constraintTop_toTopOf="@+id/date_of_event"
+                android:layout_marginTop="8dp"
+                card_view:layout_constraintBottom_toBottomOf="@+id/long_date_of_event"
+                android:layout_marginBottom="8dp" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/date_of_event"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Pallavolo"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="72dp"
+                android:layout_marginTop="16dp"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="16dp"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="16dp"
-                app:layout_constraintLeft_toRightOf="@+id/imageView2"
-                android:layout_marginLeft="24dp" />
+                card_view:layout_constraintLeft_toLeftOf="parent"
+                card_view:layout_constraintVertical_bias="0.0"
+                tools:text="Domani" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/ore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Ore 18:00"
-                app:layout_constraintBottom_toBottomOf="@+id/textView2"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintTop_toTopOf="@+id/textView2"
-                android:layout_marginTop="16dp"
-                app:layout_constraintVertical_bias="0.5"
-                app:layout_constraintLeft_toRightOf="@+id/textView2"
-                android:layout_marginLeft="8dp" />
+                tools:text="Ore"
+                card_view:layout_constraintLeft_toRightOf="@+id/date_of_event"
+                android:layout_marginLeft="8dp"
+                card_view:layout_constraintBaseline_toBaselineOf="@+id/date_of_event" />
+
+            <TextView
+                android:id="@+id/hour_of_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:textStyle="bold"
+                card_view:layout_constraintLeft_toRightOf="@+id/ore"
+                tools:text="18:00"
+                card_view:layout_constraintBaseline_toBaselineOf="@+id/ore" />
+
+            <TextView
+                android:id="@+id/long_date_of_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="72dp"
+                android:layout_marginTop="8dp"
+                android:text="Martedì 25 Dicembre"
+                android:textSize="14sp"
+                card_view:layout_constraintLeft_toLeftOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/date_of_event" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
