@@ -50,6 +50,8 @@ dependencies {
     compile "com.google.firebase:firebase-auth:${firebase}"
     compile "com.google.android.gms:play-services-auth:${firebase}"
     compile 'com.wdullaer:materialdatetimepicker:3.2.1'
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
 
 
