@@ -9,8 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.david.ermes.R;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
+import com.example.david.ermes.View.MainAdapterViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,22 +60,19 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
         public MainViewHolder(View itemView) {
             super(itemView);
+
+
+            // qui setto il costruttore del viewholder
+
+            // qui ci sarebbe da correggere
             date_of_event = (TextView) itemView.findViewById(R.id.date_of_event);
             sport_icon = (ImageView) itemView.findViewById(R.id.sport_icon);
-
 
             //settare l'onclicklistener qui :)
         }
 
         public void bind(int position) {
-
-            String date = matchList.get(position).getDate();
-            int sport_id = matchList.get(position).getImageID();
-
-            Context cx = itemView.getContext();
-
-            date_of_event.setText(date);
-            Picasso.with(cx).load(sport_id).memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
+            MainAdapterViewHolder.bindElements(matchList,position,itemView,date_of_event,sport_icon);
 
         }
     }
