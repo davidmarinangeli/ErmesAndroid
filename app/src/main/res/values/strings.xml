@@ -18,6 +18,9 @@
     <string name="partecipa">Partecipa</string>
     <string name="mappa">Mappa</string>
     <string name="oggi">Oggi</string>
+    <string name="title_activity_try">Try</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 
     <!-- buro gaio -->

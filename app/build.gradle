@@ -29,16 +29,10 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
-    // custom libraries
-    
-
     // android libraries
     compile "com.android.support:cardview-v7:${support}"
     compile "com.android.support:appcompat-v7:${support}"
-    
 
-    
     // ** FIREBASE **
 
     // database
@@ -46,14 +40,26 @@ dependencies {
     compile "com.google.firebase:firebase-crash:${firebase}"
     compile "com.google.firebase:firebase-auth:${firebase}"
     compile "com.google.android.gms:play-services-auth:${firebase}"
-    
-    compile 'com.github.clans:fab:1.6.4'
+
+    // ** END FIREBASE **
+
+    //custom libraries
+
+
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
+    compile 'com.github.clans:fab:1.6.4'
     compile 'com.wdullaer:materialdatetimepicker:3.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.android.support:support-v4:25.3.1'
     testCompile 'junit:junit:4.12'
 }
+
+
+
+
+
 
 
 

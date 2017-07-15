@@ -1,9 +1,9 @@
 package com.example.david.ermes.View.activities;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,8 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.david.ermes.R;
-import com.example.david.ermes.View.fragments.MainFragment;
+import com.example.david.ermes.View.fragments.AccountFragment;
+import com.example.david.ermes.View.fragments.HomeFragment;
+import com.github.clans.fab.FloatingActionMenu;
 
 
 public class MainActivity extends AppCompatActivity
@@ -21,42 +25,27 @@ public class MainActivity extends AppCompatActivity
 
     private Toolbar toolbar;
     private DrawerLayout drawer;
+    private FloatingActionMenu menu;
+    private AHBottomNavigation bottomNavigation;
+    private FragmentManager manager;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    return true;
-                case R.id.navigation_dashboard:
-                    return true;
-                case R.id.navigation_account:
-                    return true;
-            }
-            return false;
-        }
-
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
+        initBottomNavigationView();
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.main_contenitore,new MainFragment()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.main_contenitore, new HomeFragment()).commit();
 
         }
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,6 +56,56 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+    }
+
+    private void initBottomNavigationView() {
+        // Da qui creo la bottom navigation view
+        bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
+        bottomNavigation.setBehaviorTranslationEnabled(true);
+
+        // Creo items
+        AHBottomNavigationItem left_item = new AHBottomNavigationItem(R.string.title_maps, R.drawable.ic_place_black_24dp, R.color.colorPrimary);
+        AHBottomNavigationItem right_item = new AHBottomNavigationItem(R.string.title_account, R.drawable.ic_person_black_24dp, R.color.colorPrimary);
+        AHBottomNavigationItem central_item = new AHBottomNavigationItem(R.string.title_home, R.drawable.ic_home_black_24dp, R.color.colorPrimary);
+
+        // Aggiungo items
+        bottomNavigation.addItem(left_item);
+        bottomNavigation.addItem(central_item);
+        bottomNavigation.addItem(right_item);
+
+
+        //setto colore
+        bottomNavigation.setAccentColor(ContextCompat.getColor(this, R.color.colorAccent));
+        bottomNavigation.setInactiveColor(ContextCompat.getColor(this, R.color.inactive));
+        bottomNavigation.setForceTint(true);
+
+        bottomNavigation.setCurrentItem(1);
+
+
+        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+            @Override
+            public boolean onTabSelected(int position, boolean wasSelected) {
+                if (position == 0) {
+
+                } else if (position == 1){
+                    switchToHomeFragment();
+                } else if (position == 2){
+                    switchtoAccountFragment();
+                }
+                return true;
+            }
+        });
+    }
+
+    public void switchToHomeFragment() {
+        manager = getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.main_contenitore, new HomeFragment()).commit();
+    }
+
+    public void switchtoAccountFragment(){
+        manager = getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.main_contenitore, new AccountFragment()).commit();
 
     }
 

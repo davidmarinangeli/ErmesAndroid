@@ -17,12 +17,12 @@ import com.example.david.ermes.R;
  * Created by David on 30/05/2017.
  */
 
-public class MainFragment extends Fragment {
+public class HomeFragment extends Fragment {
 
     private MainAdapter adapter;
     private RecyclerView recyclerView;
 
-    public MainFragment() {
+    public HomeFragment() {
     }
 
     @Nullable
@@ -44,6 +44,7 @@ public class MainFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.list_of_event_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+        recyclerView.setNestedScrollingEnabled(false);
         adapter.initList();
     }
 }

@@ -2,9 +2,9 @@
 <resources>
 
     <!-- layout colors -->
-    <color name="colorPrimaryLight">#fff350</color>
-    <color name="colorPrimary">#FFC107</color>
-    <color name="colorPrimaryDark">#c79100</color>
+    <color name="colorPrimaryLight">#ffd149</color>
+    <color name="colorPrimary">#FFA000</color>
+    <color name="colorPrimaryDark">#c67100</color>
     <color name="colorPrimaryDarker">#916a00</color>
     <color name="colorAccent">#448aff</color>
     <color name="colorAccentDark">#005ecb</color>
@@ -14,4 +14,5 @@
     <color name="white">#FFFFFF</color>
     <color name="bright_foreground_holo_light">#150707</color>
     <color name="button_gray">#757575</color>
+    <color name="inactive">#747474</color>
 </resources>
