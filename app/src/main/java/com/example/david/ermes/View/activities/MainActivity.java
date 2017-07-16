@@ -17,6 +17,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.fragments.AccountFragment;
 import com.example.david.ermes.View.fragments.HomeFragment;
+import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
 
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         initBottomNavigationView();
+
+        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.addefaultevent);
+        fab1.setColorFilter(R.color.white);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.main_contenitore, new HomeFragment()).commit();

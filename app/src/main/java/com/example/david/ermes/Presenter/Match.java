@@ -2,6 +2,7 @@ package com.example.david.ermes.Presenter;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +11,11 @@ import java.util.List;
  * Classe Match per creare una struttura per gli eventi sportivi
  */
 
-public class Match {
+public class Match implements Serializable{
 
     // DA CAMBIARE IN TIPO Date O long
+
+    // Attenzione (da fare): quando definisco un match INIZIALIZZO LA DATE sia per il giorno che per l'orario.
     private String date;
 
     //da cambiare nel tipo Sport
@@ -74,11 +77,11 @@ public class Match {
         int baseballimage2 = cx.getResources().getIdentifier("baseball96", "drawable", cx.getPackageName());
         int baseballimage3 = cx.getResources().getIdentifier("baseball96", "drawable", cx.getPackageName());
 
-        match.add(create("Basket","Domani",basketballimage));
+        match.add(create("Basket","11 novembre",basketballimage));
         match.add(create("Volley","25 dicembre",volleyimage));
-        match.add(create("Calcio","Martedì",soccerimage));
-        match.add(create("Tennis","Mercoledì",tennisimage));
-        match.add(create("Ping pong","Lol never",pingpongimage));
+        match.add(create("Calcio","11 settembre",soccerimage));
+        match.add(create("Tennis","16 giugno",tennisimage));
+        match.add(create("Ping pong","3 maggio",pingpongimage));
         match.add(create("Golf","Ma come ci speri",golfballimage));
         match.add(create("Baseball","Ma come ci speri",baseballimage));
         match.add(create("Baseball","Ma come ci speri",baseballimage2));

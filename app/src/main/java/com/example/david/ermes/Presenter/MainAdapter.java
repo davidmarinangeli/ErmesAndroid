@@ -1,6 +1,8 @@
 package com.example.david.ermes.Presenter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.david.ermes.R;
-import com.example.david.ermes.View.MainAdapterViewHolder;
+import com.example.david.ermes.View.activities.EventActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +60,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         TextView date_of_event;
         ImageView sport_icon;
 
-        public MainViewHolder(View itemView) {
+        public MainViewHolder(final View itemView) {
             super(itemView);
 
 
@@ -69,6 +71,18 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             sport_icon = (ImageView) itemView.findViewById(R.id.sport_icon);
 
             //settare l'onclicklistener qui :)
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(context, EventActivity.class);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("event",matchList.get(getAdapterPosition()));
+                    i.putExtras(bundle);
+                    context.startActivity(i);
+
+                }
+            });
         }
 
         public void bind(int position) {

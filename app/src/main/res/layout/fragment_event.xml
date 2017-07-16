@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.david.ermes.View.activities.EventActivity">
+
+    <TextView
+        android:id="@+id/sport_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:text="Basket"
+        app:layout_constraintTop_toTopOf="parent" />
+    
+    <TextView
+        android:id="@+id/where_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        tools:text="Parco delle albere"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/when_text_calendar"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/when_text_calendar" />
+
+    <TextView
+        android:id="@+id/when_text_calendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Martedì 18 Giugno"
+        android:textSize="18sp"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/sport_name"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/sport_name" />
+
+    <TextView
+        android:id="@+id/when_text_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@+id/when_text_calendar"
+        tools:text="18:00"
+        app:layout_constraintBottom_toBottomOf="@+id/when_text_calendar"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintTop_toTopOf="@+id/when_text_calendar"
+        android:layout_marginTop="0dp" />
+
+</android.support.constraint.ConstraintLayout>

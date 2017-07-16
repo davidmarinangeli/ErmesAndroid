@@ -1,4 +1,4 @@
-package com.example.david.ermes.View;
+package com.example.david.ermes.Presenter;
 
 
 import android.content.Context;
@@ -6,8 +6,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.david.ermes.Presenter.Match;
-import com.example.david.ermes.R;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -21,8 +19,7 @@ import java.util.List;
 public class MainAdapterViewHolder {
 
 
-    public static void viewHolderConstructor(View itemView,TextView date_of_event, ImageView sport_icon){
-    }
+    public static void viewHolderConstructor(View itemView,TextView date_of_event, ImageView sport_icon){    }
 
     public static void bindElements(List<Match> matchList, int position, View itemView, TextView date_of_event, ImageView sport_icon){
 
