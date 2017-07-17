@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
                 if (position == 0) {
-
+                    switchToMapsFragment();
                 } else if (position == 1){
                     switchToHomeFragment();
                 } else if (position == 2){
@@ -104,6 +104,10 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    public void switchToMapsFragment(){
+        manager = getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.main_contenitore,new MapsFragment()).commit();
+    }
     public void switchToHomeFragment() {
         manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.main_contenitore, new HomeFragment()).commit();
