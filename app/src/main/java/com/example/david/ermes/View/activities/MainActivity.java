@@ -19,6 +19,7 @@ import com.example.david.ermes.View.fragments.AccountFragment;
 import com.example.david.ermes.View.fragments.HomeFragment;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 
 public class MainActivity extends AppCompatActivity
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionMenu menu;
     private AHBottomNavigation bottomNavigation;
     private FragmentManager manager;
+    private MaterialSearchView searchView;
 
 
     @Override
@@ -127,6 +129,14 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main2, menu);
+
+        searchView = (MaterialSearchView) findViewById(R.id.search_view);
+        searchView.setHint(getResources().getString(R.string.cerca_evento));
+        searchView.setBackIcon(ContextCompat.getDrawable(this,R.drawable.ic_arrow_back_blue_24dp));
+        searchView.setCursorDrawable(R.drawable.custom_cursor);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
         return true;
     }
 
@@ -136,6 +146,34 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        if (id == R.id.action_search){
+            searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    //Do some magic
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    //Do some magic
+                    return false;
+                }
+            });
+
+            searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+                @Override
+                public void onSearchViewShown() {
+                    //Do some magic
+                }
+
+                @Override
+                public void onSearchViewClosed() {
+                    //Do some magic
+                }
+            });
+        }
 
         return super.onOptionsItemSelected(item);
     }

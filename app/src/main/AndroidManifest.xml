@@ -12,6 +12,7 @@
         <activity
             android:name=".View.activities.MainActivity"
             android:label="@string/title_activity_main"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
