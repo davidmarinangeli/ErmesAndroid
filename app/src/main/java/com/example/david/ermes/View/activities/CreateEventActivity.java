@@ -15,13 +15,6 @@ public class CreateEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
-        TextView sportTitle= (TextView) findViewById(R.id.textViewInsertSport);
-        sportTitle.setAlpha(0.87f);
-
-        EditText sportSelected = (EditText) findViewById(R.id.editTextSportSelected);
-
-        TextView dateTitle= (TextView) findViewById(R.id.textViewInsertDate);
-        dateTitle.setAlpha(0.87f);
 
 
 
