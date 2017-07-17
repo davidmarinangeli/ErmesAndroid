@@ -49,7 +49,7 @@ public class EventFragment extends Fragment {
         placeofevent = (TextView) view.findViewById(R.id.where_text);
         sportname.setText(match.getSport());
         dateofevent.setText(match.getDate());
-        placeofevent.setText("Parco le albere");
+        placeofevent.setText(match.getPlace());
     }
 
 

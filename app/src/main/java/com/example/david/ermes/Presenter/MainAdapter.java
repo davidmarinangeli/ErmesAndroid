@@ -58,6 +58,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     public class MainViewHolder extends RecyclerView.ViewHolder{
 
         TextView date_of_event;
+        TextView place_of_event;
         ImageView sport_icon;
 
         public MainViewHolder(final View itemView) {
@@ -69,6 +70,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             // qui ci sarebbe da correggere
             date_of_event = (TextView) itemView.findViewById(R.id.date_of_event);
             sport_icon = (ImageView) itemView.findViewById(R.id.sport_icon);
+            place_of_event = (TextView) itemView.findViewById(R.id.place_of_event);
 
             //settare l'onclicklistener qui :)
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +88,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         }
 
         public void bind(int position) {
-            MainAdapterViewHolder.bindElements(matchList,position,itemView,date_of_event,sport_icon);
+            MainAdapterViewHolder.bindElements(matchList,position,itemView,date_of_event,sport_icon,place_of_event);
 
         }
     }

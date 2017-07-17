@@ -21,14 +21,20 @@ public class Match implements Serializable{
     //da cambiare nel tipo Sport
     private String sport;
     private int imageID;
+    private String place;
 
 
-    public Match(String sport, String date,int imageID){
+    public Match(String sport, String date,int imageID, String place){
         this.date = date;
         this.sport = sport;
         this.imageID = imageID;
+        this.place = place;
 
     }
+
+    public String getPlace() { return place; }
+
+    public void setPlace(String place) { this.place = place; }
 
     public String getDate() {
         return date;
@@ -56,8 +62,8 @@ public class Match implements Serializable{
 
 
     //metodo che crea un nuovo oggetto Match
-    public static Match create(String sport, String date,int imageID) {
-        return new Match(sport, date,imageID);
+    public static Match create(String sport, String date,int imageID, String place) {
+        return new Match(sport, date,imageID,place);
     }
 
     // aggiungere altra roba di un match qui sotto
@@ -77,15 +83,15 @@ public class Match implements Serializable{
         int baseballimage2 = cx.getResources().getIdentifier("baseball96", "drawable", cx.getPackageName());
         int baseballimage3 = cx.getResources().getIdentifier("baseball96", "drawable", cx.getPackageName());
 
-        match.add(create("Basket","11 novembre",basketballimage));
-        match.add(create("Volley","25 dicembre",volleyimage));
-        match.add(create("Calcio","11 settembre",soccerimage));
-        match.add(create("Tennis","16 giugno",tennisimage));
-        match.add(create("Ping pong","3 maggio",pingpongimage));
-        match.add(create("Golf","Ma come ci speri",golfballimage));
-        match.add(create("Baseball","Ma come ci speri",baseballimage));
-        match.add(create("Baseball","Ma come ci speri",baseballimage2));
-        match.add(create("Baseball","Ma come ci speri",baseballimage3));
+        match.add(create("Basket","11 novembre",basketballimage,"Parco le albere"));
+        match.add(create("Volley","25 dicembre",volleyimage,"Via Alessandro Volta"));
+        match.add(create("Calcio","11 settembre",soccerimage,"Via Rosmini"));
+        match.add(create("Tennis","16 giugno",tennisimage,"Via Battisti"));
+        match.add(create("Ping pong","3 maggio",pingpongimage,"Via Roma"));
+        match.add(create("Golf","Ma come ci speri",golfballimage,"Via bubu"));
+        match.add(create("Baseball","Ma come ci speri",baseballimage,"Via non ho più nomi"));
+        match.add(create("Baseball","Ma come ci speri",baseballimage2,"Via pls"));
+        match.add(create("Baseball","Ma come ci speri",baseballimage3, "Via sthap"));
 
         return match;
     }
