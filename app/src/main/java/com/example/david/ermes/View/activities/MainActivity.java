@@ -32,29 +32,30 @@ public class MainActivity extends AppCompatActivity
     private AHBottomNavigation bottomNavigation;
     private FragmentManager manager;
     private MaterialSearchView searchView;
-
+    private FloatingActionButton defaulteventfab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
+
         setSupportActionBar(toolbar);
 
-        initBottomNavigationView();
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        menu = (FloatingActionMenu) findViewById(R.id.main_fab_menu);
+        defaulteventfab = (FloatingActionButton) findViewById(R.id.addefaultevent);
 
-        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.addefaultevent);
-        fab1.setColorFilter(R.color.white);
+        defaulteventfab.setColorFilter(R.color.white);
+        initBottomNavigationView();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.main_contenitore, new HomeFragment()).commit();
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -107,10 +108,13 @@ public class MainActivity extends AppCompatActivity
 
     public void switchToMapsFragment(){
         manager = getSupportFragmentManager();
+        menu.close(true);
+        menu.hideMenu(true);
         manager.beginTransaction().replace(R.id.main_contenitore,new MapsFragment()).commit();
     }
     public void switchToHomeFragment() {
         manager = getSupportFragmentManager();
+        menu.showMenu(true);
         manager.beginTransaction().replace(R.id.main_contenitore, new HomeFragment()).commit();
     }
 
