@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.david.ermes.Presenter.Match;
+import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
+
+import java.util.Calendar;
 
 /**
  * Created by David on 16/07/2017.
@@ -20,6 +23,7 @@ public class EventFragment extends Fragment {
     private TextView sportname;
     private TextView dateofevent;
     private TextView placeofevent;
+    private TextView hourofevent;
     private Match match;
 
     public EventFragment() {
@@ -47,8 +51,16 @@ public class EventFragment extends Fragment {
         sportname = (TextView) view.findViewById(R.id.sport_name);
         dateofevent = (TextView) view.findViewById(R.id.when_text_calendar);
         placeofevent = (TextView) view.findViewById(R.id.where_text);
+        hourofevent = (TextView) view.findViewById(R.id.when_hour_text_hour);
+
+
         sportname.setText(match.getSport());
-        dateofevent.setText(match.getDate());
+        Calendar c = Calendar.getInstance();
+        c.setTime(TimeUtils.fromMillisToDate(match.getDate()));
+
+        // lo so che pare un macello sta stringa, giuro che correggerò le API
+        dateofevent.setText(c.get(Calendar.DAY_OF_MONTH) +" "+ TimeUtils.fromNumericMonthToString(c.get(Calendar.MONTH)) );
+        hourofevent.setText(String.valueOf(c.get(Calendar.HOUR_OF_DAY)));
         placeofevent.setText(match.getPlace());
     }
 
