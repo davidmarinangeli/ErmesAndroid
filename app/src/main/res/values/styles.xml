@@ -25,11 +25,17 @@
     </style>
 
     <style name="MyHintText" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textColor">@color/colorAccentDark</item>
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 
     <style name="MyEditText" parent="Theme.AppCompat.Light">
-        <item name="colorControlNormal">@color/colorAccentDark</item>
-        <item name="colorControlActivated">@color/colorAccentDark</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
+
+    <style name="ButtonStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccentDark</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>

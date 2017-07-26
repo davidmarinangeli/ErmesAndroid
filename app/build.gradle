@@ -57,7 +57,7 @@ dependencies {
     compile 'com.mikhaellopez:circularimageview:3.0.2'
     compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
     compile 'com.github.clans:fab:1.6.4'
-    compile 'com.wdullaer:materialdatetimepicker:3.2.1'
+    compile 'com.wdullaer:materialdatetimepicker:3.2.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
 
