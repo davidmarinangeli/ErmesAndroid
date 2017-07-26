@@ -15,8 +15,7 @@ public class Match implements Serializable{
 
     // DA CAMBIARE IN TIPO Date O long
 
-    // Attenzione (da fare): quando definisco un match INIZIALIZZO LA DATE sia per il giorno che per l'orario.
-    private String date;
+    private long data;
 
     //da cambiare nel tipo Sport
     private String sport;
@@ -24,8 +23,8 @@ public class Match implements Serializable{
     private String place;
 
 
-    public Match(String sport, String date,int imageID, String place){
-        this.date = date;
+    public Match(String sport, long  data,int imageID, String place){
+        this.data = data;
         this.sport = sport;
         this.imageID = imageID;
         this.place = place;
@@ -36,12 +35,12 @@ public class Match implements Serializable{
 
     public void setPlace(String place) { this.place = place; }
 
-    public String getDate() {
-        return date;
+    public long getDate() {
+        return data;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDate(long date) {
+        this.data = date;
     }
 
     public String getSport() {
@@ -62,7 +61,7 @@ public class Match implements Serializable{
 
 
     //metodo che crea un nuovo oggetto Match
-    public static Match create(String sport, String date,int imageID, String place) {
+    public static Match create(String sport, long date,int imageID, String place) {
         return new Match(sport, date,imageID,place);
     }
 
@@ -83,15 +82,15 @@ public class Match implements Serializable{
         int baseballimage2 = cx.getResources().getIdentifier("baseball96", "drawable", cx.getPackageName());
         int baseballimage3 = cx.getResources().getIdentifier("baseball96", "drawable", cx.getPackageName());
 
-        match.add(create("Basket","11 novembre",basketballimage,"Parco le albere"));
-        match.add(create("Volley","25 dicembre",volleyimage,"Via Alessandro Volta"));
-        match.add(create("Calcio","11 settembre",soccerimage,"Via Rosmini"));
-        match.add(create("Tennis","16 giugno",tennisimage,"Via Battisti"));
-        match.add(create("Ping pong","3 maggio",pingpongimage,"Via Roma"));
-        match.add(create("Golf","Ma come ci speri",golfballimage,"Via bubu"));
-        match.add(create("Baseball","Ma come ci speri",baseballimage,"Via non ho più nomi"));
-        match.add(create("Baseball","Ma come ci speri",baseballimage2,"Via pls"));
-        match.add(create("Baseball","Ma come ci speri",baseballimage3, "Via sthap"));
+        match.add(create("Basket",1500547551959L,basketballimage,"Parco le albere"));
+        match.add(create("Volley",1500495940958L,volleyimage,"Via Alessandro Volta"));
+        match.add(create("Calcio",1500547551959L,soccerimage,"Via Rosmini"));
+        match.add(create("Tennis",1498694403500L,tennisimage,"Via Battisti"));
+        match.add(create("Ping pong",969695100000L,pingpongimage,"Via Roma"));
+        match.add(create("Golf",1500495941958L,golfballimage,"Via bubu"));
+        match.add(create("Baseball",1500547551959L,baseballimage,"Via non ho più nomi"));
+        match.add(create("Baseball",1499126440030L,baseballimage2,"Via pls"));
+        match.add(create("Baseball",969695100000L,baseballimage3, "Via sthap"));
 
         return match;
     }

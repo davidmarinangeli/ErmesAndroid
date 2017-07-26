@@ -63,6 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
+                android:textColor="@color/colorAccent"
                 android:textStyle="bold"
                 card_view:layout_constraintLeft_toRightOf="@+id/ore"
                 tools:text="18:00"

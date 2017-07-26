@@ -20,8 +20,8 @@
 
     <style name="MenuButtonsSmall">
         <item name="fab_size">mini</item>
-        <item name="fab_colorNormal">@color/colorPrimaryDark</item>
-        <item name="fab_colorPressed">@color/colorPrimaryDarker</item>
+        <item name="fab_colorNormal">@color/colorPrimary</item>
+        <item name="fab_colorPressed">@color/colorPrimaryDark</item>
     </style>
 
     <style name="MyHintText" parent="TextAppearance.AppCompat.Small">

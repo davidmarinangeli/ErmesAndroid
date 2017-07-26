@@ -44,8 +44,6 @@
         android:layout_above="@+id/bottom_navigation"
         android:paddingBottom="16dp"
         android:paddingEnd="16dp"
-        app:fab_showAnimation="@anim/fab_scale_up"
-        app:fab_hideAnimation="@anim/fab_scale_down"
         fab:fab_progress_showBackground="true"
         fab:menu_backgroundColor="#ccffffff"
         fab:menu_colorNormal="@color/colorAccent"

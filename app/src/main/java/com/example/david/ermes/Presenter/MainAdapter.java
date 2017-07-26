@@ -58,6 +58,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     public class MainViewHolder extends RecyclerView.ViewHolder{
 
         TextView date_of_event;
+        TextView hour_of_event;
         TextView place_of_event;
         ImageView sport_icon;
 
@@ -69,6 +70,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
             // qui ci sarebbe da correggere
             date_of_event = (TextView) itemView.findViewById(R.id.date_of_event);
+            hour_of_event = (TextView) itemView.findViewById(R.id.hour_of_event);
             sport_icon = (ImageView) itemView.findViewById(R.id.sport_icon);
             place_of_event = (TextView) itemView.findViewById(R.id.place_of_event);
 
@@ -88,7 +90,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         }
 
         public void bind(int position) {
-            MainAdapterViewHolder.bindElements(matchList,position,itemView,date_of_event,sport_icon,place_of_event);
+            MainAdapterViewHolder.bindElements(matchList,position,itemView,date_of_event,hour_of_event,sport_icon,place_of_event);
 
         }
     }

@@ -14,6 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -49,6 +52,9 @@ public class MainActivity extends AppCompatActivity
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         menu = (FloatingActionMenu) findViewById(R.id.main_fab_menu);
+        menu.setAnimated(true);
+        menu.setClosedOnTouchOutside(true);
+
         defaulteventfab = (FloatingActionButton) findViewById(R.id.addefaultevent);
 
         defaulteventfab.setColorFilter(R.color.white);
@@ -118,13 +124,19 @@ public class MainActivity extends AppCompatActivity
 
     public void switchToMapsFragment(){
         manager = getSupportFragmentManager();
+        Animation a = AnimationUtils.loadAnimation(this,R.anim.scale_down);
+        menu.setAnimation(a);
         menu.close(true);
         menu.hideMenu(true);
+        a.start();
         manager.beginTransaction().replace(R.id.main_contenitore,new MapsFragment()).commit();
     }
     public void switchToHomeFragment() {
         manager = getSupportFragmentManager();
+        Animation a = AnimationUtils.loadAnimation(this,R.anim.scale_up);
+        menu.setAnimation(a);
         menu.showMenu(true);
+        a.start();
         manager.beginTransaction().replace(R.id.main_contenitore, new HomeFragment()).commit();
     }
 
