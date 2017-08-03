@@ -15,7 +15,7 @@
     <style name="ToolBarStyle" parent="Theme.AppCompat">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="colorPrimary">@color/colorPrimary</item>
-        
+
     </style>
 
     <style name="MenuButtonsSmall">

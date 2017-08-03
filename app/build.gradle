@@ -35,11 +35,6 @@ dependencies {
     compile "com.android.support:support-v4:${support}"
     compile "com.android.support:design:${support}"
 
-    compile 'com.google.android.gms:play-services-maps:10.2.6'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
     // ** FIREBASE **
 
     // database
@@ -51,6 +46,11 @@ dependencies {
     // ** END FIREBASE **
 
     //custom libraries
+
+
+    compile 'com.google.android.gms:play-services-maps:10.2.6'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.android.support:design:25.3.1'
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
@@ -60,8 +60,11 @@ dependencies {
     compile 'com.wdullaer:materialdatetimepicker:3.2.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
-
 }
+
+apply plugin: 'com.google.gms.google-services'
+
+
 
 
 
