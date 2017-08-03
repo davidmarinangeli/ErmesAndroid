@@ -23,11 +23,13 @@ public class Match implements Serializable{
     private String place;
 
 
+
     public Match(String sport, long  data,int imageID, String place){
         this.data = data;
         this.sport = sport;
         this.imageID = imageID;
         this.place = place;
+
 
     }
 
@@ -60,6 +62,9 @@ public class Match implements Serializable{
     }
 
 
+
+
+
     //metodo che crea un nuovo oggetto Match
     public static Match create(String sport, long date,int imageID, String place) {
         return new Match(sport, date,imageID,place);
@@ -83,6 +88,7 @@ public class Match implements Serializable{
         int baseballimage3 = cx.getResources().getIdentifier("baseball96", "drawable", cx.getPackageName());
 
         match.add(create("Basket",1500547551959L,basketballimage,"Parco le albere"));
+        /*
         match.add(create("Volley",1500495940958L,volleyimage,"Via Alessandro Volta"));
         match.add(create("Calcio",1500547551959L,soccerimage,"Via Rosmini"));
         match.add(create("Tennis",1498694403500L,tennisimage,"Via Battisti"));
@@ -92,6 +98,13 @@ public class Match implements Serializable{
         match.add(create("Baseball",1499126440030L,baseballimage2,"Via pls"));
         match.add(create("Baseball",969695100000L,baseballimage3, "Via sthap"));
 
+
+
+         */
+
+
+
         return match;
     }
+
 }

@@ -22,8 +22,9 @@ import java.util.List;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder>{
 
-    private List<Match> matchList = new ArrayList<>();
+    public List<Match> matchList = new ArrayList<>();
     private Context context;
+
 
     public MainAdapter(Context c) {
         this.context = c;
@@ -45,6 +46,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     public void initList(){
 
         this.matchList = Match.toyListofMatches(context);
+        notifyDataSetChanged();
+
+    }
+
+    public void addElement(Match x){
+        this.matchList.add(x);
         notifyDataSetChanged();
     }
 

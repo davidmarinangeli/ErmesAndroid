@@ -24,6 +24,7 @@ public class EventFragment extends Fragment {
     private TextView dateofevent;
     private TextView placeofevent;
     private TextView hourofevent;
+    private TextView tools;
     private Match match;
 
     public EventFragment() {
@@ -52,6 +53,7 @@ public class EventFragment extends Fragment {
         dateofevent = (TextView) view.findViewById(R.id.when_text_calendar);
         placeofevent = (TextView) view.findViewById(R.id.where_text);
         hourofevent = (TextView) view.findViewById(R.id.when_hour_text_hour);
+
 
 
         sportname.setText(match.getSport());
