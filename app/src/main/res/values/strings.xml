@@ -41,6 +41,7 @@
         completions."
     </string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="login">Login</string>
 
 
     <!-- buro gaio -->

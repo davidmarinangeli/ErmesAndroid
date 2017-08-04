@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.david.ermes.R;
@@ -30,10 +31,12 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private SignInButton logInButton;
+    private TextView userlogintext;
+
     private GoogleSignInAccount account;
     private FirebaseAuth mAuth;
 
-    private String clientID = "663865499839-k8k2vrp46ji10t6gkk7vf4rj9t7hmd07.apps.googleusercontent.com";
+    private String clientID = "663865499839-k726rla8ijgek2u3je8vp8il59dm2bd2.apps.googleusercontent.com";
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "SignInActivity";
@@ -47,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mAuth = FirebaseAuth.getInstance();
         logInButton = (SignInButton) findViewById(R.id.login_button);
+        userlogintext = (TextView) findViewById(R.id.user_email_login);
         logInButton.setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -93,9 +97,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
+            Log.d("errore",result.getStatus().getStatusMessage()+"");
             }
         }
     }
@@ -141,7 +147,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void updateUI(FirebaseUser user){
-        Log.d("user",user.getEmail() + " " + user.getDisplayName());
+        userlogintext.setText(user.getEmail());
     }
 
 }
