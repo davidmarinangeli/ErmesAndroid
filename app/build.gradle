@@ -5,14 +5,14 @@ android {
         config {
             keyAlias 'key0'
             keyPassword 'ermesandroid'
-            storeFile file('D:/GitHub/ErmesAndroid/keystore.jks')
+            storeFile file('../keystore.jks')
             storePassword 'ermesandroid'
         }
 
         debug {
             keyAlias 'keydebug'
             keyPassword 'ermesandroid'
-            storeFile file('D:/GitHub/ErmesAndroid/keystoredebug.jks')
+            storeFile file('../keystoredebug.jks')
             storePassword 'ermesandroid'
         }
     }
@@ -30,7 +30,7 @@ android {
     buildTypes {
         release {
 
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
