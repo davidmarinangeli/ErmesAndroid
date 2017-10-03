@@ -5,4 +5,5 @@ package com.example.david.ermes.Model;
  */
 
 public class DatabaseManager {
+
 }

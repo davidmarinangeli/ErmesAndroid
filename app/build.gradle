@@ -1,27 +1,52 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword 'ermesandroid'
+            storeFile file('../keystore.jks')
+            storePassword 'ermesandroid'
+        }
+
+        debug {
+            keyAlias 'keydebug'
+            keyPassword 'ermesandroid'
+            storeFile file('../keystoredebug.jks')
+            storePassword 'ermesandroid'
+        }
+    }
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.example.david.ermes"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
-            minifyEnabled false
+
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+    }
+    productFlavors {
     }
 }
 
 ext {
-    support = "25.3.1"
-    firebase = "10.2.6"
+    support = "26.1.0"
+    firebase = "11.2.2"
 }
 
 dependencies {
@@ -29,17 +54,13 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
     // android libraries
     compile "com.android.support:cardview-v7:${support}"
     compile "com.android.support:appcompat-v7:${support}"
+    compile "com.android.support:support-v13:${support}"
     compile "com.android.support:support-v4:${support}"
     compile "com.android.support:design:${support}"
-
-    compile 'com.google.android.gms:play-services-maps:10.2.6'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
     // ** FIREBASE **
 
     // database
@@ -50,9 +71,13 @@ dependencies {
 
     // ** END FIREBASE **
 
+
     //custom libraries
+    compile "com.google.android.gms:play-services-maps:${firebase}"
+    compile "com.android.support:appcompat-v7:${support}"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
-    compile 'com.android.support:design:25.3.1'
+    compile "com.android.support:design:${support}"
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
     compile 'com.mikhaellopez:circularimageview:3.0.2'
     compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
@@ -60,15 +85,6 @@ dependencies {
     compile 'com.wdullaer:materialdatetimepicker:3.2.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
-
 }
-
-
-
-
-
-
-
-
 
 apply plugin: 'com.google.gms.google-services'
