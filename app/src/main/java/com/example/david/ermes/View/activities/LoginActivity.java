@@ -45,12 +45,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mAuth = FirebaseAuth.getInstance();
-        logInButton = (SignInButton) findViewById(R.id.login_button);
-        userlogintext = (TextView) findViewById(R.id.user_email_login);
+        logInButton = findViewById(R.id.login_button);
+        userlogintext = findViewById(R.id.user_email_login);
         logInButton.setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

@@ -42,6 +42,7 @@
     </string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="login">Login</string>
+    <string name="dot">•</string>
 
 
     <!-- buro gaio -->
