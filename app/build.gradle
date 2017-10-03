@@ -16,12 +16,12 @@ android {
             storePassword 'ermesandroid'
         }
     }
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.example.david.ermes"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -45,8 +45,8 @@ android {
 }
 
 ext {
-    support = "25.3.1"
-    firebase = "10.2.6"
+    support = "26.1.0"
+    firebase = "11.2.2"
 }
 
 dependencies {
@@ -58,6 +58,7 @@ dependencies {
     // android libraries
     compile "com.android.support:cardview-v7:${support}"
     compile "com.android.support:appcompat-v7:${support}"
+    compile "com.android.support:support-v13:${support}"
     compile "com.android.support:support-v4:${support}"
     compile "com.android.support:design:${support}"
     // ** FIREBASE **
@@ -72,11 +73,11 @@ dependencies {
 
 
     //custom libraries
-    compile 'com.google.android.gms:play-services-maps:10.2.6'
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile "com.google.android.gms:play-services-maps:${firebase}"
+    compile "com.android.support:appcompat-v7:${support}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
-    compile 'com.android.support:design:25.3.1'
+    compile "com.android.support:design:${support}"
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
     compile 'com.mikhaellopez:circularimageview:3.0.2'
     compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
@@ -85,17 +86,5 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
 }
-
-apply plugin: 'com.google.gms.google-services'
-
-
-
-
-
-
-
-
-
-
 
 apply plugin: 'com.google.gms.google-services'
