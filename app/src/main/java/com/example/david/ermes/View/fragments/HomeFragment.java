@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.david.ermes.Presenter.MainAdapter;
+import com.example.david.ermes.Presenter.Match;
 import com.example.david.ermes.R;
 
 /**
@@ -21,27 +22,44 @@ public class HomeFragment extends Fragment {
 
     private MainAdapter adapter;
     private RecyclerView recyclerView;
+    private Match match;
 
     public HomeFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+        if (args != null) {
+            match = (Match) args.getSerializable("event");
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.main_recyclerview_layout,container,false);
+        return inflater.inflate(R.layout.main_recyclerview_layout, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initRecycler(view);
+        if (match == null) {
+            initRecycler(view);
+        } else {
+            adapter = new MainAdapter(getContext());
+            initRecycler(view);
+            adapter.addElement(match);
+        }
     }
 
     private void initRecycler(final View rootView) {
 
         //inizializzo l'adapter e indirizzo tutti gli elementi
         adapter = new MainAdapter(getContext());
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.list_of_event_recyclerview);
+        recyclerView = rootView.findViewById(R.id.list_of_event_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);

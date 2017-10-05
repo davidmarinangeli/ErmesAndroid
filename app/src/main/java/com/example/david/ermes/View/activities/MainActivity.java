@@ -1,5 +1,6 @@
 package com.example.david.ermes.View.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -13,13 +14,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.example.david.ermes.Presenter.Match;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.fragments.AccountFragment;
 import com.example.david.ermes.View.fragments.HomeFragment;
@@ -50,12 +50,12 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        menu = (FloatingActionMenu) findViewById(R.id.main_fab_menu);
+        drawer = findViewById(R.id.drawer_layout);
+        menu = findViewById(R.id.main_fab_menu);
         menu.setAnimated(true);
         menu.setClosedOnTouchOutside(true);
 
-        defaulteventfab = (FloatingActionButton) findViewById(R.id.addefaultevent);
+        defaulteventfab = findViewById(R.id.addefaultevent);
 
         defaulteventfab.setColorFilter(R.color.white);
         initBottomNavigationView();
@@ -76,7 +76,8 @@ public class MainActivity extends AppCompatActivity
         defaulteventfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, CreateEventActivity.class));
+                Intent i = new Intent(MainActivity.this,CreateEventActivity.class);
+                startActivityForResult(i,1);
             }
         });
 
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initBottomNavigationView() {
         // Da qui creo la bottom navigation view
-        bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
+        bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setBehaviorTranslationEnabled(true);
 
         // Creo items
@@ -113,13 +114,28 @@ public class MainActivity extends AppCompatActivity
                 if (position == 0) {
                     switchToMapsFragment();
                 } else if (position == 1){
-                    switchToHomeFragment();
+                    switchToHomeFragment(null);
                 } else if (position == 2){
                     switchtoAccountFragment();
                 }
                 return true;
             }
         });
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (1) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    Match m = (Match) data.getExtras().getSerializable("event");
+                    switchToHomeFragment(m);
+                }
+                break;
+            }
+        }
     }
 
     public void switchToMapsFragment(){
@@ -131,13 +147,20 @@ public class MainActivity extends AppCompatActivity
         a.start();
         manager.beginTransaction().replace(R.id.main_contenitore,new MapsFragment()).commit();
     }
-    public void switchToHomeFragment() {
+    public void switchToHomeFragment(Match m) {
         manager = getSupportFragmentManager();
-        Animation a = AnimationUtils.loadAnimation(this,R.anim.scale_up);
-        menu.setAnimation(a);
+
+        Animation animation = AnimationUtils.loadAnimation(this,R.anim.scale_up);
+        menu.setAnimation(animation);
         menu.showMenu(true);
-        a.start();
-        manager.beginTransaction().replace(R.id.main_contenitore, new HomeFragment()).commit();
+        animation.start();
+
+        HomeFragment homeFragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("event",m);
+        homeFragment.setArguments(args);
+
+        manager.beginTransaction().replace(R.id.main_contenitore, homeFragment).commit();
     }
 
     public void switchtoAccountFragment(){
@@ -229,7 +252,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

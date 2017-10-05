@@ -63,9 +63,7 @@ public class Match implements Serializable{
 
 
 
-
-
-    //metodo che crea un nuovo oggetto Match
+    //metodo che crea un nuovo oggetto Match SI LO SO CHE E' NA MERDA E NON DOVREBBE STARCI, E' "TEMPORANEO"
     public static Match create(String sport, long date,int imageID, String place) {
         return new Match(sport, date,imageID,place);
     }

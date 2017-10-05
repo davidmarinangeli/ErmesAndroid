@@ -15,7 +15,7 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
-        Toolbar tb = (Toolbar) findViewById(R.id.event_toolbar);
+        Toolbar tb = findViewById(R.id.event_toolbar);
         setSupportActionBar(tb);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

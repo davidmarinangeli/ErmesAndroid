@@ -49,10 +49,10 @@ public class EventFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        sportname = (TextView) view.findViewById(R.id.sport_name);
-        dateofevent = (TextView) view.findViewById(R.id.when_text_calendar);
-        placeofevent = (TextView) view.findViewById(R.id.where_text);
-        hourofevent = (TextView) view.findViewById(R.id.when_hour_text_hour);
+        sportname = view.findViewById(R.id.sport_name);
+        dateofevent = view.findViewById(R.id.when_text_calendar);
+        placeofevent = view.findViewById(R.id.where_text);
+        hourofevent = view.findViewById(R.id.when_hour_text_hour);
 
 
 
