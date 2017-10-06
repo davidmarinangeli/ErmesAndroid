@@ -28,6 +28,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import com.example.david.ermes.Model.DatabaseManager;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private SignInButton logInButton;
@@ -79,6 +81,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             default: break;
         }
+
+        DatabaseManager db = new DatabaseManager();
     }
 
     private void signIn() {

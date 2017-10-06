@@ -10,6 +10,13 @@ public class Account {
     private int exp;
     private String fav_sport;
 
+    public Account(String username, int age, int exp, String fav_sport) {
+        this.username = username;
+        this.age = age;
+        this.exp = exp;
+        this.fav_sport = fav_sport;
+    }
+
     //aggiungere altri campi qua sotto
 
     public String getUsername() {
