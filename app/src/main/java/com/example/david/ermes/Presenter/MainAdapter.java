@@ -60,8 +60,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         return matchList.size();
     }
 
-
-
     public class MainViewHolder extends RecyclerView.ViewHolder{
 
         TextView date_of_event;

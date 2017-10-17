@@ -1,11 +1,13 @@
 package com.example.david.ermes.View.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,14 +15,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.example.david.ermes.Presenter.Match;
+import com.example.david.ermes.Presenter.ViewPagerAdapter;
 import com.example.david.ermes.R;
+import com.example.david.ermes.View.customviews.CoolViewPager;
 import com.example.david.ermes.View.fragments.AccountFragment;
 import com.example.david.ermes.View.fragments.HomeFragment;
 import com.example.david.ermes.View.fragments.MapsFragment;
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
+    private CoolViewPager viewPager;
+    ViewPagerAdapter viewPagerAdapter;
     private DrawerLayout drawer;
     private FloatingActionMenu menu;
     private AHBottomNavigation bottomNavigation;
@@ -44,49 +49,49 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.app_name);
+        drawer = findViewById(R.id.drawer_layout);
 
         setSupportActionBar(toolbar);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        menu = (FloatingActionMenu) findViewById(R.id.main_fab_menu);
-        menu.setAnimated(true);
-        menu.setClosedOnTouchOutside(true);
 
-        defaulteventfab = (FloatingActionButton) findViewById(R.id.addefaultevent);
-
-        defaulteventfab.setColorFilter(R.color.white);
-        initBottomNavigationView();
-
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
+/*
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.main_contenitore, new HomeFragment()).commit();
 
         }
+        */
 
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+        menu = findViewById(R.id.main_fab_menu);
+        menu.setAnimated(true);
+        menu.setClosedOnTouchOutside(true);
+
+        defaulteventfab = findViewById(R.id.addefaultevent);
+        defaulteventfab.setColorFilter(R.color.white);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         defaulteventfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, CreateEventActivity.class));
+                Intent i = new Intent(MainActivity.this, CreateEventActivity.class);
+                startActivityForResult(i, 1);
             }
         });
-
-
+        initBottomNavigationView();
     }
 
     private void initBottomNavigationView() {
         // Da qui creo la bottom navigation view
-        bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
+        bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setBehaviorTranslationEnabled(true);
+        viewPager = findViewById(R.id.viewPager);
 
         // Creo items
         AHBottomNavigationItem left_item = new AHBottomNavigationItem(R.string.title_maps, R.drawable.ic_place_black_24dp, R.color.colorPrimary);
@@ -98,6 +103,13 @@ public class MainActivity extends AppCompatActivity
         bottomNavigation.addItem(central_item);
         bottomNavigation.addItem(right_item);
 
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        viewPagerAdapter.addFragments(new MapsFragment());
+        viewPagerAdapter.addFragments(new HomeFragment());
+        viewPagerAdapter.addFragments(new AccountFragment());
+        viewPager.setAdapter(viewPagerAdapter);
+
 
         //setto colore
         bottomNavigation.setAccentColor(ContextCompat.getColor(this, R.color.colorAccent));
@@ -105,50 +117,34 @@ public class MainActivity extends AppCompatActivity
         bottomNavigation.setForceTint(true);
 
         bottomNavigation.setCurrentItem(1);
-
+        viewPager.setCurrentItem(1);
 
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
                 if (position == 0) {
-                    switchToMapsFragment();
-                } else if (position == 1){
-                    switchToHomeFragment();
-                } else if (position == 2){
-                    switchtoAccountFragment();
+                    viewPager.setCurrentItem(position);
+                } else if (position == 1) {
+                    viewPager.setCurrentItem(position);
+                } else if (position == 2) {
+                    viewPager.setCurrentItem(position);
+
                 }
                 return true;
             }
         });
     }
 
-    public void switchToMapsFragment(){
-        manager = getSupportFragmentManager();
-        Animation a = AnimationUtils.loadAnimation(this,R.anim.scale_down);
-        menu.setAnimation(a);
-        menu.close(true);
-        menu.hideMenu(true);
-        a.start();
-        manager.beginTransaction().replace(R.id.main_contenitore,new MapsFragment()).commit();
-    }
-    public void switchToHomeFragment() {
-        manager = getSupportFragmentManager();
-        Animation a = AnimationUtils.loadAnimation(this,R.anim.scale_up);
-        menu.setAnimation(a);
-        menu.showMenu(true);
-        a.start();
-        manager.beginTransaction().replace(R.id.main_contenitore, new HomeFragment()).commit();
-    }
 
-    public void switchtoAccountFragment(){
-        manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.main_contenitore, new AccountFragment()).commit();
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //comportamento da avere nel caso in cui torno da un'altra activity
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -161,9 +157,9 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main2, menu);
 
-        searchView = (MaterialSearchView) findViewById(R.id.search_view);
+        searchView = findViewById(R.id.search_view);
         searchView.setHint(getResources().getString(R.string.cerca_evento));
-        searchView.setBackIcon(ContextCompat.getDrawable(this,R.drawable.ic_arrow_back_blue_24dp));
+        searchView.setBackIcon(ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_blue_24dp));
         searchView.setCursorDrawable(R.drawable.custom_cursor);
 
         MenuItem item = menu.findItem(R.id.action_search);
@@ -178,7 +174,7 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_search){
+        if (id == R.id.action_search) {
             searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -229,7 +225,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
