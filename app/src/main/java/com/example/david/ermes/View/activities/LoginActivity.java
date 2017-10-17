@@ -34,6 +34,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.example.david.ermes.Model.DatabaseManager;
 import com.example.david.ermes.Presenter.User;
 
+import java.util.Date;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private SignInButton logInButton;
@@ -108,7 +110,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 User u = User.getCurrentUser();
                 u.save();
 
-                Match m = new Match("Football", 5, 5, "Via le mani dal culo");
+                Match m = new Match("Football", 5, 5, "Via le mani dal culo", null);
+                m.save();
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...

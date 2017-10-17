@@ -2,8 +2,12 @@ package com.example.david.ermes.Presenter;
 
 import android.content.Context;
 
+import com.example.david.ermes.Model.DatabaseManager;
+import com.example.david.ermes.Model.Models;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,16 +25,23 @@ public class Match implements Serializable{
     private String sport;
     private int imageID;
     private String place;
+    private Date date;
 
+    private DatabaseManager db;
 
-
-    public Match(String sport, long  data,int imageID, String place){
+    public Match(String sport, long  data, int imageID, String place, Date date){
         this.data = data;
         this.sport = sport;
         this.imageID = imageID;
         this.place = place;
+        this.date = date;
 
+        this.db = new DatabaseManager();
+    }
 
+    public void save() {
+        Models._Match m = new Models._Match(this.date, this.place);
+        this.db.saveMatch(m);
     }
 
     public String getPlace() { return place; }
@@ -65,7 +76,7 @@ public class Match implements Serializable{
 
     //metodo che crea un nuovo oggetto Match SI LO SO CHE E' NA MERDA E NON DOVREBBE STARCI, E' "TEMPORANEO"
     public static Match create(String sport, long date,int imageID, String place) {
-        return new Match(sport, date,imageID,place);
+        return new Match(sport, date,imageID,place, null);
     }
 
     // aggiungere altra roba di un match qui sotto

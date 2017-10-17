@@ -5,10 +5,12 @@ import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import com.example.david.ermes.Presenter.User;
@@ -81,14 +83,48 @@ public class DatabaseManager {
 
     public void saveUser(String uid, Models._User user) {
         if (user != null) {
-            Map<String, Models._User> data = new HashMap<String, Models._User>();
+            Map<String, Models._User> data = new HashMap<>();
             data.put(uid, user);
             this.usersRef.setValue(data);
         }
     }
 
-    public void saveMatch(String id, Models._Match match) {
-        this.matchesRef.setValue(match);
+    public void saveMatch(Models._Match match) {
+        if (match != null) {
+            this.matchesRef.push().setValue(match);
+        }
+    }
+
+    public Models._Match fetchMatchByIdOwner(String id) {
+        Query queryRef = this.matchesRef.orderByChild("idOwner").equalTo(id);
+        queryRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        // TODO te ghe da sistemare sta roba dio can
+        return null;
     }
 
 }
