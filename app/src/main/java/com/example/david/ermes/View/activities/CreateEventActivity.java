@@ -56,14 +56,7 @@ public class CreateEventActivity extends AppCompatActivity implements TimePicker
         fine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent resultIntent = new Intent(v.getContext(),MainActivity.class);
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("event",m);
-
-                resultIntent.putExtras(bundle);
-                setResult(Activity.RESULT_OK, resultIntent);
-                finish();
+                //qui mettere il comportamento alla creazione del match
             }
         });
     }

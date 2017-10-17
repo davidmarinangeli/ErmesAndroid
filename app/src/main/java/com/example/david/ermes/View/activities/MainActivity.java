@@ -23,6 +23,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.david.ermes.Presenter.Match;
 import com.example.david.ermes.Presenter.ViewPagerAdapter;
 import com.example.david.ermes.R;
+import com.example.david.ermes.View.customviews.CoolViewPager;
 import com.example.david.ermes.View.fragments.AccountFragment;
 import com.example.david.ermes.View.fragments.HomeFragment;
 import com.example.david.ermes.View.fragments.MapsFragment;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
-    private ViewPager viewPager;
+    private CoolViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
     private DrawerLayout drawer;
     private FloatingActionMenu menu;
@@ -138,41 +139,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case (1): {
-                if (resultCode == Activity.RESULT_OK) {
-                    Match m = (Match) data.getExtras().getSerializable("event");
-                    switchToHomeFragment(m);
-                }
-                break;
-            }
-        }
-    }
-
-    public void switchToMapsFragment() {
-        Animation a = AnimationUtils.loadAnimation(this, R.anim.scale_down);
-        menu.setAnimation(a);
-        menu.close(true);
-        menu.hideMenu(true);
-        a.start();
-
-        viewPager.setCurrentItem(2);
-    }
-
-    public void switchToHomeFragment(Match m) {
-
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.scale_up);
-        menu.setAnimation(animation);
-        menu.showMenu(true);
-        animation.start();
-
-        HomeFragment homeFragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putSerializable("event", m);
-        homeFragment.setArguments(args);
-
-        viewPager.setCurrentItem(0);
-
+        //comportamento da avere nel caso in cui torno da un'altra activity
     }
 
     @Override
