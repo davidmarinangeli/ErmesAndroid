@@ -9,7 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.net.Uri;
 
+import com.example.david.ermes.Presenter.Match;
+import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -29,6 +32,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import com.example.david.ermes.Model.DatabaseManager;
+import com.example.david.ermes.Presenter.User;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
@@ -81,8 +85,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             default: break;
         }
-
-        DatabaseManager db = new DatabaseManager();
     }
 
     private void signIn() {
@@ -101,11 +103,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+                Log.d("DATABASE", "Current user: " + User.getCurrentUser().toString());
 
+                User u = User.getCurrentUser();
+                u.save();
+
+                Match m = new Match("Football", 5, 5, "Via le mani dal culo");
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
-            Log.d("errore",result.getStatus().getStatusMessage()+"");
+                Log.d("errore",result.getStatus().getStatusMessage()+"");
             }
         }
     }

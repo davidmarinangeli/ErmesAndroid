@@ -1,15 +1,21 @@
 package com.example.david.ermes.Model;
 
+import android.net.Uri;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import com.example.david.ermes.Presenter.Account;
+import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.Presenter.Match;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by David on 24/05/2017.
@@ -17,18 +23,18 @@ import com.example.david.ermes.Presenter.Match;
 
 public class DatabaseManager {
 
-    private DatabaseReference users, matches;
+    private DatabaseReference usersRef, matchesRef;
 
     public DatabaseManager() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-        users = database.getReference("users");
-        users.addValueEventListener(new ValueEventListener() {
+        this.usersRef = database.getReference("users");
+        this.usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
+                Models._User value = dataSnapshot.getValue(Models._User.class);
                 Log.d("FIREBASE", "Value is: " + value);
             }
 
@@ -39,13 +45,13 @@ public class DatabaseManager {
             }
         });
 
-        matches = database.getReference("matches");
-        matches.addValueEventListener(new ValueEventListener() {
+        this.matchesRef = database.getReference("matches");
+        this.matchesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
+                Models._Match value = dataSnapshot.getValue(Models._Match.class);
                 Log.d("FIREBASE", "Value is: " + value);
             }
 
@@ -55,16 +61,34 @@ public class DatabaseManager {
                 Log.w("FIREBASE", "Failed to read value.", error.toException());
             }
         });
-
-        users.setValue("Write test");
     }
 
-    public void saveUser(Account account) {
-        users.setValue(account);
+    public User getCurrentUser() {
+        User u = null;
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            Uri photoURL = user.getPhotoUrl();
+            String UID = user.getUid();
+
+            u = new User(name, email, photoURL, UID);
+        }
+
+        return u;
     }
 
-    public void saveMatch(Match match) {
-        matches.setValue(match);
+    public void saveUser(String uid, Models._User user) {
+        if (user != null) {
+            Map<String, Models._User> data = new HashMap<String, Models._User>();
+            data.put(uid, user);
+            this.usersRef.setValue(data);
+        }
+    }
+
+    public void saveMatch(String id, Models._Match match) {
+        this.matchesRef.setValue(match);
     }
 
 }
