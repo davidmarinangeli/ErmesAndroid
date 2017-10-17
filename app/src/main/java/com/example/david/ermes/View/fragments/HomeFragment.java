@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.main_recyclerview_layout, container, false);
+        return inflater.inflate(R.layout.content_main, container, false);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment {
 
         //inizializzo l'adapter e indirizzo tutti gli elementi
         adapter = new MainAdapter(getContext());
-        recyclerView = rootView.findViewById(R.id.list_of_event_recyclerview);
+        recyclerView = rootView.findViewById(R.id.main_contenitore);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);
