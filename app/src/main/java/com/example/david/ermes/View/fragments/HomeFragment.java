@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.example.david.ermes.Presenter.MainAdapter;
 import com.example.david.ermes.Presenter.Match;
 import com.example.david.ermes.R;
+import com.stone.vega.library.VegaLayoutManager;
 
 /**
  * Created by David on 30/05/2017.
@@ -60,7 +61,7 @@ public class HomeFragment extends Fragment {
         //inizializzo l'adapter e indirizzo tutti gli elementi
         adapter = new MainAdapter(getContext());
         recyclerView = rootView.findViewById(R.id.main_contenitore);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new VegaLayoutManager());
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);
         adapter.initList();
