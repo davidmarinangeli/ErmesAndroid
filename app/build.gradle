@@ -71,9 +71,10 @@ dependencies {
 
     // ** END FIREBASE **
 
-
     //custom libraries
-    compile 'com.stone.vega.library:VegaLayoutManager:1.0.1'
+
+    compile 'com.github.xmuSistone:VegaLayoutManager:master-SNAPSHOT'
+    //compile 'com.stone.vega.library:VegaLayoutManager:1.0.1'
     compile "com.google.android.gms:play-services-maps:${firebase}"
     compile "com.android.support:appcompat-v7:${support}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
