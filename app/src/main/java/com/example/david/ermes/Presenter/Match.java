@@ -44,6 +44,12 @@ public class Match implements Serializable{
         this.db.saveMatch(m);
     }
 
+    public static List<Match> searchMatchesByIdOwner(String id) {
+        DatabaseManager db = new DatabaseManager();
+        db.fetchMatchesByIdOwner(id);
+        return null;
+    }
+
     public String getPlace() { return place; }
 
     public void setPlace(String place) { this.place = place; }

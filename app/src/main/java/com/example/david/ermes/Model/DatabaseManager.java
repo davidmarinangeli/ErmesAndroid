@@ -16,7 +16,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.Presenter.Match;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,7 +97,30 @@ public class DatabaseManager {
         }
     }
 
-    public Models._Match fetchMatchByIdOwner(String id) {
+    public Models._Match fetchMatchesByIdOwner(String id) {
+
+        matchesRef.addValueEventListener(new ValueEventListener() {
+            List<Match> ciao = new ArrayList<Match>();
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Is better to use a List, because you don't know the size
+                // of the iterator returned by dataSnapshot.getChildren() to
+                // initialize the array
+                final List<String> areas = new ArrayList<>();
+
+                for (DataSnapshot areaSnapshot: dataSnapshot.getChildren()) {
+                    String areaName = areaSnapshot.toString();
+                    areas.add(areaName);
+                    Log.d("areaSnapshot", String.valueOf(areaSnapshot.getValue()) + " " + areaSnapshot.child("location").getValue());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+/*
         Query queryRef = this.matchesRef.orderByChild("idOwner").equalTo(id);
         queryRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -123,6 +148,7 @@ public class DatabaseManager {
 
             }
         });
+        */
         // TODO te ghe da sistemare sta roba dio can
         return null;
     }
