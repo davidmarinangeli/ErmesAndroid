@@ -107,10 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 firebaseAuthWithGoogle(account);
                 Log.d("DATABASE", "Current user: " + User.getCurrentUser().toString());
 
-                User u = User.getCurrentUser();
-                u.save();
-
-                Match m = new Match("Football", 5, 5, "Via le mani dal culo", null);
+                Match m = new Match("ppQmFPxmnOf160uecBFXzecA2Nk2", "Via le mani dal culo", null);
                 m.save();
             } else {
                 // Google Sign In failed, update UI appropriately

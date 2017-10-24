@@ -51,7 +51,7 @@ public class CreateEventActivity extends AppCompatActivity implements TimePicker
 
 
         Button fine = findViewById((R.id.buttonfine));
-        final Match m = new Match("basket",213123131,32924,"albere", null);
+        final Match m = new Match("ppQmFPxmnOf160uecBFXzecA2Nk2", "albere", null);
 
         fine.setOnClickListener(new View.OnClickListener() {
             @Override

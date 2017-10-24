@@ -45,7 +45,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
     public void initList(){
 
-        this.matchList = Match.toyListofMatches(context);
+        //this.matchList = Match.toyListofMatches(context);
         notifyDataSetChanged();
 
     }

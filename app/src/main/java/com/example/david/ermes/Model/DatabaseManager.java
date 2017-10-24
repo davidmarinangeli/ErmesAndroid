@@ -16,7 +16,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.Presenter.Match;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,12 +97,15 @@ public class DatabaseManager {
         }
     }
 
-    public Models._Match fetchMatchByIdOwner(String id) {
+    public List<Models._Match> fetchMatchesByIdOwner(String id) {
+        final List<Models._Match> matches = new ArrayList<>();
+
         Query queryRef = this.matchesRef.orderByChild("idOwner").equalTo(id);
         queryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
+                Models._Match match = dataSnapshot.getValue(Models._Match.class);
+                matches.add(match);
             }
 
             @Override
@@ -120,11 +125,11 @@ public class DatabaseManager {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("FETCH_MATCHES", "loadMatch:onCancelled", databaseError.toException());
             }
         });
-        // TODO te ghe da sistemare sta roba dio can
-        return null;
+
+        return matches;
     }
 
 }
