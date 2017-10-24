@@ -1,6 +1,7 @@
 package com.example.david.ermes.Presenter;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import com.example.david.ermes.Model.DatabaseManager;
 import com.example.david.ermes.Model.Models;
@@ -82,6 +83,14 @@ public class Match implements Serializable{
 
     //metodo che crea un nuovo oggetto Match SI LO SO CHE E' NA MERDA E NON DOVREBBE STARCI, E' "TEMPORANEO"
     public static Match create(String sport, long date,int imageID, String place) {
+        int image_tag;
+        if(sport.equals("basket")){
+            image_tag =
+        } else if (sport.equals("volley")){
+
+        } else if(sport.equals("calcio")){
+
+        }
         return new Match(sport, date,imageID,place, null);
     }
 
@@ -92,18 +101,9 @@ public class Match implements Serializable{
     public static List<Match> toyListofMatches(Context cx){
         List<Match> match = new ArrayList<>();
 
-        int basketballimage = cx.getResources().getIdentifier("basketball96", "drawable", cx.getPackageName());
-        int soccerimage = cx.getResources().getIdentifier("soccerball96", "drawable", cx.getPackageName());
-        int volleyimage = cx.getResources().getIdentifier("volleyball696", "drawable", cx.getPackageName());
-        int tennisimage = cx.getResources().getIdentifier("tennisracquet96", "drawable", cx.getPackageName());
-        int pingpongimage = cx.getResources().getIdentifier("pingpong96", "drawable", cx.getPackageName());
-        int golfballimage = cx.getResources().getIdentifier("golfball96", "drawable", cx.getPackageName());
-        int baseballimage = cx.getResources().getIdentifier("baseball96", "drawable", cx.getPackageName());
-        int baseballimage2 = cx.getResources().getIdentifier("baseball96", "drawable", cx.getPackageName());
-        int baseballimage3 = cx.getResources().getIdentifier("baseball96", "drawable", cx.getPackageName());
-
-        match.add(create("Basket",1500547551959L,basketballimage,"Parco le albere"));
         /*
+        match.add(create("Basket",1500547551959L,basketballimage,"Parco le albere"));
+
         match.add(create("Volley",1500495940958L,volleyimage,"Via Alessandro Volta"));
         match.add(create("Calcio",1500547551959L,soccerimage,"Via Rosmini"));
         match.add(create("Tennis",1498694403500L,tennisimage,"Via Battisti"));
