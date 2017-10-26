@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.david.ermes.Presenter.FirebaseCallback;
+
 /**
  * Created by David on 24/05/2017.
  */
@@ -28,6 +30,7 @@ import java.util.Map;
 public class DatabaseManager {
 
     private DatabaseReference usersRef, matchesRef;
+    private List<Models._Match> _matches;
 
     public DatabaseManager() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -97,15 +100,36 @@ public class DatabaseManager {
         }
     }
 
-    public List<Models._Match> fetchMatchesByIdOwner(String id) {
-        final List<Models._Match> matches = new ArrayList<>();
+    public void fetchMatchesByIdOwner(String id, final FirebaseCallback fc) {
 
-        Query queryRef = this.matchesRef.orderByChild("idOwner").equalTo(id);
-        queryRef.addChildEventListener(new ChildEventListener() {
+        Query queryRef = this.matchesRef.orderByChild("owner").equalTo(id);
+        final List<Models._Match> list = new ArrayList<>();
+
+        queryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                // Models._User value = dataSnapshot.getValue(Models._User.class);
+                for (DataSnapshot d: dataSnapshot.getChildren()) {
+                    list.add(d.getValue(Models._Match.class));
+                }
+                fc.callback(list);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("FIREBASE", "Failed to read value.", error.toException());
+            }
+        });
+
+                /*addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Models._Match match = dataSnapshot.getValue(Models._Match.class);
-                matches.add(match);
+                Models._Match m = dataSnapshot.getValue(Models._Match.class);
+                list.add(m);
+                Log.d("MATCHES LIST", list.toString());
             }
 
             @Override
@@ -127,9 +151,7 @@ public class DatabaseManager {
             public void onCancelled(DatabaseError databaseError) {
                 Log.w("FETCH_MATCHES", "loadMatch:onCancelled", databaseError.toException());
             }
-        });
-
-        return matches;
+        });*/
     }
 
 }

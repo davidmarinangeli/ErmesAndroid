@@ -105,10 +105,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                Log.d("DATABASE", "Current user: " + User.getCurrentUser().toString());
 
                 Match m = new Match("ppQmFPxmnOf160uecBFXzecA2Nk2", "Via le mani dal culo", null);
                 m.save();
+
+                Match.fetchMatchesByIdOwner("ppQmFPxmnOf160uecBFXzecA2Nk2");
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...

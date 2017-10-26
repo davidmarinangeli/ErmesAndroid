@@ -1,6 +1,7 @@
 package com.example.david.ermes.Presenter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
 import com.example.david.ermes.Model.DatabaseManager;
@@ -55,15 +56,9 @@ public class Match implements Serializable {
         this.idOwner = idOwner;
     }
 
-    public static List<Match> fetchMatchesByIdOwner(String id) {
+    public static void fetchMatchesByIdOwner(String id) {
         DatabaseManager fetchDB = new DatabaseManager();
-
-        List<Match> matches = new ArrayList<>();
-        for (Models._Match match : fetchDB.fetchMatchesByIdOwner(id)) {
-            matches.add(match.convertToMatch());
-        }
-
-        return matches;
+        //fetchDB.fetchMatchesByIdOwner(id);
     }
 
 }

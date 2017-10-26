@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import com.example.david.ermes.Presenter.Match;
 import com.example.david.ermes.R;
+import com.github.clans.fab.FloatingActionMenu;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.Calendar;
-
 
 public class CreateEventActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener , DatePickerDialog.OnDateSetListener{
 
@@ -22,6 +22,7 @@ public class CreateEventActivity extends AppCompatActivity implements TimePicker
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+
 
         TextView orario = findViewById(R.id.textTime);
         TextView data = findViewById(R.id.textDate);
@@ -57,6 +58,8 @@ public class CreateEventActivity extends AppCompatActivity implements TimePicker
             @Override
             public void onClick(View v) {
                 //qui mettere il comportamento alla creazione del match
+                m.save();
+                finish();
             }
         });
     }
