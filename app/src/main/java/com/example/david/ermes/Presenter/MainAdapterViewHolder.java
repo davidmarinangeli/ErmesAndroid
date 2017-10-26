@@ -24,10 +24,10 @@ public class MainAdapterViewHolder {
     public static void viewHolderConstructor(View itemView,TextView date_of_event, ImageView sport_icon, TextView place){    }
 
     public static void bindElements(List<Match> matchList, int position, View itemView, TextView date_of_event, TextView hour_of_event, ImageView sport_icon, TextView place){
-
+/*
         long date = matchList.get(position).getDate();
         int sport_id = matchList.get(position).getImageID();
-        String where = matchList.get(position).getPlace();
+        String where = matchList.get(position).getLocation();
 
         Context cx = itemView.getContext();
 
@@ -39,5 +39,6 @@ public class MainAdapterViewHolder {
 
         place.setText(where);
         Picasso.with(cx).load(sport_id).memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
+        */
     }
 }

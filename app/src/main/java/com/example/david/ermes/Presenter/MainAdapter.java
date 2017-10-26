@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.david.ermes.Model.DatabaseManager;
+import com.example.david.ermes.Model.Models;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.EventActivity;
 
@@ -45,8 +47,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
     public void initList(){
 
-        this.matchList = Match.toyListofMatches(context);
-        notifyDataSetChanged();
+        new DatabaseManager().fetchMatchesByIdOwner("ppQmFPxmnOf160uecBFXzecA2Nk2", new FirebaseCallback() {
+            @Override
+            public void callback(List<Models._Match> list) {
+                matchList = Models._Match.convertToMatchList(list);
+                notifyDataSetChanged();
+            }
+        });
 
     }
 

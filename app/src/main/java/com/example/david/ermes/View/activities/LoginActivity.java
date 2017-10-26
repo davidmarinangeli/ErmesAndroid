@@ -9,7 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.net.Uri;
 
+import com.example.david.ermes.Presenter.Match;
+import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -27,6 +30,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import com.example.david.ermes.Model.DatabaseManager;
+import com.example.david.ermes.Presenter.User;
+
+import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
@@ -98,10 +106,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
 
+                Match m = new Match("ppQmFPxmnOf160uecBFXzecA2Nk2", "Via le mani dal culo", null);
+                m.save();
+
+                Match.fetchMatchesByIdOwner("ppQmFPxmnOf160uecBFXzecA2Nk2");
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
-            Log.d("errore",result.getStatus().getStatusMessage()+"");
+                Log.d("errore",result.getStatus().getStatusMessage()+"");
             }
         }
     }
