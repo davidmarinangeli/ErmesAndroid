@@ -11,7 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.net.Uri;
 
+import com.example.david.ermes.Presenter.FirebaseCallback;
 import com.example.david.ermes.Presenter.Match;
+import com.example.david.ermes.Presenter.Sport;
 import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.R;
 import com.google.android.gms.auth.api.Auth;
@@ -35,6 +37,7 @@ import com.example.david.ermes.Model.DatabaseManager;
 import com.example.david.ermes.Presenter.User;
 
 import java.util.Date;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
@@ -106,10 +109,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
 
-                Match m = new Match("ppQmFPxmnOf160uecBFXzecA2Nk2", "Via le mani dal culo", null);
-                m.save();
-
-                Match.fetchMatchesByIdOwner("ppQmFPxmnOf160uecBFXzecA2Nk2");
+                Sport.fetchAllSports(new FirebaseCallback() {
+                    @Override
+                    public void callback(List list) {
+                        Log.d("SPORTS", list.toString());
+                    }
+                });
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
@@ -131,6 +136,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
+                            User.getCurrentUser().save();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

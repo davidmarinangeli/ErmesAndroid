@@ -24,19 +24,35 @@ public class Match implements Serializable {
     private String location;
     private Date date;
     private String idOwner;
+    private boolean isPublic;
+    private String idSport;
+    private int maxPlayers;
+    private List<User> pending;
+    private List<User> partecipants;
+    private int numGuests;
+    private List<String> missingStuff;
 
     private DatabaseManager db;
 
-    public Match(String idOwner, String location, Date date) {
+    public Match() {}
+
+    public Match(String idOwner, String location, Date date, boolean isPublic,
+                 String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
         this.location = location;
         this.date = date;
         this.idOwner = idOwner;
+        this.isPublic = isPublic;
+        this.idSport = idSport;
+        this.maxPlayers = maxPlayers;
+        this.numGuests = numGuests;
+        this.missingStuff = missingStuff;
 
         this.db = new DatabaseManager();
     }
 
     public void save() {
-        Models._Match m = new Models._Match(this.idOwner, this.date, this.location);
+        Models._Match m = new Models._Match(this.idOwner, this.date, this.location, this.isPublic,
+                this.idSport, this.maxPlayers, this.numGuests, this.missingStuff);
         this.db.saveMatch(m);
     }
 
@@ -56,9 +72,13 @@ public class Match implements Serializable {
         this.idOwner = idOwner;
     }
 
-    public static void fetchMatchesByIdOwner(String id) {
-        DatabaseManager fetchDB = new DatabaseManager();
-        //fetchDB.fetchMatchesByIdOwner(id);
+    public static void fetchMatchesByIdOwner(String id, final FirebaseCallback fCallback) {
+        (new DatabaseManager()).fetchMatchesByIdOwner(id, new FirebaseCallback() {
+            @Override
+            public void callback(List list) {
+                fCallback.callback(Models._Match.convertToMatchList(list));
+            }
+        });
     }
 
 }
