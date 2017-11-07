@@ -30,7 +30,6 @@ import com.example.david.ermes.Presenter.FirebaseCallback;
 public class DatabaseManager {
 
     private DatabaseReference usersRef, matchesRef, sportsRef;
-    private List<Models._Match> _matches;
 
     public DatabaseManager() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -123,7 +122,7 @@ public class DatabaseManager {
 
     public void fetchMatchesByIdOwner(String id, final FirebaseCallback fc) {
 
-        Query queryRef = this.matchesRef.orderByChild("owner").equalTo(id);
+        Query queryRef = this.matchesRef.orderByChild("idOwner").equalTo(id);
         final List<Models._Match> list = new ArrayList<>();
 
         queryRef.addValueEventListener(new ValueEventListener() {

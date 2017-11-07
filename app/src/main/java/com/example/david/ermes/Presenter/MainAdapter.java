@@ -45,7 +45,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
     public void initList(){
 
-        Match.fetchMatchesByIdOwner("ppQmFPxmnOf160uecBFXzecA2Nk2", new FirebaseCallback() {
+        Match.fetchMatchesByIdOwner(User.getCurrentUser().getUID(), new FirebaseCallback() {
             @Override
             public void callback(List list) {
                 matchList = list;
