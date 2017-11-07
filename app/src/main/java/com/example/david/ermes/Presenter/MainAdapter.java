@@ -51,11 +51,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             @Override
             public void callback(List<Models._Match> list) {
                 matchList = Models._Match.convertToMatchList(list);
-                notifyDataSetChanged();
+                if (!matchList.isEmpty())
+                    notifyDataSetChanged();
             }
         });
 
     }
+
+
 
     public void addElement(Match x){
         this.matchList.add(x);

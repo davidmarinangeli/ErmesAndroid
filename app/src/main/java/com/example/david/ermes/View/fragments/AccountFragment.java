@@ -18,6 +18,9 @@ import com.example.david.ermes.View.activities.LoginActivity;
  */
 public class AccountFragment extends Fragment {
 
+    Button loginbutton;
+    Button logoutbutton;
+
 
     public AccountFragment() {
         // Required empty public constructor
@@ -41,16 +44,19 @@ public class AccountFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        Button b = view.findViewById(R.id.lg);
+        loginbutton = view.findViewById(R.id.loginbutton);
+        logoutbutton = view.findViewById(R.id.logoutbutton);
 
-        b.setOnClickListener(new View.OnClickListener() {
+
+        loginbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(view.getContext(),LoginActivity.class);
+                Intent i = new Intent(view.getContext(), LoginActivity.class);
                 startActivity(i);
 
             }
         });
         super.onViewCreated(view, savedInstanceState);
     }
+
 }

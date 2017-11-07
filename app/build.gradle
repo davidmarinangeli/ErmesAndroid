@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+
     signingConfigs {
         config {
             keyAlias 'key0'
@@ -19,6 +20,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
+
         applicationId "com.example.david.ermes"
         minSdkVersion 21
         targetSdkVersion 26
@@ -46,14 +48,16 @@ android {
 
 ext {
     support = "26.1.0"
-    firebase = "11.2.2"
+    firebase = "11.4.2"
 }
 
 dependencies {
+
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
 
     // android libraries
     compile "com.android.support:cardview-v7:${support}"
@@ -74,7 +78,6 @@ dependencies {
     //custom libraries
 
     compile 'com.github.xmuSistone:VegaLayoutManager:master-SNAPSHOT'
-    //compile 'com.stone.vega.library:VegaLayoutManager:1.0.1'
     compile "com.google.android.gms:play-services-maps:${firebase}"
     compile "com.android.support:appcompat-v7:${support}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
