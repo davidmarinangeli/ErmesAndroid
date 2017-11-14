@@ -7,14 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.net.Uri;
 
-import com.example.david.ermes.Presenter.FirebaseCallback;
 import com.example.david.ermes.Presenter.Match;
-import com.example.david.ermes.Presenter.Sport;
-import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -33,16 +31,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import com.example.david.ermes.Model.DatabaseManager;
-import com.example.david.ermes.Presenter.User;
-
-import java.util.Date;
-import java.util.List;
-
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private SignInButton logInButton;
+    private Button normalbutton;
+    private EditText login_editext;
+    private EditText password_editext;
     private TextView userlogintext;
+
+    private Button logoutbutton;
 
     private GoogleSignInAccount account;
     private FirebaseAuth mAuth;
@@ -59,10 +56,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // setto i parametri dell'editext login e password
+        login_editext = findViewById(R.id.mail);
+        password_editext = findViewById(R.id.pwd);
+
+        logoutbutton = findViewById(R.id.logoutbutton);
+        logoutbutton.setOnClickListener(this);
+
+        // prendo l'istanza del FBAuth
         mAuth = FirebaseAuth.getInstance();
-        logInButton = findViewById(R.id.login_button);
+
+
+        // setto i parametri dei bottoni di Login
+        logInButton = findViewById(R.id.google_login_button);
+        normalbutton = findViewById(R.id.loginbutton);
+        normalbutton.setOnClickListener(this);
+
         userlogintext = findViewById(R.id.user_email_login);
         logInButton.setOnClickListener(this);
+
+        TextView textView = (TextView) logInButton.getChildAt(0);
+        textView.setPadding(0, 0, 14, 0);
+        textView.setText("Accedi con Google");
+
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(clientID)
@@ -76,23 +92,59 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
 
-        FirebaseUser user = mAuth.getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.login_button:
-                signIn();
+            case R.id.google_login_button:
+                signInGoogle();
                 break;
-            default: break;
+            case R.id.loginbutton:
+                String email = login_editext.getText().toString();
+                String password = password_editext.getText().toString();
+                if ((!email.isEmpty()) && (!password.isEmpty())) {
+                    signInNormal(email,password);
+                } else {
+                    //TODO: settare il comportamento in caso di bad filling
+                }
+                    break;
+            case R.id.logoutbutton:
+                signOut();
+            default:
+                break;
         }
     }
 
-    private void signIn() {
+    private void signInNormal(final String email, final String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+                        }
+
+                        // ...
+                    }
+                });
+    }
+
+    private void signInGoogle() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -108,17 +160,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-
-                Sport.fetchAllSports(new FirebaseCallback() {
-                    @Override
-                    public void callback(List list) {
-                        Log.d("SPORTS", list.toString());
-                    }
-                });
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
-                Log.d("errore",result.getStatus().getStatusMessage()+"");
+                Log.d("errore", result.getStatus().getStatusMessage() + "");
             }
         }
     }
@@ -136,7 +181,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-                            User.getCurrentUser().save();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -155,17 +199,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Log.d(TAG, "onConnectionFailed: " + connectionResult);
     }
 
+    public void updateUI(FirebaseUser user) {
+        if (user != null)
+            userlogintext.setText(user.getEmail());
+    }
+
     public void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
                 Log.d(TAG, "Signed out");
+                userlogintext.setText("");
             }
         });
-    }
-
-    public void updateUI(FirebaseUser user){
-        userlogintext.setText(user.getEmail());
     }
 
 }
