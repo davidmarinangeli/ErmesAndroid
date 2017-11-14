@@ -43,11 +43,12 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="login">Login</string>
     <string name="dot">•</string>
-    <string name="e_mail">E-Mail</string>
-    <string name="password">Password</string>
     <string name="oppure">oppure</string>
-    <string name="accedi">Accedi</string>
-    <string name="logout">Logout</string>
+    <string name="accedi">accedi</string>
+    <string name="logout">logout</string>
+    <string name="password">Password</string>
+    <string name="e_mail">E-mail</string>
+    <string name="luogo">Luogo</string>
 
 
     <!-- buro gaio -->

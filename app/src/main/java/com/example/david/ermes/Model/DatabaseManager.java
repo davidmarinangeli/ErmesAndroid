@@ -17,6 +17,7 @@ import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.Presenter.Match;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +30,7 @@ import com.example.david.ermes.Presenter.FirebaseCallback;
 
 public class DatabaseManager {
 
-    private DatabaseReference usersRef, matchesRef;
-    private List<Models._Match> _matches;
+    private DatabaseReference usersRef, matchesRef, sportsRef;
 
     public DatabaseManager() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -68,6 +68,8 @@ public class DatabaseManager {
                 Log.w("FIREBASE", "Failed to read value.", error.toException());
             }
         });
+
+        this.sportsRef = database.getReference("sports");
     }
 
     public User getCurrentUser() {
@@ -77,10 +79,9 @@ public class DatabaseManager {
         if (user != null) {
             String name = user.getDisplayName();
             String email = user.getEmail();
-            Uri photoURL = user.getPhotoUrl();
             String UID = user.getUid();
 
-            u = new User(name, email, photoURL, UID);
+            u = new User(name, email, UID, "", "sport a caso");
         }
 
         return u;
@@ -88,9 +89,7 @@ public class DatabaseManager {
 
     public void saveUser(String uid, Models._User user) {
         if (user != null) {
-            Map<String, Models._User> data = new HashMap<>();
-            data.put(uid, user);
-            this.usersRef.setValue(data);
+            this.usersRef.child(uid).setValue(user);
         }
     }
 
@@ -100,9 +99,31 @@ public class DatabaseManager {
         }
     }
 
-    public void fetchMatchesByIdOwner(String id, final FirebaseCallback fc) {
+    public void fetchAllSports(final FirebaseCallback fc) {
+        final List<Models._Sport> list = new ArrayList<>();
+        this.sportsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                // Models._User value = dataSnapshot.getValue(Models._User.class);
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    list.add(d.getValue(Models._Sport.class));
+                }
+                fc.callback(list);
+            }
 
-        Query queryRef = this.matchesRef.orderByChild("owner").equalTo(id);
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("FIREBASE", "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+    public void fetchMatches(String param, String value, final FirebaseCallback fc) {
+
+        Query queryRef = this.matchesRef.orderByChild(param).equalTo(value);
         final List<Models._Match> list = new ArrayList<>();
 
         queryRef.addValueEventListener(new ValueEventListener() {

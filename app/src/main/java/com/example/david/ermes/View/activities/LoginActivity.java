@@ -106,7 +106,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 signInGoogle();
                 break;
             case R.id.loginbutton:
-                    signInNormal(login_editext.getText().toString(), password_editext.getText().toString());
+                String email = login_editext.getText().toString();
+                String password = password_editext.getText().toString();
+                if ((!email.isEmpty()) && (!password.isEmpty())) {
+                    signInNormal(email,password);
+                } else {
+                    //TODO: settare il comportamento in caso di bad filling
+                }
                     break;
             case R.id.logoutbutton:
                 signOut();
@@ -115,7 +121,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void signInNormal(String email, String password) {
+    private void signInNormal(final String email, final String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -127,8 +133,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
-                            login_editext.setError("Errore nel login");
-                            login_editext.setHighlightColor(getResources().getColor(R.color.red));
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -156,11 +160,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-
-                Match m = new Match("ppQmFPxmnOf160uecBFXzecA2Nk2", "Via le mani dal culo", null);
-                m.save();
-
-                Match.fetchMatchesByIdOwner("ppQmFPxmnOf160uecBFXzecA2Nk2");
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...

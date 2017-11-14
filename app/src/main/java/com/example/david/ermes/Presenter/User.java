@@ -12,8 +12,9 @@ import com.example.david.ermes.Model.Models;
 public class User {
     private String name;
     private String email;
-    private Uri photoURL;
     private String UID;
+    private String city;
+    private String idFavSport;
 
     private DatabaseManager db;
 
@@ -21,11 +22,12 @@ public class User {
         this.db = new DatabaseManager();
     }
 
-    public User(String name, String email, Uri photoURL, String UID) {
+    public User(String name, String email, String UID, String city, String idFavSport) {
         this.name = name;
         this.email = email;
-        this.photoURL = photoURL;
         this.UID = UID;
+        this.city = city;
+        this.idFavSport = idFavSport;
 
         db = new DatabaseManager();
     }
@@ -36,7 +38,7 @@ public class User {
     }
 
     public void save() {
-        Models._User u = new Models._User(this.name);
+        Models._User u = new Models._User(this.idFavSport, this.city);
         this.db.saveUser(this.UID, u);
     }
 
@@ -48,11 +50,11 @@ public class User {
         return this.email;
     }
 
-    public Uri getPhotoURL() {
-        return this.photoURL;
-    }
-
     public String getUID() {
         return this.UID;
     }
+
+    public String getIdFavSport() { return this.idFavSport; }
+
+    public String getCity() { return this.city; }
 }

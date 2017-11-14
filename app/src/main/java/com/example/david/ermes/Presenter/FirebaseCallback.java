@@ -8,5 +8,5 @@ import java.util.List;
  */
 
 public interface FirebaseCallback {
-    public void callback(List<Models._Match> matches);
+    public void callback(List list);
 }

@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.david.ermes.Model.DatabaseManager;
-import com.example.david.ermes.Model.Models;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.EventActivity;
 
@@ -22,7 +20,7 @@ import java.util.List;
  * Created by David on 30/05/2017.
  */
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder>{
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
 
     public List<Match> matchList = new ArrayList<>();
     private Context context;
@@ -45,22 +43,23 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         holder.bind(position);
     }
 
-    public void initList(){
+    public void initList() {
 
-        new DatabaseManager().fetchMatchesByIdOwner("ppQmFPxmnOf160uecBFXzecA2Nk2", new FirebaseCallback() {
-            @Override
-            public void callback(List<Models._Match> list) {
-                matchList = Models._Match.convertToMatchList(list);
-                if (!matchList.isEmpty())
-                    notifyDataSetChanged();
-            }
-        });
-
+        User user = User.getCurrentUser();
+        if (user != null) {
+            Match.fetchMatchesByIdOwner(User.getCurrentUser().getUID(), new FirebaseCallback() {
+                @Override
+                public void callback(List list) {
+                    matchList = list;
+                    if (!list.isEmpty()) {
+                        notifyDataSetChanged();
+                    }
+                }
+            });
+        }
     }
 
-
-
-    public void addElement(Match x){
+    public void addElement(Match x) {
         this.matchList.add(x);
         notifyDataSetChanged();
     }
@@ -70,7 +69,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         return matchList.size();
     }
 
-    public class MainViewHolder extends RecyclerView.ViewHolder{
+    public class MainViewHolder extends RecyclerView.ViewHolder {
 
         TextView date_of_event;
         TextView hour_of_event;
@@ -96,7 +95,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
                     Intent i = new Intent(context, EventActivity.class);
 
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("event",matchList.get(getAdapterPosition()));
+                    bundle.putSerializable("event", matchList.get(getAdapterPosition()));
                     i.putExtras(bundle);
                     context.startActivity(i);
 
@@ -105,7 +104,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         }
 
         public void bind(int position) {
-            MainAdapterViewHolder.bindElements(matchList,position,itemView,date_of_event,hour_of_event,sport_icon,place_of_event);
+            MainAdapterViewHolder.bindElements(matchList, position, itemView, date_of_event, hour_of_event, sport_icon, place_of_event);
 
         }
     }
