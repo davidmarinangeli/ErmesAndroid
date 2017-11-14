@@ -1,5 +1,6 @@
 package com.example.david.ermes.Model;
 
+import com.example.david.ermes.Presenter.Location;
 import com.example.david.ermes.Presenter.Match;
 import com.example.david.ermes.Presenter.Sport;
 
@@ -26,7 +27,7 @@ public class Models {
 
     public static class _Match {
         public Date date;
-        public String location;
+        public Location location;
         public String owner;
         public boolean isPublic;
         public String idSport;
@@ -36,7 +37,7 @@ public class Models {
 
         public _Match() {}
 
-        public _Match(String idOwner, Date date, String location, boolean isPublic,
+        public _Match(String idOwner, Date date, Location location, boolean isPublic,
                       String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
             this.date = date;
             this.location = location;

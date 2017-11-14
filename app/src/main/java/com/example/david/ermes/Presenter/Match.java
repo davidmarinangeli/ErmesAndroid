@@ -21,7 +21,7 @@ import java.util.ListIterator;
  */
 
 public class Match implements Serializable {
-    private String location;
+    private Location location;
     private Date date;
     private String idOwner;
     private boolean isPublic;
@@ -36,7 +36,7 @@ public class Match implements Serializable {
 
     public Match() {}
 
-    public Match(String idOwner, String location, Date date, boolean isPublic,
+    public Match(String idOwner, Location location, Date date, boolean isPublic,
                  String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
         this.location = location;
         this.date = date;
@@ -56,11 +56,11 @@ public class Match implements Serializable {
         this.db.saveMatch(m);
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return this.location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
@@ -80,5 +80,4 @@ public class Match implements Serializable {
             }
         });
     }
-
 }
