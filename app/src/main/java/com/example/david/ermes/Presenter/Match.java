@@ -51,7 +51,7 @@ public class Match implements Serializable {
     }
 
     public void save() {
-        Models._Match m = new Models._Match(this.idOwner, this.date, this.location, this.isPublic,
+        Models._Match m = new Models._Match(this.idOwner, this.date.getTime(), this.location, this.isPublic,
                 this.idSport, this.maxPlayers, this.numGuests, this.missingStuff);
         this.db.saveMatch(m);
     }
@@ -73,7 +73,7 @@ public class Match implements Serializable {
     }
 
     public static void fetchMatchesByIdOwner(String id, final FirebaseCallback fCallback) {
-        (new DatabaseManager()).fetchMatchesByIdOwner(id, new FirebaseCallback() {
+        (new DatabaseManager()).fetchMatches("idOwner", id, new FirebaseCallback() {
             @Override
             public void callback(List list) {
                 fCallback.callback(Models._Match.convertToMatchList(list));
@@ -81,4 +81,12 @@ public class Match implements Serializable {
         });
     }
 
+    public static void fetchMatchesByDate(Date date, final FirebaseCallback fCallback) {
+        (new DatabaseManager()).fetchMatches("date", date.toString(), new FirebaseCallback() {
+            @Override
+            public void callback(List list) {
+                fCallback.callback(Models._Match.convertToMatchList(list));
+            }
+        });
+    }
 }

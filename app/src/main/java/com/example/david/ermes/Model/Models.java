@@ -2,7 +2,7 @@ package com.example.david.ermes.Model;
 
 import com.example.david.ermes.Presenter.Match;
 import com.example.david.ermes.Presenter.Sport;
-
+import com.example.david.ermes.Presenter.utils.TimeUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,9 +25,9 @@ public class Models {
     }
 
     public static class _Match {
-        public Date date;
+        public long date;
         public String location;
-        public String owner;
+        public String idOwner;
         public boolean isPublic;
         public String idSport;
         public int maxPlayers;
@@ -36,11 +36,11 @@ public class Models {
 
         public _Match() {}
 
-        public _Match(String idOwner, Date date, String location, boolean isPublic,
+        public _Match(String idOwner, long date, String location, boolean isPublic,
                       String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
             this.date = date;
             this.location = location;
-            this.owner = idOwner;
+            this.idOwner = idOwner;
             this.isPublic = isPublic;
             this.idSport = idSport;
             this.maxPlayers = maxPlayers;
@@ -49,7 +49,7 @@ public class Models {
         }
 
         public Match convertToMatch() {
-            return new Match(this.owner, this.location, this.date, this.isPublic,
+            return new Match(this.idOwner, this.location, TimeUtils.fromMillisToDate(this.date), this.isPublic,
                     this.idSport, this.maxPlayers, this.numGuests, this.missingStuff);
         }
 
@@ -81,6 +81,22 @@ public class Models {
                 sports.add(s.convertToSport());
             }
             return sports;
+        }
+    }
+
+    public static class _Location {
+        public String location;
+        public double x;
+        public double y;
+        public String idUser;
+
+        public _Location() {}
+
+        public _Location(String location, double x, double y, String idUser) {
+            this.idUser = idUser;
+            this.x = x;
+            this.y = y;
+            this.location = location;
         }
     }
 }

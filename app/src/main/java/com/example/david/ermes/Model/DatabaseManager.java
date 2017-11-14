@@ -17,6 +17,7 @@ import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.Presenter.Match;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,7 +107,7 @@ public class DatabaseManager {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 // Models._User value = dataSnapshot.getValue(Models._User.class);
-                for (DataSnapshot d: dataSnapshot.getChildren()) {
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
                     list.add(d.getValue(Models._Sport.class));
                 }
                 fc.callback(list);
@@ -120,9 +121,9 @@ public class DatabaseManager {
         });
     }
 
-    public void fetchMatchesByIdOwner(String id, final FirebaseCallback fc) {
+    public void fetchMatches(String param, String value, final FirebaseCallback fc) {
 
-        Query queryRef = this.matchesRef.orderByChild("idOwner").equalTo(id);
+        Query queryRef = this.matchesRef.orderByChild(param).equalTo(value);
         final List<Models._Match> list = new ArrayList<>();
 
         queryRef.addValueEventListener(new ValueEventListener() {
