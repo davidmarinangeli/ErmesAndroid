@@ -16,6 +16,8 @@ public class Sport {
 
     private DatabaseManager db;
 
+    public Sport() { this.db = new DatabaseManager(); }
+
     public Sport(String name, int numPlayers) {
         this.name = name;
         this.numPlayers = numPlayers;

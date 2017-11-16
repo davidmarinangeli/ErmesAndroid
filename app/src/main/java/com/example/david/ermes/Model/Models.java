@@ -66,6 +66,7 @@ public class Models {
     public static class _Sport {
         public String name;
         public int numPlayers;
+        private String id;
 
         public _Sport() {}
 
@@ -82,6 +83,10 @@ public class Models {
                 sports.add(s.convertToSport());
             }
             return sports;
+        }
+
+        public void setID(String id) {
+            this.id = id;
         }
     }
 
