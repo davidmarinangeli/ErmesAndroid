@@ -76,7 +76,7 @@ public class CreateEventActivity extends AppCompatActivity implements TimePicker
                         now.get(Calendar.DAY_OF_MONTH));
                 date.show(getFragmentManager(),"Datepickerdialog");
 
-                Log.d("TIMEPICKER", String.valueOf(date..get(Calendar.DAY_OF_MONTH)));
+                //Log.d("TIMEPICKER", String.valueOf(date.get(Calendar.DAY_OF_MONTH)));
 
             }
         });
