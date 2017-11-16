@@ -1,10 +1,7 @@
 package com.example.david.ermes.View.activities;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,7 +16,6 @@ import com.example.david.ermes.Presenter.Match;
 import com.example.david.ermes.Presenter.Sport;
 import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.R;
-import com.github.clans.fab.FloatingActionMenu;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -27,70 +23,58 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class CreateEventActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener , DatePickerDialog.OnDateSetListener{
+public class CreateEventActivity extends AppCompatActivity {
 
-    TextView orario;
-    TextView data;
+    TextView event_orario_textview;
+    TextView event_data_textview;
     EditText location;
     Spinner sport_selector;
     Button fine_creazione;
     SpinnerAdapter adapter;
+    Calendar match_calendar_time;
+    Sport sport;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
+        event_orario_textview = findViewById(R.id.textTime);
+        event_data_textview = findViewById(R.id.textDate);
 
-        orario = findViewById(R.id.textTime);
         location = findViewById(R.id.luogo);
-        data = findViewById(R.id.textDate);
         sport_selector = findViewById(R.id.sport_spinner);
         fine_creazione = findViewById(R.id.buttonfine);
+        match_calendar_time = Calendar.getInstance();
 
-
-        orario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-                TimePickerDialog time = TimePickerDialog.newInstance(
-                        CreateEventActivity.this,
-                        now.get(Calendar.HOUR),
-                        now.get(Calendar.MINUTE),
-                        now.get(Calendar.SECOND),
-                        true);
-                time.show(getFragmentManager(), "Timepickerdialog");
-            }
-
-        });
-
-        data.setOnClickListener(new View.OnClickListener(){
-
+        event_data_textview.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-                DatePickerDialog date = DatePickerDialog.newInstance(CreateEventActivity.this,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH));
-                date.show(getFragmentManager(),"Datepickerdialog");
-
-                Log.d("TIMEPICKER", String.valueOf(date..get(Calendar.DAY_OF_MONTH)));
-
+                DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(onDateSetListener);
+                datePickerDialog.show(getFragmentManager(),"datepickerdialog");
             }
         });
 
+        event_orario_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(onTimeSetListener,true);
+                timePickerDialog.show(getFragmentManager(),"timepickerdialog");
+            }
+        });
 
         final ArrayList<String> arraySpinner = new ArrayList<>();
         Sport.fetchAllSports(new FirebaseCallback() {
             @Override
             public void callback(List list) {
-                for (Sport s : (ArrayList<Sport>) list){
+                for (Sport s : (ArrayList<Sport>) list) {
                     arraySpinner.add(s.getName());
                 }
-                adapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item,arraySpinner);
+                adapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
                 sport_selector.setAdapter(adapter);
+                sport_selector.getSelectedItem();
             }
         });
 
@@ -98,57 +82,55 @@ public class CreateEventActivity extends AppCompatActivity implements TimePicker
             @Override
             public void onClick(View v) {
                 User current_user = User.getCurrentUser();
+
                 Location location = new Location();
+                location.setName("Piazza centa");
                 location.setName(location.getName());
+
+                List<String> missingstuff = new ArrayList<>();
+                missingstuff.add("rete");
+                missingstuff.add("pallone");
+
                 //qui mettere il comportamento alla creazione del match
-                //Match result_match = new Match(current_user.getName(),location,);
+                Match result_match = new Match(
+                        current_user.getUID(),
+                        location,
+                        com.example.david.ermes.Presenter.utils.TimeUtils.fromMillisToDate(match_calendar_time.getTimeInMillis()),
+                        true,
+                        "Baseket",
+                        12,
+                        2,
+                        missingstuff
+                );
+
+                result_match.save();
 
                 finish();
             }
         });
     }
 
-    @Override
-    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-        TextView orario = findViewById(R.id.textTime);
-        orario.setText(""+hourOfDay+":"+minute);
+    private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePickerDialog datePicker, int year, int month, int day) {
+            match_calendar_time.set(Calendar.YEAR,year);
+            match_calendar_time.set(Calendar.MONTH,month);
+            match_calendar_time.set(Calendar.DAY_OF_MONTH,day);
 
-    }
-
-
-    @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        TextView data = findViewById(R.id.textDate);
-        String meseTestuale = new String();
-        switch(monthOfYear){
-            case 0 : meseTestuale="Gennaio";
-                break;
-            case 1 : meseTestuale="Febbraio";
-                break;
-            case 2 : meseTestuale="Marzo";
-                break;
-            case 3 : meseTestuale="Aprile";
-                break;
-            case 4 : meseTestuale="Maggio";
-                break;
-            case 5 : meseTestuale="Giugno";
-                break;
-            case 6 : meseTestuale="Luglio";
-                break;
-            case 7 : meseTestuale="Agosto";
-                break;
-            case 8 : meseTestuale="Settembra";
-                break;
-            case 9 : meseTestuale="Ottobre";
-                break;
-            case 10 : meseTestuale="Novembre";
-                break;
-            case 11 : meseTestuale="Dicembre";
-                break;
+            event_data_textview.setText(com.example.david.ermes.Presenter.utils.TimeUtils.fromMillistoYearMonthDay(match_calendar_time.getTimeInMillis()));
 
         }
+    };
 
-        data.setText(dayOfMonth+" "+meseTestuale+" "+year);
+    private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener(){
+        @Override
+        public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+            match_calendar_time.set(Calendar.HOUR_OF_DAY,hourOfDay);
+            match_calendar_time.set(Calendar.MINUTE,minute);
+            match_calendar_time.set(Calendar.SECOND,second);
 
-    }
+            String hour_minute = hourOfDay +":"+minute;
+            event_orario_textview.setText(hour_minute);
+        }
+    };
 }
