@@ -109,6 +109,7 @@ public class DatabaseManager {
                 // Models._User value = dataSnapshot.getValue(Models._User.class);
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     list.add(d.getValue(Models._Sport.class));
+                    ((Models._Sport) list.get(list.size() - 1)).setID(d.getKey());
                 }
                 fc.callback(list);
             }
