@@ -4,6 +4,7 @@ import com.example.david.ermes.Presenter.Location;
 import com.example.david.ermes.Presenter.Match;
 import com.example.david.ermes.Presenter.Sport;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,8 @@ public class Models {
         public String idFavSport;
         public String city;
 
-        public _User() {}
+        public _User() {
+        }
 
         public _User(String idFavSport, String city) {
             this.idFavSport = idFavSport;
@@ -35,7 +37,8 @@ public class Models {
         public int numGuests;
         public List<String> missingStuff;
 
-        public _Match() {}
+        public _Match() {
+        }
 
         public _Match(String idOwner, long date, Location location, boolean isPublic,
                       String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
@@ -66,15 +69,23 @@ public class Models {
     public static class _Sport {
         public String name;
         public int numPlayers;
+        private String id;
 
-        public _Sport() {}
+        public _Sport() {
+        }
 
         public _Sport(String name, int numPlayers) {
             this.name = name;
             this.numPlayers = numPlayers;
         }
 
-        public Sport convertToSport() { return new Sport(this.name, this.numPlayers); }
+        public Sport convertToSport() {
+            return new Sport(
+                    this.id,
+                    this.name,
+                    this.numPlayers
+            );
+        }
 
         public static List<Sport> convertToSportList(List<Models._Sport> list) {
             List<Sport> sports = new ArrayList<>();
@@ -82,6 +93,10 @@ public class Models {
                 sports.add(s.convertToSport());
             }
             return sports;
+        }
+
+        public void setID(String id) {
+            this.id = id;
         }
     }
 
@@ -91,7 +106,8 @@ public class Models {
         public double y;
         public String idUser;
 
-        public _Location() {}
+        public _Location() {
+        }
 
         public _Location(String location, double x, double y, String idUser) {
             this.idUser = idUser;

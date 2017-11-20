@@ -3,6 +3,7 @@ package com.example.david.ermes.View.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,12 +28,15 @@ public class CreateEventActivity extends AppCompatActivity {
 
     TextView event_orario_textview;
     TextView event_data_textview;
-    EditText location;
+    EditText location_edittext;
     Spinner sport_selector;
     Button fine_creazione;
     SpinnerAdapter adapter;
     Calendar match_calendar_time;
+
+    String selected_sport;
     Sport sport;
+    Location location;
 
 
     @Override
@@ -43,10 +47,12 @@ public class CreateEventActivity extends AppCompatActivity {
         event_orario_textview = findViewById(R.id.textTime);
         event_data_textview = findViewById(R.id.textDate);
 
-        location = findViewById(R.id.luogo);
+        location_edittext = findViewById(R.id.luogo);
         sport_selector = findViewById(R.id.sport_spinner);
         fine_creazione = findViewById(R.id.buttonfine);
         match_calendar_time = Calendar.getInstance();
+
+        sport = new Sport();
 
         event_data_textview.setOnClickListener(new View.OnClickListener() {
 
@@ -65,6 +71,8 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
+        sport_selector.setOnItemSelectedListener(new itemSelectedListener());
+
         final ArrayList<String> arraySpinner = new ArrayList<>();
         Sport.fetchAllSports(new FirebaseCallback() {
             @Override
@@ -74,18 +82,22 @@ public class CreateEventActivity extends AppCompatActivity {
                 }
                 adapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
                 sport_selector.setAdapter(adapter);
-                sport_selector.getSelectedItem();
+
+
+
             }
         });
 
         fine_creazione.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 User current_user = User.getCurrentUser();
 
-                Location location = new Location();
-                location.setName("Piazza centa");
-                location.setName(location.getName());
+                location = new Location("Piazza centa");
+
+                //sport = (Sport) sport_selector.getSelectedItem();
 
                 List<String> missingstuff = new ArrayList<>();
                 missingstuff.add("rete");
@@ -97,8 +109,10 @@ public class CreateEventActivity extends AppCompatActivity {
                         location,
                         com.example.david.ermes.Presenter.utils.TimeUtils.fromMillisToDate(match_calendar_time.getTimeInMillis()),
                         true,
-                        "Baseket",
-                        12,
+                        //sport.getName()
+                        selected_sport,
+                        //sport.getNumPlayers()
+                        10,
                         2,
                         missingstuff
                 );
@@ -108,6 +122,17 @@ public class CreateEventActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public class itemSelectedListener implements AdapterView.OnItemSelectedListener {
+
+        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+            selected_sport = parent.getItemAtPosition(pos).toString();
+        }
+
+        public void onNothingSelected(AdapterView parent) {
+            // Do nothing.
+        }
     }
 
     private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {

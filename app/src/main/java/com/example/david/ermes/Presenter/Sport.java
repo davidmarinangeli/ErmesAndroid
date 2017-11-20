@@ -13,14 +13,14 @@ import java.util.List;
 public class Sport {
     private String name;
     private int numPlayers;
+    private String id;
 
-    private DatabaseManager db;
+    public Sport() {}
 
-    public Sport(String name, int numPlayers) {
+    public Sport(String id, String name, int numPlayers) {
         this.name = name;
         this.numPlayers = numPlayers;
-
-        this.db = new DatabaseManager();
+        this.id = id;
     }
 
     public String getName() {
@@ -29,6 +29,10 @@ public class Sport {
 
     public int getNumPlayers() {
         return this.numPlayers;
+    }
+
+    public String getID() {
+        return this.id;
     }
 
     public static void fetchAllSports(final FirebaseCallback fCallback) {

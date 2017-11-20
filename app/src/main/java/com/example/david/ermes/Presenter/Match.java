@@ -34,7 +34,7 @@ public class Match implements Serializable {
 
     private DatabaseManager db;
 
-    public Match() {}
+    public Match() { this.db = new DatabaseManager(); }
 
     public Match(String idOwner, Location location, Date date, boolean isPublic,
                  String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
@@ -70,6 +70,70 @@ public class Match implements Serializable {
 
     public void setIdOwner(String idOwner) {
         this.idOwner = idOwner;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public String getIdSport() {
+        return idSport;
+    }
+
+    public void setIdSport(String idSport) {
+        this.idSport = idSport;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
+    }
+
+    public List<User> getPending() {
+        return pending;
+    }
+
+    public void setPending(List<User> pending) {
+        this.pending = pending;
+    }
+
+    public List<User> getPartecipants() {
+        return partecipants;
+    }
+
+    public void setPartecipants(List<User> partecipants) {
+        this.partecipants = partecipants;
+    }
+
+    public int getNumGuests() {
+        return numGuests;
+    }
+
+    public void setNumGuests(int numGuests) {
+        this.numGuests = numGuests;
+    }
+
+    public List<String> getMissingStuff() {
+        return missingStuff;
+    }
+
+    public void setMissingStuff(List<String> missingStuff) {
+        this.missingStuff = missingStuff;
     }
 
     public static void fetchMatchesByIdOwner(String id, final FirebaseCallback fCallback) {
