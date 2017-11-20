@@ -51,7 +51,13 @@ public class Match implements Serializable {
     }
 
     public void save() {
-        Models._Match m = new Models._Match(this.idOwner, this.date.getTime(), this.location, this.isPublic,
+        Models._Location l = new Models._Location(this.location.getName(),
+                this.location.getLatitude(),
+                this.location.getLongitude(),
+                this.location.getLocation_creator().getUID()
+        );
+
+        Models._Match m = new Models._Match(this.idOwner, this.date.getTime(), l, this.isPublic,
                 this.idSport, this.maxPlayers, this.numGuests, this.missingStuff);
         this.db.saveMatch(m);
     }

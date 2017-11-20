@@ -99,6 +99,23 @@ public class DatabaseManager {
         }
     }
 
+    public void fetchUserById(String id, final FirebaseCallback fc) {
+        final List<Models._User> list = new ArrayList<>();
+        Query getUser = this.usersRef.equalTo(id);
+        getUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                list.add(dataSnapshot.getValue(Models._User.class));
+                fc.callback(list);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void fetchAllSports(final FirebaseCallback fc) {
         final List<Models._Sport> list = new ArrayList<>();
         this.sportsRef.addValueEventListener(new ValueEventListener() {

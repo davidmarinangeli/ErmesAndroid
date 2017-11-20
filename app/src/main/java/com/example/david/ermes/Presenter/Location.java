@@ -19,6 +19,13 @@ public class Location implements Serializable{
         this.name = name;
     }
 
+    public Location(String name, Long lat, Long lon, User creator) {
+        this.name = name;
+        this.latitude = lat;
+        this.longitude = lon;
+        this.location_creator = creator;
+    }
+
     public User getLocation_creator() {
         return location_creator;
     }

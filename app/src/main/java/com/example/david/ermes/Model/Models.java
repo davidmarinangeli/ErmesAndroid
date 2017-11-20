@@ -29,7 +29,7 @@ public class Models {
 
     public static class _Match {
         public long date;
-        public Location location;
+        public _Location location;
         public String idOwner;
         public boolean isPublic;
         public String idSport;
@@ -40,7 +40,7 @@ public class Models {
         public _Match() {
         }
 
-        public _Match(String idOwner, long date, Location location, boolean isPublic,
+        public _Match(String idOwner, long date, _Location location, boolean isPublic,
                       String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
             this.date = date;
             this.location = location;
@@ -53,7 +53,8 @@ public class Models {
         }
 
         public Match convertToMatch() {
-            return new Match(this.idOwner, this.location, TimeUtils.fromMillisToDate(this.date), this.isPublic,
+            System.out.println(this.location);
+            return new Match(this.idOwner, this.location.convertToLocation(), TimeUtils.fromMillisToDate(this.date), this.isPublic,
                     this.idSport, this.maxPlayers, this.numGuests, this.missingStuff);
         }
 
@@ -102,18 +103,23 @@ public class Models {
 
     public static class _Location {
         public String location;
-        public double x;
-        public double y;
+        public Long x;
+        public Long y;
         public String idUser;
 
         public _Location() {
         }
 
-        public _Location(String location, double x, double y, String idUser) {
+        public _Location(String location, Long x, Long y, String idUser) {
             this.idUser = idUser;
             this.x = x;
             this.y = y;
             this.location = location;
+        }
+
+        public Location convertToLocation() {
+            return new Location(
+            );
         }
     }
 }
