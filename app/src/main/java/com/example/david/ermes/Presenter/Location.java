@@ -1,14 +1,23 @@
 package com.example.david.ermes.Presenter;
 
+import java.io.Serializable;
+
 /**
  * Created by david on 11/14/2017.
  */
 
-public class Location {
+public class Location implements Serializable{
     private User location_creator;
     private Long latitude;
     private Long longitude;
     private String name;
+
+    public Location() {
+    }
+
+    public Location(String name){
+        this.name = name;
+    }
 
     public User getLocation_creator() {
         return location_creator;

@@ -24,7 +24,6 @@ public class TimeUtils {
 
 
     public static Date fromMillisToDate(long millis) {
-
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("GMT+2"));
         cal.setTimeInMillis(millis);
@@ -33,6 +32,14 @@ public class TimeUtils {
         date.setTime(cal.getTimeInMillis());
 
         return date;
+    }
+
+    public static String fromMillistoYearMonthDay(long millis){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT+2"));
+        cal.setTimeInMillis(millis);
+
+        return new SimpleDateFormat("dd MMMM yyyy",Locale.ITALY).format(millis);
     }
 
     public static String fromNumericMonthToString(int month){
