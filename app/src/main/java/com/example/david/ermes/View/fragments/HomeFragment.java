@@ -52,7 +52,6 @@ public class HomeFragment extends Fragment {
         } else {
             adapter = new MainAdapter(getContext());
             initRecycler(view);
-            adapter.addElement(match);
         }
     }
 

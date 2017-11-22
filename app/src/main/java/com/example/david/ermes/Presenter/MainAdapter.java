@@ -22,7 +22,7 @@ import java.util.List;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
 
-    public List<Match> matchList = new ArrayList<>();
+    public List<Match> matchList = null;
     private Context context;
 
 
@@ -46,7 +46,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     public void initList() {
 
         User user = User.getCurrentUser();
-        if (user != null) {
+        if ((user != null) && (matchList == null)) {
             Match.fetchMatchesByIdOwner(User.getCurrentUser().getUID(), new FirebaseCallback() {
                 @Override
                 public void callback(List list) {
@@ -56,12 +56,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
                     }
                 }
             });
+        } else {
         }
     }
 
     public void addElement(Match x) {
         this.matchList.add(x);
-        notifyDataSetChanged();
+
     }
 
     @Override

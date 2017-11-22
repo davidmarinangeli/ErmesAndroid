@@ -11,6 +11,7 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -23,22 +24,30 @@ public class MainAdapterViewHolder {
 
     public static void viewHolderConstructor(View itemView,TextView date_of_event, ImageView sport_icon, TextView place){    }
 
-    public static void bindElements(List<Match> matchList, int position, View itemView, TextView date_of_event, TextView hour_of_event, ImageView sport_icon, TextView place){
-/*
-        long date = matchList.get(position).getDate();
-        int sport_id = matchList.get(position).getImageID();
-        String where = matchList.get(position).getLocation();
+    public static void bindElements(List<Match> matchList,
+                                    int position,
+                                    View itemView,
+                                    TextView date_of_event,
+                                    TextView hour_of_event,
+                                    ImageView sport_icon,
+                                    TextView place){
+
+        Date date = matchList.get(position).getDate();
+        //int sport_id = itemView
+        String where = matchList.get(position).getLocation().getName();
 
         Context cx = itemView.getContext();
 
         Calendar c = Calendar.getInstance();
-        c.setTime(TimeUtils.fromMillisToDate(date));
-        date_of_event.setText(c.get(Calendar.DAY_OF_MONTH) +" "+ TimeUtils.fromNumericMonthToString(c.get(Calendar.MONTH)) );
+        c.setTimeInMillis(date.getTime());
+
+        c.setTime(TimeUtils.fromMillisToDate(c.getTimeInMillis()));
+        date_of_event.setText(c.get(Calendar.DAY_OF_MONTH) +" "+ TimeUtils.fromNumericMonthToString(c.get(Calendar.MONTH)));
 
         hour_of_event.setText(TimeUtils.getFormattedHourMinute(c));
 
         place.setText(where);
-        Picasso.with(cx).load(sport_id).memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
-        */
+        //Picasso.with(cx).load(sport_id).memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
+
     }
 }
