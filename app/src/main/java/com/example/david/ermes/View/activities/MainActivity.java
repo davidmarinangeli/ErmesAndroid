@@ -1,13 +1,11 @@
 package com.example.david.ermes.View.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,13 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.example.david.ermes.Presenter.Match;
-import com.example.david.ermes.Presenter.ViewPagerAdapter;
+import com.example.david.ermes.View.ViewPagerAdapter;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.customviews.CoolViewPager;
 import com.example.david.ermes.View.fragments.AccountFragment;

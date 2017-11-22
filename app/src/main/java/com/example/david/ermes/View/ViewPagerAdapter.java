@@ -1,4 +1,4 @@
-package com.example.david.ermes.Presenter;
+package com.example.david.ermes.View;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

@@ -117,6 +117,29 @@ public class DatabaseManager {
         });
     }
 
+    public void fetchUsersById(final List<String> idList, final FirebaseCallback fc) {
+        final List<Models._User> list = new ArrayList<>();
+        Query getUsers = this.usersRef.orderByKey();
+        getUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    if (idList.contains(d.getKey().toString())) {
+                        Models._User user = d.getValue(Models._User.class);
+                        user.setUID(d.getKey());
+                        list.add(user);
+                    }
+                }
+                fc.callback(list);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void fetchAllSports(final FirebaseCallback fc) {
         final List<Models._Sport> list = new ArrayList<>();
         this.sportsRef.addValueEventListener(new ValueEventListener() {
@@ -143,7 +166,8 @@ public class DatabaseManager {
     public void fetchMatches(String param, String value, final FirebaseCallback fc) {
 
         Query queryRef = this.matchesRef.orderByChild(param).equalTo(value);
-        final List<Models._Match> list = new ArrayList<>();
+        final List<Models._Match> matches_list = new ArrayList<>();
+        final List<String> locations_creators = new ArrayList<>();
 
         queryRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -151,12 +175,31 @@ public class DatabaseManager {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 // Models._User value = dataSnapshot.getValue(Models._User.class);
-                list.clear();
+                matches_list.clear();
                 for (DataSnapshot d: dataSnapshot.getChildren()) {
+                    Models._Match match = d.getValue(Models._Match.class);
+                    matches_list.add(match);
 
-                    list.add(d.getValue(Models._Match.class));
+                    if (!locations_creators.contains(match.location.idUserCreator)) {
+                        locations_creators.add(match.location.idUserCreator);
+                    }
                 }
-                fc.callback(list);
+                fc.callback(matches_list);
+
+                fetchUsersById(locations_creators, new FirebaseCallback() {
+                    @Override
+                    public void callback(List list) {
+                        for (Models._Match match : matches_list) {
+                            if (locations_creators.contains(match.location.idUserCreator)) {
+                                for (Models._User user : (List<Models._User>) list) {
+                                    if (match.location.idUserCreator == user.getUID()) {
+                                        match.location.setUserCreator(user);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
             }
 
             @Override
