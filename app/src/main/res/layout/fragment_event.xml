@@ -30,7 +30,7 @@
         app:layout_constraintTop_toBottomOf="@id/event_toolbar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/basket2"
+        app:srcCompat="@drawable/basketball_field"
         />
 
 
@@ -42,11 +42,17 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
-        card_view:cardCornerRadius="2dp"
-        card_view:cardElevation="2dp"
+
         card_view:layout_constraintTop_toBottomOf="@+id/imageViewFavSport"
         card_view:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="567dp">
+        tools:layout_editor_absoluteY="567dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:clickable="true"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="2dp">
 
 
         <android.support.constraint.ConstraintLayout
@@ -100,83 +106,223 @@
         card_view:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="567dp">
 
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-
-        </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
-        android:id="@+id/eventDetailCard"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/eventDetailCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="2dp"
-        card_view:layout_constraintTop_toBottomOf="@+id/profileCard"
         card_view:layout_constraintEnd_toEndOf="parent"
         card_view:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="567dp">
+        card_view:layout_constraintTop_toTopOf="@+id/playerCard">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/sport_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
                 android:textSize="36sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
-                tools:text="Basket"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteY="8dp"
+                tools:text="Basket" />
 
             <TextView
                 android:id="@+id/where_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                tools:text="Parco delle albere"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/when_text_calendar"
                 android:layout_marginLeft="0dp"
-                app:layout_constraintLeft_toLeftOf="@+id/when_text_calendar" />
+                android:layout_marginTop="8dp"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="@+id/when_text_calendar"
+                app:layout_constraintTop_toBottomOf="@+id/when_text_calendar"
+                tools:text="Parco delle albere" />
 
             <TextView
                 android:id="@+id/when_text_calendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="8dp"
                 android:text="Martedì 18 Giugno"
                 android:textSize="18sp"
-                android:layout_marginLeft="0dp"
                 app:layout_constraintLeft_toLeftOf="@+id/sport_name"
-                android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@+id/sport_name" />
 
             <TextView
                 android:id="@+id/when_hour_text_hour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
                 android:layout_marginLeft="8dp"
+                android:layout_marginTop="0dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintLeft_toRightOf="@+id/when_text_calendar"
-                tools:text="18:00"
                 app:layout_constraintBottom_toBottomOf="@+id/when_text_calendar"
-                android:layout_marginBottom="0dp"
+                app:layout_constraintLeft_toRightOf="@+id/when_text_calendar"
                 app:layout_constraintTop_toTopOf="@+id/when_text_calendar"
-                android:layout_marginTop="0dp" />
+                tools:text="18:00" />
 
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.CardView>
 
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/eventUsersCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="2dp"
+        card_view:layout_constraintEnd_toEndOf="parent"
+        card_view:layout_constraintHorizontal_bias="0.0"
+        card_view:layout_constraintStart_toStartOf="parent"
+        card_view:layout_constraintTop_toBottomOf="@+id/eventDetailCard">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/invitedNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                card_view:layout_constraintBottom_toTopOf="@+id/invited"
+                card_view:layout_constraintEnd_toEndOf="@+id/invited"
+                card_view:layout_constraintStart_toStartOf="@+id/invited"
+                card_view:layout_constraintTop_toTopOf="parent"
+                tools:text="8" />
+
+            <TextView
+                android:id="@+id/invited"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="24dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent"
+                tools:text="invitati" />
+
+
+            <TextView
+                android:id="@+id/partecipantNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                card_view:layout_constraintBottom_toTopOf="@+id/partecipant"
+                card_view:layout_constraintEnd_toEndOf="@+id/partecipant"
+                card_view:layout_constraintStart_toStartOf="@+id/partecipant"
+                card_view:layout_constraintTop_toTopOf="parent"
+                tools:text="4" />
+
+            <TextView
+                android:id="@+id/partecipant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="48dp"
+                android:layout_marginStart="8dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toStartOf="@+id/openSlot"
+                card_view:layout_constraintHorizontal_bias="0.82"
+                card_view:layout_constraintStart_toEndOf="@+id/invited"
+                tools:text="Partecipanti" />
+
+            <TextView
+                android:id="@+id/openSlotNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                card_view:layout_constraintBottom_toTopOf="@+id/openSlot"
+                card_view:layout_constraintEnd_toEndOf="@+id/openSlot"
+                card_view:layout_constraintStart_toStartOf="@+id/openSlot"
+                card_view:layout_constraintTop_toTopOf="parent"
+                tools:text="10" />
+
+            <TextView
+                android:id="@+id/openSlot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                tools:text="Posti liberi" />
+
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:id="@+id/buttonPartecipa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Partecipa"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonInvita"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Invita"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonConcludiEvento"
+        app:layout_constraintStart_toEndOf="@+id/buttonPartecipa" />
+
+    <Button
+        android:id="@+id/buttonConcludiEvento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Concludi"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>
