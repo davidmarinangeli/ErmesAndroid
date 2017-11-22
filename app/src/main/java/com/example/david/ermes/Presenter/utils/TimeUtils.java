@@ -44,8 +44,12 @@ public class TimeUtils {
 
     public static String fromNumericMonthToString(int month){
 
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH,month);
+        date.setTime(cal.getTimeInMillis());
         // trasformo il mese numerico in parola e inserisco la prima lettera in maiuscolo
-        String start = new SimpleDateFormat("MMMM", Locale.ITALY).format(month);
+        String start = new SimpleDateFormat("MMMM", Locale.ITALY).format(date);
         return start.substring(0, 1).toUpperCase() + start.substring(1);
     }
 

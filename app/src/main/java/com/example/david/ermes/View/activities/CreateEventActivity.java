@@ -1,5 +1,7 @@
 package com.example.david.ermes.View.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -118,6 +120,13 @@ public class CreateEventActivity extends AppCompatActivity {
                 );
 
                 result_match.save();
+
+                Intent result_intent = new Intent(v.getContext(),MainActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("new_event",result_match);
+                result_intent.putExtras(bundle);
+                setResult(Activity.RESULT_OK,result_intent);
 
                 finish();
             }
