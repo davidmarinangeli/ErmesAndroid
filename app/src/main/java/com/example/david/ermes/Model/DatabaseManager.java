@@ -183,6 +183,7 @@ public class DatabaseManager {
                         locations_creators.add(match.location.idUserCreator);
                     }
                 }
+                fc.callback(matches_list);
 
                 fetchUsersById(locations_creators, new FirebaseCallback() {
                     @Override
@@ -196,7 +197,6 @@ public class DatabaseManager {
                                 }
                             }
                         }
-                        fc.callback(matches_list);
                     }
                 });
             }

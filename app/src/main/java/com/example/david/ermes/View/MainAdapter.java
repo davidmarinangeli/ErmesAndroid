@@ -1,4 +1,4 @@
-package com.example.david.ermes.Presenter;
+package com.example.david.ermes.View;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.david.ermes.Presenter.FirebaseCallback;
+import com.example.david.ermes.Presenter.Match;
+import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.EventActivity;
 
@@ -22,7 +25,7 @@ import java.util.List;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
 
-    public List<Match> matchList = null;
+    public List<Match> matchList = new ArrayList<>();
     private Context context;
 
 
@@ -51,9 +54,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
                 @Override
                 public void callback(List list) {
                     matchList = list;
-                    if (!list.isEmpty()) {
-                        notifyDataSetChanged();
-                    }
+                    notifyDataSetChanged();
+
+                    // lo aggiungo nel db, quello va a chiamare intermente un ondatachange
+
                 }
             });
         }
@@ -61,10 +65,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
     @Override
     public int getItemCount() {
-        if (matchList != null)
-            return matchList.size();
-        else
-            return 0;
+        return matchList.size();
     }
 
     public class MainViewHolder extends RecyclerView.ViewHolder {

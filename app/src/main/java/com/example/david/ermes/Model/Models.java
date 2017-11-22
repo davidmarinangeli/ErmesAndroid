@@ -149,11 +149,16 @@ public class Models {
         }
 
         public Location convertToLocation() {
+            User user = null;
+            if (this.userCreator != null) {
+                user = this.userCreator.convertToUser();
+            }
+
             return new Location(
                     this.location,
                     this.x,
                     this.y,
-                    this.userCreator.convertToUser()
+                    user
             );
         }
 
