@@ -1,8 +1,10 @@
 package com.example.david.ermes.Model;
 
+import com.example.david.ermes.Presenter.FirebaseCallback;
 import com.example.david.ermes.Presenter.Location;
 import com.example.david.ermes.Presenter.Match;
 import com.example.david.ermes.Presenter.Sport;
+import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 
 import java.util.ArrayList;
@@ -17,14 +19,38 @@ public class Models {
     public static class _User {
         public String idFavSport;
         public String city;
+        private String name;
+        private String email;
+        private String UID;
 
         public _User() {
+            this.name = "";
+            this.email = "";
+            this.UID = "";
         }
 
         public _User(String idFavSport, String city) {
             this.idFavSport = idFavSport;
             this.city = city;
         }
+
+        public User convertToUser() {
+            return new User(this.name, this.email, this.UID, this.city, this.idFavSport);
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public void setUID(String UID) {
+            this.UID = UID;
+        }
+
+        public String getUID() {return this.UID;}
     }
 
     public static class _Match {
@@ -73,11 +99,13 @@ public class Models {
         private String id;
 
         public _Sport() {
+            this.id = "";
         }
 
         public _Sport(String name, int numPlayers) {
             this.name = name;
             this.numPlayers = numPlayers;
+            this.id = "";
         }
 
         public Sport convertToSport() {
@@ -105,21 +133,32 @@ public class Models {
         public String location;
         public Long x;
         public Long y;
-        public String idUser;
+        public String idUserCreator;
+        private _User userCreator;
 
         public _Location() {
+            this.userCreator = null;
         }
 
         public _Location(String location, Long x, Long y, String idUser) {
-            this.idUser = idUser;
+            this.idUserCreator = idUser;
             this.x = x;
             this.y = y;
             this.location = location;
+            this.userCreator = null;
         }
 
         public Location convertToLocation() {
             return new Location(
+                    this.location,
+                    this.x,
+                    this.y,
+                    this.userCreator.convertToUser()
             );
+        }
+
+        public void setUserCreator(_User user) {
+            this.userCreator = user;
         }
     }
 }
