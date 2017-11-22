@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.Presenter.Match;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;

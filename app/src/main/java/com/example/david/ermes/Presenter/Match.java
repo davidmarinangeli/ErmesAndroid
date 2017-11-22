@@ -2,6 +2,8 @@ package com.example.david.ermes.Presenter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.example.david.ermes.Model.DatabaseManager;
@@ -20,7 +22,7 @@ import java.util.ListIterator;
  * Classe Match per creare una struttura per gli eventi sportivi
  */
 
-public class Match implements Serializable {
+public class Match implements Serializable, Parcelable {
     private Location location;
     private Date date;
     private String idOwner;
@@ -49,6 +51,27 @@ public class Match implements Serializable {
 
         this.db = new DatabaseManager();
     }
+
+    protected Match(Parcel in) {
+        idOwner = in.readString();
+        isPublic = in.readByte() != 0;
+        idSport = in.readString();
+        maxPlayers = in.readInt();
+        numGuests = in.readInt();
+        missingStuff = in.createStringArrayList();
+    }
+
+    public static final Creator<Match> CREATOR = new Creator<Match>() {
+        @Override
+        public Match createFromParcel(Parcel in) {
+            return new Match(in);
+        }
+
+        @Override
+        public Match[] newArray(int size) {
+            return new Match[size];
+        }
+    };
 
     public void save() {
         Models._Location l = new Models._Location(this.location.getName(),
@@ -160,4 +183,18 @@ public class Match implements Serializable {
         });
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(idOwner);
+        parcel.writeByte((byte) (isPublic ? 1 : 0));
+        parcel.writeString(idSport);
+        parcel.writeInt(maxPlayers);
+        parcel.writeInt(numGuests);
+        parcel.writeStringList(missingStuff);
+    }
 }

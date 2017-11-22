@@ -35,7 +35,7 @@ public class EventFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        match = (Match) args.getSerializable("event");
+        match = args.getParcelable("event");
     }
 
     @Override
@@ -58,7 +58,7 @@ public class EventFragment extends Fragment {
 
         //sportname.setText(match.getSport());
         Calendar c = Calendar.getInstance();
-        //c.setTime(TimeUtils.fromMillisToDate(match.getDate()));
+        //c.setTime(match.getDate());
 
         // lo so che pare un macello sta stringa, giuro che correggerò le API
         dateofevent.setText(c.get(Calendar.DAY_OF_MONTH) +" "+ TimeUtils.fromNumericMonthToString(c.get(Calendar.MONTH)) );

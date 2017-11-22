@@ -22,7 +22,7 @@ public class EventActivity extends AppCompatActivity {
         // passo gli extra presi
         EventFragment eventFragment = new EventFragment();
         Bundle args = new Bundle();
-        args.putSerializable("event",getIntent().getExtras().getSerializable("event"));
+        args.putParcelable("event",getIntent().getExtras().getParcelable("event"));
         eventFragment.setArguments(args);
 
         if (savedInstanceState == null) {

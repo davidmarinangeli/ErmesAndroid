@@ -46,7 +46,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     public void initList() {
 
         User user = User.getCurrentUser();
-        if ((user != null) && (matchList == null)) {
+        if ((user != null)) {
             Match.fetchMatchesByIdOwner(User.getCurrentUser().getUID(), new FirebaseCallback() {
                 @Override
                 public void callback(List list) {
@@ -56,18 +56,15 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
                     }
                 }
             });
-        } else {
         }
-    }
-
-    public void addElement(Match x) {
-        this.matchList.add(x);
-
     }
 
     @Override
     public int getItemCount() {
-        return matchList.size();
+        if (matchList != null)
+            return matchList.size();
+        else
+            return 0;
     }
 
     public class MainViewHolder extends RecyclerView.ViewHolder {
@@ -96,7 +93,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
                     Intent i = new Intent(context, EventActivity.class);
 
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("event", matchList.get(getAdapterPosition()));
+                    bundle.putParcelable("event", matchList.get(getAdapterPosition()));
                     i.putExtras(bundle);
                     context.startActivity(i);
 
