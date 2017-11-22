@@ -151,7 +151,9 @@ public class DatabaseManager {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 // Models._User value = dataSnapshot.getValue(Models._User.class);
+                list.clear();
                 for (DataSnapshot d: dataSnapshot.getChildren()) {
+
                     list.add(d.getValue(Models._Match.class));
                 }
                 fc.callback(list);
