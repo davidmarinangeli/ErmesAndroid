@@ -177,15 +177,6 @@ public class Match implements Serializable, Parcelable {
         });
     }
 
-    public static void fetchMatchesByDate(Date date, final FirebaseCallback fCallback) {
-        (new DatabaseManager()).fetchMatches("date", date.toString(), new FirebaseCallback() {
-            @Override
-            public void callback(List list) {
-                fCallback.callback(Models._Match.convertToMatchList(list));
-            }
-        });
-    }
-
     @Override
     public int describeContents() {
         return 0;

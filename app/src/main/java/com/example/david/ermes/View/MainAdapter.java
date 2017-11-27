@@ -53,7 +53,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             Match.fetchMatchesByIdOwner(User.getCurrentUser().getUID(), new FirebaseCallback() {
                 @Override
                 public void callback(List list) {
-                    matchList = list;
+                    if (list != null) {
+                        matchList = list;
+                    }
                     notifyDataSetChanged();
 
                     // lo aggiungo nel db, quello va a chiamare intermente un ondatachange
@@ -65,7 +67,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
     @Override
     public int getItemCount() {
-        return matchList.size();
+        if (matchList != null) {
+            return matchList.size();
+        } else {
+            return 0;
+        }
     }
 
     public class MainViewHolder extends RecyclerView.ViewHolder {

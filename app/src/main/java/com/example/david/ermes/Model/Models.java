@@ -131,8 +131,8 @@ public class Models {
 
     public static class _Location {
         public String location;
-        public Long x;
-        public Long y;
+        public double x;
+        public double y;
         public String idUserCreator;
         private _User userCreator;
 
@@ -140,7 +140,7 @@ public class Models {
             this.userCreator = null;
         }
 
-        public _Location(String location, Long x, Long y, String idUser) {
+        public _Location(String location, double x, double y, String idUser) {
             this.idUserCreator = idUser;
             this.x = x;
             this.y = y;
