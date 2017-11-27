@@ -31,7 +31,7 @@ import com.example.david.ermes.Presenter.FirebaseCallback;
 
 public class DatabaseManager {
 
-    private DatabaseReference usersRef, matchesRef, sportsRef;
+    private DatabaseReference usersRef, matchesRef, sportsRef, locationsRef;
 
     public DatabaseManager() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -71,6 +71,7 @@ public class DatabaseManager {
         });
 
         this.sportsRef = database.getReference("sports");
+        this.locationsRef = database.getReference("locations");
     }
 
     public User getCurrentUser() {
@@ -97,6 +98,12 @@ public class DatabaseManager {
     public void saveMatch(Models._Match match) {
         if (match != null) {
             this.matchesRef.push().setValue(match);
+        }
+    }
+
+    public void saveLocation(Models._Location location) {
+        if (location != null) {
+            this.locationsRef.push().setValue(location);
         }
     }
 
@@ -164,8 +171,14 @@ public class DatabaseManager {
     }
 
     public void fetchMatches(String param, String value, final FirebaseCallback fc) {
+        Query queryRef = null;
 
-        Query queryRef = this.matchesRef.orderByChild(param).equalTo(value);
+        if (param == null) {
+            queryRef = this.matchesRef.orderByKey();
+        } else {
+            queryRef = this.matchesRef.orderByChild(param).equalTo(value);
+        }
+
         final List<Models._Match> matches_list = new ArrayList<>();
         final List<String> locations_creators = new ArrayList<>();
 

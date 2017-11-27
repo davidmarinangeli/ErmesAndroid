@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 
 import com.example.david.ermes.Model.DatabaseManager;
@@ -170,6 +171,15 @@ public class Match implements Serializable, Parcelable {
 
     public static void fetchMatchesByIdOwner(String id, final FirebaseCallback fCallback) {
         (new DatabaseManager()).fetchMatches("idOwner", id, new FirebaseCallback() {
+            @Override
+            public void callback(List list) {
+                fCallback.callback(Models._Match.convertToMatchList(list));
+            }
+        });
+    }
+
+    public static void fetchAllMatches(final FirebaseCallback fCallback) {
+        (new DatabaseManager()).fetchMatches(null, null, new FirebaseCallback() {
             @Override
             public void callback(List list) {
                 fCallback.callback(Models._Match.convertToMatchList(list));
