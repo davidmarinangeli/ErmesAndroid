@@ -42,12 +42,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Enrico"
+                tools:text="Enrico"
                 android:textSize="18sp"
                 app:layout_constraintLeft_toLeftOf="@+id/username"
                 app:layout_constraintTop_toBottomOf="@+id/username"
-                card_view:layout_constraintLeft_toLeftOf="@+id/username"
-                card_view:layout_constraintTop_toBottomOf="@+id/username" />
+                 />
 
             <TextView
                 android:id="@+id/surname"
@@ -61,9 +60,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/name"
                 app:layout_constraintTop_toTopOf="@+id/name"
                 tools:text="Marcantoni"
-                card_view:layout_constraintBottom_toBottomOf="@+id/name"
-                card_view:layout_constraintLeft_toRightOf="@+id/name"
-                card_view:layout_constraintTop_toTopOf="@+id/name" />
+                 />
 
             <TextView
                 android:id="@+id/favSport"
@@ -75,8 +72,7 @@
                 app:layout_constraintLeft_toLeftOf="@+id/name"
                 app:layout_constraintTop_toBottomOf="@+id/name"
                 tools:text="Softei"
-                card_view:layout_constraintLeft_toLeftOf="@+id/name"
-                card_view:layout_constraintTop_toBottomOf="@+id/name" />
+                 />
 
 
 
@@ -122,8 +118,7 @@
                 android:textSize="18sp"
                 app:layout_constraintLeft_toLeftOf="@+id/city"
                 app:layout_constraintTop_toBottomOf="@+id/city"
-                card_view:layout_constraintLeft_toLeftOf="@+id/city"
-                card_view:layout_constraintTop_toBottomOf="@+id/city" />
+                 />
 
 
         </android.support.constraint.ConstraintLayout>

@@ -131,7 +131,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/username"
+                android:id="@+id/when_text_calendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -143,17 +143,15 @@
                 tools:text="Basket" />
 
             <TextView
-                android:id="@+id/favSport"
+                android:id="@+id/sport_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
                 android:layout_marginTop="8dp"
                 android:textSize="18sp"
                 app:layout_constraintLeft_toLeftOf="@+id/when_text_calendar"
                 app:layout_constraintTop_toBottomOf="@+id/when_text_calendar"
                 tools:text="Parco delle albere"
-                card_view:layout_constraintLeft_toLeftOf="@+id/name"
-                card_view:layout_constraintTop_toBottomOf="@+id/name" />
+                 />
 
             <TextView
                 android:id="@+id/name"
@@ -164,11 +162,10 @@
                 android:textSize="18sp"
                 app:layout_constraintLeft_toLeftOf="@+id/sport_name"
                 app:layout_constraintTop_toBottomOf="@+id/sport_name"
-                card_view:layout_constraintLeft_toLeftOf="@+id/username"
-                card_view:layout_constraintTop_toBottomOf="@+id/username" />
+                />
 
             <TextView
-                android:id="@+id/surname"
+                android:id="@+id/when_hour_text_hour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="0dp"
@@ -180,9 +177,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/when_text_calendar"
                 app:layout_constraintTop_toTopOf="@+id/when_text_calendar"
                 tools:text="18:00"
-                card_view:layout_constraintBottom_toBottomOf="@+id/name"
-                card_view:layout_constraintLeft_toRightOf="@+id/name"
-                card_view:layout_constraintTop_toTopOf="@+id/name" />
+                 />
 
         </android.support.constraint.ConstraintLayout>
 
