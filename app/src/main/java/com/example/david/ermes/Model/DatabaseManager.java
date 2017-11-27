@@ -130,6 +130,7 @@ public class DatabaseManager {
         getUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                list.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     if (idList.contains(d.getKey().toString())) {
                         Models._User user = d.getValue(Models._User.class);
@@ -155,6 +156,7 @@ public class DatabaseManager {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 // Models._User value = dataSnapshot.getValue(Models._User.class);
+                list.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     list.add(d.getValue(Models._Sport.class));
                     ((Models._Sport) list.get(list.size() - 1)).setID(d.getKey());
@@ -198,21 +200,6 @@ public class DatabaseManager {
                     }
                 }
                 fc.callback(matches_list);
-
-                fetchUsersById(locations_creators, new FirebaseCallback() {
-                    @Override
-                    public void callback(List list) {
-                        for (Models._Match match : matches_list) {
-                            if (locations_creators.contains(match.location.idUserCreator)) {
-                                for (Models._User user : (List<Models._User>) list) {
-                                    if (match.location.idUserCreator == user.getUID()) {
-                                        match.location.setUserCreator(user);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
             }
 
             @Override

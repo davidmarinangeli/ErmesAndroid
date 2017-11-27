@@ -56,25 +56,27 @@ public class MapsFragment extends Fragment {
                 Match.fetchMatchesByIdOwner(User.getCurrentUser().getUID(), new FirebaseCallback() {
                     @Override
                     public void callback(List list) {
-                        match_list = list;
-                        for (Match match : match_list) {
-                            LatLng location_latlng = new LatLng(
-                                    match.getLocation().getLatitude(),
-                                    match.getLocation().getLongitude()
-                            );
+                        if (list != null && list.size() > 0) {
+                            match_list = list;
+                            for (Match match : match_list) {
+                                LatLng location_latlng = new LatLng(
+                                        match.getLocation().getLatitude(),
+                                        match.getLocation().getLongitude()
+                                );
 
-                            googleMap.addMarker(new MarkerOptions()
-                                    .position(location_latlng)
-                                    .title(match.getLocation().getName())
-                                    .snippet(match.getIdSport()));
+                                googleMap.addMarker(new MarkerOptions()
+                                        .position(location_latlng)
+                                        .title(match.getLocation().getName())
+                                        .snippet(match.getIdSport()));
+                            }
+                            LatLng randomlatlng = new LatLng(
+                                    match_list.get(0).getLocation().getLatitude(),
+                                    match_list.get(0).getLocation().getLongitude()
+                            );
+                            // For zooming automatically to the location of the marker
+                            CameraPosition cameraPosition = new CameraPosition.Builder().zoom(12).target(randomlatlng).build();
+                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         }
-                        LatLng randomlatlng = new LatLng(
-                                match_list.get(0).getLocation().getLatitude(),
-                                match_list.get(0).getLocation().getLongitude()
-                        );
-                        // For zooming automatically to the location of the marker
-                        CameraPosition cameraPosition = new CameraPosition.Builder().zoom(12).target(randomlatlng).build();
-                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                     }
                 });
 
