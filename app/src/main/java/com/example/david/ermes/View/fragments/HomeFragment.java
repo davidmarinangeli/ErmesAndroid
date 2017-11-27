@@ -4,6 +4,7 @@ package com.example.david.ermes.View.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +60,7 @@ public class HomeFragment extends Fragment {
         //inizializzo l'adapter e indirizzo tutti gli elementi
         adapter = new MainAdapter(getContext());
         recyclerView = rootView.findViewById(R.id.main_contenitore);
-        recyclerView.setLayoutManager(new VegaLayoutManager());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);
         adapter.initList();

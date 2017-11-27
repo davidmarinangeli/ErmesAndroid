@@ -1,5 +1,8 @@
 package com.example.david.ermes.Presenter;
 
+import com.example.david.ermes.Model.DatabaseManager;
+import com.example.david.ermes.Model.Models;
+
 import java.io.Serializable;
 
 /**
@@ -12,11 +15,15 @@ public class Location implements Serializable{
     private double longitude;
     private String name;
 
+    private DatabaseManager db;
+
     public Location() {
+        this.db = new DatabaseManager();
     }
 
     public Location(String name){
         this.name = name;
+        this.db = new DatabaseManager();
     }
 
     public Location(String name, double lat, double lon, User creator) {
@@ -24,6 +31,7 @@ public class Location implements Serializable{
         this.latitude = lat;
         this.longitude = lon;
         this.location_creator = creator;
+        this.db = new DatabaseManager();
     }
 
     public User getLocation_creator() {
@@ -56,5 +64,16 @@ public class Location implements Serializable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void save() {
+        Models._Location location = new Models._Location(
+                this.name,
+                this.latitude,
+                this.longitude,
+                this.location_creator.getUID()
+        );
+
+        this.db.saveLocation(location);
     }
 }

@@ -31,7 +31,7 @@ import com.example.david.ermes.Presenter.FirebaseCallback;
 
 public class DatabaseManager {
 
-    private DatabaseReference usersRef, matchesRef, sportsRef;
+    private DatabaseReference usersRef, matchesRef, sportsRef, locationsRef;
 
     public DatabaseManager() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -71,6 +71,7 @@ public class DatabaseManager {
         });
 
         this.sportsRef = database.getReference("sports");
+        this.locationsRef = database.getReference("locations");
     }
 
     public User getCurrentUser() {
@@ -100,6 +101,12 @@ public class DatabaseManager {
         }
     }
 
+    public void saveLocation(Models._Location location) {
+        if (location != null) {
+            this.locationsRef.push().setValue(location);
+        }
+    }
+
     public void fetchUserById(String id, final FirebaseCallback fc) {
         final List<Models._User> list = new ArrayList<>();
         Query getUser = this.usersRef.equalTo(id);
@@ -123,6 +130,7 @@ public class DatabaseManager {
         getUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                list.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     if (idList.contains(d.getKey().toString())) {
                         Models._User user = d.getValue(Models._User.class);
@@ -148,6 +156,7 @@ public class DatabaseManager {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 // Models._User value = dataSnapshot.getValue(Models._User.class);
+                list.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     list.add(d.getValue(Models._Sport.class));
                     ((Models._Sport) list.get(list.size() - 1)).setID(d.getKey());
@@ -164,8 +173,14 @@ public class DatabaseManager {
     }
 
     public void fetchMatches(String param, String value, final FirebaseCallback fc) {
+        Query queryRef = null;
 
-        Query queryRef = this.matchesRef.orderByChild(param).equalTo(value);
+        if (param == null) {
+            queryRef = this.matchesRef.orderByKey();
+        } else {
+            queryRef = this.matchesRef.orderByChild(param).equalTo(value);
+        }
+
         final List<Models._Match> matches_list = new ArrayList<>();
         final List<String> locations_creators = new ArrayList<>();
 
@@ -185,21 +200,6 @@ public class DatabaseManager {
                     }
                 }
                 fc.callback(matches_list);
-
-                fetchUsersById(locations_creators, new FirebaseCallback() {
-                    @Override
-                    public void callback(List list) {
-                        for (Models._Match match : matches_list) {
-                            if (locations_creators.contains(match.location.idUserCreator)) {
-                                for (Models._User user : (List<Models._User>) list) {
-                                    if (match.location.idUserCreator == user.getUID()) {
-                                        match.location.setUserCreator(user);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
             }
 
             @Override
