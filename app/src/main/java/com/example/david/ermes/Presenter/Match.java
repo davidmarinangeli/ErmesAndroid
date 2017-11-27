@@ -165,6 +165,9 @@ public class Match implements Serializable, Parcelable {
         this.missingStuff = missingStuff;
     }
 
+    // repository -> in cui inserire i fetchmatch così come tutti i database manager
+    // il repository deve essere un singleton (una sola istanza)
+
     public static void fetchMatchesByIdOwner(String id, final FirebaseCallback fCallback) {
         (new DatabaseManager()).fetchMatches("idOwner", id, new FirebaseCallback() {
             @Override

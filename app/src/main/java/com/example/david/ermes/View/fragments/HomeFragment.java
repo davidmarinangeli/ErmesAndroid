@@ -4,13 +4,12 @@ package com.example.david.ermes.View.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.david.ermes.Presenter.MainAdapter;
+import com.example.david.ermes.View.MainAdapter;
 import com.example.david.ermes.Presenter.Match;
 import com.example.david.ermes.R;
 import com.stone.vega.library.VegaLayoutManager;
