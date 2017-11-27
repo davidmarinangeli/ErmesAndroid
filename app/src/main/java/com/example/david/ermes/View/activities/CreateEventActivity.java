@@ -97,7 +97,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
                 User current_user = User.getCurrentUser();
 
-                location = new Location("Piazza centa", 0L, 0L, current_user);
+                location = new Location("Alessandro Volta", 46.0490089, 11.123597, current_user);
 
                 //sport = (Sport) sport_selector.getSelectedItem();
 

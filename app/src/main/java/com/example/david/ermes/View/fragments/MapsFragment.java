@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.david.ermes.Presenter.FirebaseCallback;
+import com.example.david.ermes.Presenter.Match;
+import com.example.david.ermes.Presenter.User;
 import com.example.david.ermes.R;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,6 +20,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by David on 17/07/2017.
  */
@@ -25,13 +31,14 @@ public class MapsFragment extends Fragment {
 
     MapView mMapView;
     private GoogleMap googleMap;
+    List<Match> match_list = new ArrayList<>();
     GoogleApiClient mGoogleApiClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        mMapView = (MapView) rootView.findViewById(R.id.map);
+        mMapView = rootView.findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
@@ -46,14 +53,32 @@ public class MapsFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
+                Match.fetchMatchesByIdOwner(User.getCurrentUser().getUID(), new FirebaseCallback() {
+                    @Override
+                    public void callback(List list) {
+                        match_list = list;
+                        for (Match match : match_list) {
+                            LatLng location_latlng = new LatLng(
+                                    match.getLocation().getLatitude(),
+                                    match.getLocation().getLongitude()
+                            );
+
+                            googleMap.addMarker(new MarkerOptions()
+                                    .position(location_latlng)
+                                    .title(match.getLocation().getName())
+                                    .snippet(match.getIdSport()));
+                        }
+                        LatLng randomlatlng = new LatLng(
+                                match_list.get(0).getLocation().getLatitude(),
+                                match_list.get(0).getLocation().getLongitude()
+                        );
+                        // For zooming automatically to the location of the marker
+                        CameraPosition cameraPosition = new CameraPosition.Builder().zoom(12).target(randomlatlng).build();
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }
+                });
 
                 // For dropping a marker at a point on the Map
-                LatLng alessandrovolta = new LatLng(46.048970, 11.123597);
-                googleMap.addMarker(new MarkerOptions().position(alessandrovolta).title("Campetto Via A.Volta").snippet("Campo da basket"));
-
-                // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(alessandrovolta).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
 

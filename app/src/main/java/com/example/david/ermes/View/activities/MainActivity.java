@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity
     private FragmentManager manager;
     private MaterialSearchView searchView;
     private FloatingActionButton defaulteventfab;
+    private FloatingActionButton add
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
