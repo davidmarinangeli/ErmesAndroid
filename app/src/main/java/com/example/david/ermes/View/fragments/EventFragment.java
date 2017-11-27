@@ -24,6 +24,7 @@ public class EventFragment extends Fragment {
     private TextView dateofevent;
     private TextView placeofevent;
     private TextView hourofevent;
+    private TextView usercreator;
     private TextView tools;
     private Match match;
 
@@ -53,12 +54,14 @@ public class EventFragment extends Fragment {
         dateofevent = view.findViewById(R.id.when_text_calendar);
         placeofevent = view.findViewById(R.id.where_text);
         hourofevent = view.findViewById(R.id.when_hour_text_hour);
+        usercreator = view.findViewById(R.id.userNameText);
 
 
 
-        //sportname.setText(match.getSport());
+        sportname.setText(match.getIdSport());
         Calendar c = Calendar.getInstance();
-        //c.setTime(match.getDate());
+        c.setTime(match.getDate());
+        usercreator.setText(match.getIdOwner());
 
         // lo so che pare un macello sta stringa, giuro che correggerò le API
         dateofevent.setText(c.get(Calendar.DAY_OF_MONTH) +" "+ TimeUtils.fromNumericMonthToString(c.get(Calendar.MONTH)) );

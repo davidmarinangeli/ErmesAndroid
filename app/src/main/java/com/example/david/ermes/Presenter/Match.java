@@ -54,6 +54,7 @@ public class Match implements Serializable, Parcelable {
     }
 
     protected Match(Parcel in) {
+        date = new Date(in.readLong());
         idOwner = in.readString();
         isPublic = in.readByte() != 0;
         idSport = in.readString();
@@ -194,6 +195,7 @@ public class Match implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(date.getTime());
         parcel.writeString(idOwner);
         parcel.writeByte((byte) (isPublic ? 1 : 0));
         parcel.writeString(idSport);
