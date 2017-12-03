@@ -48,7 +48,7 @@ android {
 
 ext {
     support = "26.1.0"
-    firebase = "11.6.0"
+    firebase = "11.6.2"
 }
 
 dependencies {
@@ -71,13 +71,14 @@ dependencies {
     compile "com.google.firebase:firebase-crash:${firebase}"
     compile "com.google.firebase:firebase-auth:${firebase}"
     compile "com.google.android.gms:play-services-auth:${firebase}"
+    compile "com.google.android.gms:play-services-location:${firebase}"
+    compile "com.google.android.gms:play-services-maps:${firebase}"
 
     // ** END FIREBASE **
 
     //custom libraries
 
     compile 'com.github.xmuSistone:VegaLayoutManager:master-SNAPSHOT'
-    compile "com.google.android.gms:play-services-maps:${firebase}"
     compile "com.android.support:appcompat-v7:${support}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
@@ -90,6 +91,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
 }
+
 
 
 apply plugin: 'com.google.gms.google-services'

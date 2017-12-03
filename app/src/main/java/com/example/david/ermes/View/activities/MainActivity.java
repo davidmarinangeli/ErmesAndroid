@@ -68,11 +68,17 @@ public class MainActivity extends AppCompatActivity
         menu.setClosedOnTouchOutside(true);
 
         defaulteventfab = findViewById(R.id.addefaultevent);
+        addPlace = findViewById(R.id.addplace);
+
+
         defaulteventfab.setColorFilter(R.color.white);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
         defaulteventfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +86,16 @@ public class MainActivity extends AppCompatActivity
                 startActivityForResult(i, 1);
             }
         });
+
+        addPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this,AddLocationActivity.class);
+                startActivity(i);
+                startActivityForResult(i,1);
+            }
+        });
+
         initBottomNavigationView();
     }
 

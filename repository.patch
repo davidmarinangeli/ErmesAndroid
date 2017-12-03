@@ -1,0 +1,1084 @@
+Index: app/src/main/java/com/example/david/ermes/View/MainAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/david/ermes/View/MainAdapter.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/View/MainAdapter.java	(revision )
+@@ -10,9 +10,7 @@
+ import android.widget.ImageView;
+ import android.widget.TextView;
+ 
+-import com.example.david.ermes.Presenter.FirebaseCallback;
+-import com.example.david.ermes.Presenter.Match;
+-import com.example.david.ermes.Presenter.User;
++import com.example.david.ermes.Model.models.Match;
+ import com.example.david.ermes.R;
+ import com.example.david.ermes.View.activities.EventActivity;
+ 
+@@ -46,32 +44,16 @@
+         holder.bind(position);
+     }
+ 
+-    public void initList() {
+-
+-        User user = User.getCurrentUser();
+-        if ((user != null)) {
+-            Match.fetchMatchesByIdOwner(User.getCurrentUser().getUID(), new FirebaseCallback() {
+-                @Override
+-                public void callback(List list) {
+-                    if (list != null) {
+-                        matchList = list;
+-                    }
+-                    notifyDataSetChanged();
+-
+-                    // lo aggiungo nel db, quello va a chiamare intermente un ondatachange
+-
+-                }
+-            });
+-        }
+-    }
+-
+     @Override
+     public int getItemCount() {
+-        if (matchList != null) {
+-            return matchList.size();
+-        } else {
+-            return 0;
+-        }
++        return matchList.size();
++
++    }
++
++    public void refreshList(List<Match> matches){
++        matchList = matches;
++
++        notifyDataSetChanged();
+     }
+ 
+     public class MainViewHolder extends RecyclerView.ViewHolder {
+Index: app/src/main/java/com/example/david/ermes/View/activities/LoginActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/david/ermes/View/activities/LoginActivity.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/View/activities/LoginActivity.java	(revision )
+@@ -12,7 +12,6 @@
+ import android.widget.TextView;
+ import android.widget.Toast;
+ 
+-import com.example.david.ermes.Presenter.Match;
+ import com.example.david.ermes.R;
+ import com.google.android.gms.auth.api.Auth;
+ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+Index: app/src/main/java/com/example/david/ermes/Model/repository/UserRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/david/ermes/Model/repository/UserRepository.java	(revision )
++++ app/src/main/java/com/example/david/ermes/Model/repository/UserRepository.java	(revision )
+@@ -0,0 +1,31 @@
++package com.example.david.ermes.Model.repository;
++
++
++import com.example.david.ermes.Model.db.DatabaseManager.OnDataChangedListener;
++import com.example.david.ermes.Model.db.UserDatabaseRepository;
++import com.example.david.ermes.Model.models.User;
++
++public class UserRepository {
++    private static final UserRepository instance = new UserRepository();
++
++    public static UserRepository getInstance() {
++        return instance;
++    }
++    private User user;
++
++    private UserRepository() {
++
++        this.user = UserDatabaseRepository.getInstance().getCurrentUser();
++
++        UserDatabaseRepository.getInstance().setUserDataChangedListener(new OnDataChangedListener<User>() {
++
++            @Override public void onDataChanged(User data) {
++                UserRepository.this.user = data;
++            }
++        });
++    }
++
++    public User getUser() {
++        return user;
++    }
++}
+Index: app/src/main/java/com/example/david/ermes/Presenter/Match.java
+===================================================================
+--- app/src/main/java/com/example/david/ermes/Presenter/Match.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/Model/models/Match.java	(revision )
+@@ -1,22 +1,11 @@
+-package com.example.david.ermes.Presenter;
++package com.example.david.ermes.Model.models;
+ 
+-import android.content.Context;
+-import android.content.res.Resources;
+ import android.os.Parcel;
+ import android.os.Parcelable;
+-import android.provider.ContactsContract;
+-import android.support.annotation.NonNull;
+-
+-import com.example.david.ermes.Model.DatabaseManager;
+-import com.example.david.ermes.Model.Models;
+ 
+ import java.io.Serializable;
+-import java.util.ArrayList;
+-import java.util.Collection;
+ import java.util.Date;
+-import java.util.Iterator;
+ import java.util.List;
+-import java.util.ListIterator;
+ 
+ /**
+  * Created by David on 30/05/2017.
+@@ -35,9 +24,8 @@
+     private int numGuests;
+     private List<String> missingStuff;
+ 
+-    private DatabaseManager db;
+ 
+-    public Match() { this.db = new DatabaseManager(); }
++    public Match() { }
+ 
+     public Match(String idOwner, Location location, Date date, boolean isPublic,
+                  String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
+@@ -49,8 +37,6 @@
+         this.maxPlayers = maxPlayers;
+         this.numGuests = numGuests;
+         this.missingStuff = missingStuff;
+-
+-        this.db = new DatabaseManager();
+     }
+ 
+     protected Match(Parcel in) {
+@@ -75,18 +61,6 @@
+         }
+     };
+ 
+-    public void save() {
+-        Models._Location l = new Models._Location(this.location.getName(),
+-                this.location.getLatitude(),
+-                this.location.getLongitude(),
+-                this.location.getLocation_creator().getUID()
+-        );
+-
+-        Models._Match m = new Models._Match(this.idOwner, this.date.getTime(), l, this.isPublic,
+-                this.idSport, this.maxPlayers, this.numGuests, this.missingStuff);
+-        this.db.saveMatch(m);
+-    }
+-
+     public Location getLocation() {
+         return this.location;
+     }
+@@ -170,23 +144,7 @@
+     // repository -> in cui inserire i fetchmatch così come tutti i database manager
+     // il repository deve essere un singleton (una sola istanza)
+ 
+-    public static void fetchMatchesByIdOwner(String id, final FirebaseCallback fCallback) {
+-        (new DatabaseManager()).fetchMatches("idOwner", id, new FirebaseCallback() {
+-            @Override
+-            public void callback(List list) {
+-                fCallback.callback(Models._Match.convertToMatchList(list));
+-            }
+-        });
+-    }
+ 
+-    public static void fetchAllMatches(final FirebaseCallback fCallback) {
+-        (new DatabaseManager()).fetchMatches(null, null, new FirebaseCallback() {
+-            @Override
+-            public void callback(List list) {
+-                fCallback.callback(Models._Match.convertToMatchList(list));
+-            }
+-        });
+-    }
+ 
+     @Override
+     public int describeContents() {
+Index: app/src/main/java/com/example/david/ermes/View/MainAdapterViewHolder.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/david/ermes/View/MainAdapterViewHolder.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/View/MainAdapterViewHolder.java	(revision )
+@@ -6,10 +6,8 @@
+ import android.widget.ImageView;
+ import android.widget.TextView;
+ 
+-import com.example.david.ermes.Presenter.Match;
++import com.example.david.ermes.Model.models.Match;
+ import com.example.david.ermes.Presenter.utils.TimeUtils;
+-import com.squareup.picasso.MemoryPolicy;
+-import com.squareup.picasso.Picasso;
+ 
+ import java.util.Calendar;
+ import java.util.Date;
+Index: app/src/main/java/com/example/david/ermes/Model/db/UserDatabaseRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/david/ermes/Model/db/UserDatabaseRepository.java	(revision )
++++ app/src/main/java/com/example/david/ermes/Model/db/UserDatabaseRepository.java	(revision )
+@@ -0,0 +1,104 @@
++package com.example.david.ermes.Model.db;
++
++
++import android.util.Log;
++
++import com.example.david.ermes.Model.db.DatabaseManager.OnDataChangedListener;
++import com.example.david.ermes.Model.db.DbModels._User;
++import com.example.david.ermes.Model.models.User;
++import com.google.firebase.database.DataSnapshot;
++import com.google.firebase.database.DatabaseError;
++import com.google.firebase.database.DatabaseReference;
++import com.google.firebase.database.Query;
++import com.google.firebase.database.ValueEventListener;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public class UserDatabaseRepository {
++
++    private static UserDatabaseRepository instance = new UserDatabaseRepository();
++
++    public static UserDatabaseRepository getInstance() {
++        return instance;
++    }
++
++    private DatabaseReference usersRef;
++
++    private UserDatabaseRepository() {
++        DatabaseManager databaseManager = DatabaseManager.get();
++
++        usersRef = databaseManager.getUsersRef();
++    }
++
++    public User getCurrentUser(){
++        return DatabaseManager.get().getCurrentUser();
++    }
++
++    public void setUserDataChangedListener(final OnDataChangedListener<User> listener) {
++        usersRef.addValueEventListener(new ValueEventListener() {
++            @Override
++            public void onDataChange(DataSnapshot dataSnapshot) {
++                // This method is called once with the initial value and again
++                // whenever data at this location is updated.
++                DbModels._User value = dataSnapshot.getValue(DbModels._User.class);
++                Log.d("FIREBASE", "Value is: " + value);
++
++                listener.onDataChanged(value.convertToUser());
++            }
++
++            @Override
++            public void onCancelled(DatabaseError error) {
++                // Failed to read value
++                Log.w("FIREBASE", "Failed to read value.", error.toException());
++            }
++        });
++    }
++
++    public void save(String uid, User user) {
++        DbModels._User u = new DbModels._User(user.getIdFavSport(), user.getCity());
++        this.usersRef.child(uid).setValue(user);
++    }
++
++    public void fetchUserById(String id, final FirebaseCallback fc) {
++        final List<_User> list = new ArrayList<>();
++        Query getUser = this.usersRef.equalTo(id);
++        getUser.addValueEventListener(new ValueEventListener() {
++            @Override
++            public void onDataChange(DataSnapshot dataSnapshot) {
++                list.add(dataSnapshot.getValue(_User.class));
++                fc.callback(list);
++            }
++
++            @Override
++            public void onCancelled(DatabaseError databaseError) {
++
++            }
++        });
++    }
++
++    public void fetchUsersById(final List<String> idList, final FirebaseCallback fc) {
++        final List<_User> list = new ArrayList<>();
++        Query getUsers = this.usersRef.orderByKey();
++        getUsers.addValueEventListener(new ValueEventListener() {
++            @Override
++            public void onDataChange(DataSnapshot dataSnapshot) {
++                list.clear();
++                for (DataSnapshot d : dataSnapshot.getChildren()) {
++                    if (idList.contains(d.getKey().toString())) {
++                        _User user = d.getValue(_User.class);
++                        user.setUID(d.getKey());
++                        list.add(user);
++                    }
++                }
++                fc.callback(list);
++            }
++
++            @Override
++            public void onCancelled(DatabaseError databaseError) {
++
++            }
++        });
++    }
++
++}
+Index: app/src/main/java/com/example/david/ermes/View/fragments/EventFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/david/ermes/View/fragments/EventFragment.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/View/fragments/EventFragment.java	(revision )
+@@ -8,7 +8,7 @@
+ import android.view.ViewGroup;
+ import android.widget.TextView;
+ 
+-import com.example.david.ermes.Presenter.Match;
++import com.example.david.ermes.Model.models.Match;
+ import com.example.david.ermes.Presenter.utils.TimeUtils;
+ import com.example.david.ermes.R;
+ 
+Index: app/src/main/java/com/example/david/ermes/View/fragments/MapsFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/david/ermes/View/fragments/MapsFragment.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/View/fragments/MapsFragment.java	(revision )
+@@ -6,9 +6,9 @@
+ import android.view.View;
+ import android.view.ViewGroup;
+ 
+-import com.example.david.ermes.Presenter.FirebaseCallback;
+-import com.example.david.ermes.Presenter.Match;
+-import com.example.david.ermes.Presenter.User;
++import com.example.david.ermes.Model.db.FirebaseCallback;
++import com.example.david.ermes.Model.models.Match;
++import com.example.david.ermes.Model.models.User;
+ import com.example.david.ermes.R;
+ import com.google.android.gms.common.api.GoogleApiClient;
+ import com.google.android.gms.maps.CameraUpdateFactory;
+Index: app/src/main/java/com/example/david/ermes/Model/repository/MatchRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/david/ermes/Model/repository/MatchRepository.java	(revision )
++++ app/src/main/java/com/example/david/ermes/Model/repository/MatchRepository.java	(revision )
+@@ -0,0 +1,25 @@
++package com.example.david.ermes.Model.repository;
++
++import com.example.david.ermes.Model.db.FirebaseCallback;
++import com.example.david.ermes.Model.db.MatchesDatabaseRepository;
++import com.example.david.ermes.Model.models.User;
++
++/**
++ * Created by carlo on 30/11/2017.
++ */
++
++public class MatchRepository {
++    private static final MatchRepository instance = new MatchRepository();
++
++    public static MatchRepository getInstance() {
++        return instance;
++    }
++
++    private MatchRepository() {
++
++    }
++
++    public void fetchMatchesByIdOwner(User user, FirebaseCallback firebaseCallback) {
++        MatchesDatabaseRepository.getInstance().fetchMatchesByIdOwner(user.getUID(), firebaseCallback);
++    }
++}
+Index: app/src/main/java/com/example/david/ermes/Presenter/FirebaseCallback.java
+===================================================================
+--- app/src/main/java/com/example/david/ermes/Presenter/FirebaseCallback.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/Model/db/FirebaseCallback.java	(revision )
+@@ -1,5 +1,4 @@
+-package com.example.david.ermes.Presenter;
+-import com.example.david.ermes.Model.Models;
++package com.example.david.ermes.Model.db;
+ 
+ import java.util.List;
+ 
+Index: app/src/main/java/com/example/david/ermes/View/activities/CreateEventActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/david/ermes/View/activities/CreateEventActivity.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/View/activities/CreateEventActivity.java	(revision )
+@@ -13,11 +13,11 @@
+ import android.widget.SpinnerAdapter;
+ import android.widget.TextView;
+ 
+-import com.example.david.ermes.Presenter.FirebaseCallback;
+-import com.example.david.ermes.Presenter.Location;
+-import com.example.david.ermes.Presenter.Match;
+-import com.example.david.ermes.Presenter.Sport;
+-import com.example.david.ermes.Presenter.User;
++import com.example.david.ermes.Model.db.FirebaseCallback;
++import com.example.david.ermes.Model.models.Location;
++import com.example.david.ermes.Model.models.Match;
++import com.example.david.ermes.Model.models.Sport;
++import com.example.david.ermes.Model.models.User;
+ import com.example.david.ermes.R;
+ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
+Index: app/src/main/java/com/example/david/ermes/View/fragments/HomeFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/david/ermes/View/fragments/HomeFragment.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/View/fragments/HomeFragment.java	(revision )
+@@ -10,10 +10,15 @@
+ import android.view.View;
+ import android.view.ViewGroup;
+ 
+-import com.example.david.ermes.View.MainAdapter;
+-import com.example.david.ermes.Presenter.Match;
++import com.example.david.ermes.Model.db.FirebaseCallback;
++import com.example.david.ermes.Model.models.Match;
++import com.example.david.ermes.Model.models.User;
++import com.example.david.ermes.Model.repository.MatchRepository;
++import com.example.david.ermes.Model.repository.UserRepository;
+ import com.example.david.ermes.R;
+-import com.stone.vega.library.VegaLayoutManager;
++import com.example.david.ermes.View.MainAdapter;
++
++import java.util.List;
+ 
+ /**
+  * Created by David on 30/05/2017.
+@@ -47,12 +52,7 @@
+     @Override
+     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+         super.onViewCreated(view, savedInstanceState);
+-        if (match == null) {
+-            initRecycler(view);
+-        } else {
+-            adapter = new MainAdapter(getContext());
+-            initRecycler(view);
+-        }
++        initRecycler(view);
+     }
+ 
+     private void initRecycler(final View rootView) {
+@@ -63,6 +63,22 @@
+         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+         recyclerView.setAdapter(adapter);
+         recyclerView.setNestedScrollingEnabled(false);
+-        adapter.initList();
++        initList();
++    }
++
++    public void initList() {
++
++        User user = UserRepository.getInstance().getUser();
++
++        if ((user != null)) {
++
++            MatchRepository.getInstance().fetchMatchesByIdOwner(user, new FirebaseCallback() {
++                @Override
++                public void callback(List list) {
++                    adapter.refreshList(list);
++
++                }
++            });
++        }
+     }
+ }
+Index: app/src/main/java/com/example/david/ermes/Model/Models.java
+===================================================================
+--- app/src/main/java/com/example/david/ermes/Model/Models.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/Model/db/DbModels.java	(revision )
+@@ -1,21 +1,19 @@
+-package com.example.david.ermes.Model;
++package com.example.david.ermes.Model.db;
+ 
+-import com.example.david.ermes.Presenter.FirebaseCallback;
+-import com.example.david.ermes.Presenter.Location;
+-import com.example.david.ermes.Presenter.Match;
+-import com.example.david.ermes.Presenter.Sport;
+-import com.example.david.ermes.Presenter.User;
++import com.example.david.ermes.Model.models.Location;
++import com.example.david.ermes.Model.models.Match;
++import com.example.david.ermes.Model.models.Sport;
++import com.example.david.ermes.Model.models.User;
+ import com.example.david.ermes.Presenter.utils.TimeUtils;
+ 
+ import java.util.ArrayList;
+-import java.util.Date;
+ import java.util.List;
+ 
+ /**
+  * Created by nicol on 17/10/2017.
+  */
+ 
+-public class Models {
++public class DbModels {
+     public static class _User {
+         public String idFavSport;
+         public String city;
+@@ -84,9 +82,9 @@
+                     this.idSport, this.maxPlayers, this.numGuests, this.missingStuff);
+         }
+ 
+-        public static List<Match> convertToMatchList(List<Models._Match> list) {
++        public static List<Match> convertToMatchList(List<DbModels._Match> list) {
+             List<Match> matches = new ArrayList<>();
+-            for (Models._Match m : list) {
++            for (DbModels._Match m : list) {
+                 matches.add(m.convertToMatch());
+             }
+             return matches;
+@@ -116,9 +114,9 @@
+             );
+         }
+ 
+-        public static List<Sport> convertToSportList(List<Models._Sport> list) {
++        public static List<Sport> convertToSportList(List<DbModels._Sport> list) {
+             List<Sport> sports = new ArrayList<>();
+-            for (Models._Sport s : list) {
++            for (DbModels._Sport s : list) {
+                 sports.add(s.convertToSport());
+             }
+             return sports;
+Index: app/src/main/java/com/example/david/ermes/Presenter/User.java
+===================================================================
+--- app/src/main/java/com/example/david/ermes/Presenter/User.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/Model/models/User.java	(revision )
+@@ -1,9 +1,4 @@
+-package com.example.david.ermes.Presenter;
+-
+-import android.net.Uri;
+-
+-import com.example.david.ermes.Model.DatabaseManager;
+-import com.example.david.ermes.Model.Models;
++package com.example.david.ermes.Model.models;
+ 
+ /**
+  * Created by David on 21/07/2017.
+@@ -16,10 +11,8 @@
+     private String city;
+     private String idFavSport;
+ 
+-    private DatabaseManager db;
+-
+     public User() {
+-        this.db = new DatabaseManager();
++
+     }
+ 
+     public User(String name, String email, String UID, String city, String idFavSport) {
+@@ -29,17 +22,6 @@
+         this.city = city;
+         this.idFavSport = idFavSport;
+ 
+-        db = new DatabaseManager();
+-    }
+-
+-    public static User getCurrentUser() {
+-        DatabaseManager db = new DatabaseManager();
+-        return db.getCurrentUser();
+-    }
+-
+-    public void save() {
+-        Models._User u = new Models._User(this.idFavSport, this.city);
+-        this.db.saveUser(this.UID, u);
+     }
+ 
+     public String getName() {
+@@ -54,7 +36,11 @@
+         return this.UID;
+     }
+ 
+-    public String getIdFavSport() { return this.idFavSport; }
++    public String getIdFavSport() {
++        return this.idFavSport;
++    }
+ 
+-    public String getCity() { return this.city; }
++    public String getCity() {
++        return this.city;
++    }
+ }
+Index: app/src/main/java/com/example/david/ermes/Model/DatabaseManager.java
+===================================================================
+--- app/src/main/java/com/example/david/ermes/Model/DatabaseManager.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/Model/db/DatabaseManager.java	(revision )
+@@ -1,29 +1,20 @@
+-package com.example.david.ermes.Model;
++package com.example.david.ermes.Model.db;
+ 
+-import android.net.Uri;
+ import android.util.Log;
+ 
++import com.example.david.ermes.Model.db.DbModels._Location;
++import com.example.david.ermes.Model.db.DbModels._Sport;
++import com.example.david.ermes.Model.models.User;
+ import com.google.firebase.auth.FirebaseAuth;
+ import com.google.firebase.auth.FirebaseUser;
+-import com.google.firebase.database.ChildEventListener;
+ import com.google.firebase.database.DataSnapshot;
+ import com.google.firebase.database.DatabaseError;
+ import com.google.firebase.database.DatabaseReference;
+ import com.google.firebase.database.FirebaseDatabase;
+-import com.google.firebase.database.Query;
+ import com.google.firebase.database.ValueEventListener;
+ 
+-import com.example.david.ermes.Presenter.User;
+-import com.example.david.ermes.Presenter.Match;
+-
+-import java.io.Serializable;
+ import java.util.ArrayList;
+-import java.util.Date;
+-import java.util.HashMap;
+ import java.util.List;
+-import java.util.Map;
+-
+-import com.example.david.ermes.Presenter.FirebaseCallback;
+ 
+ /**
+  * Created by David on 24/05/2017.
+@@ -31,45 +22,21 @@
+ 
+ public class DatabaseManager {
+ 
++    private static DatabaseManager instance = new DatabaseManager();
++
++     static DatabaseManager get() {
++        return instance;
++    }
++
++    private FirebaseDatabase database;
+     private DatabaseReference usersRef, matchesRef, sportsRef, locationsRef;
+ 
+-    public DatabaseManager() {
+-        FirebaseDatabase database = FirebaseDatabase.getInstance();
++    private DatabaseManager() {
++
++        this.database = FirebaseDatabase.getInstance();
+ 
+         this.usersRef = database.getReference("users");
+-        this.usersRef.addValueEventListener(new ValueEventListener() {
+-            @Override
+-            public void onDataChange(DataSnapshot dataSnapshot) {
+-                // This method is called once with the initial value and again
+-                // whenever data at this location is updated.
+-                Models._User value = dataSnapshot.getValue(Models._User.class);
+-                Log.d("FIREBASE", "Value is: " + value);
+-            }
+-
+-            @Override
+-            public void onCancelled(DatabaseError error) {
+-                // Failed to read value
+-                Log.w("FIREBASE", "Failed to read value.", error.toException());
+-            }
+-        });
+-
+-        this.matchesRef = database.getReference("matches");
+-        this.matchesRef.addValueEventListener(new ValueEventListener() {
+-            @Override
+-            public void onDataChange(DataSnapshot dataSnapshot) {
+-                // This method is called once with the initial value and again
+-                // whenever data at this location is updated.
+-                Models._Match value = dataSnapshot.getValue(Models._Match.class);
+-                Log.d("FIREBASE", "Value is: " + value);
+-            }
+-
+-            @Override
+-            public void onCancelled(DatabaseError error) {
+-                // Failed to read value
+-                Log.w("FIREBASE", "Failed to read value.", error.toException());
+-            }
+-        });
+-
++        this.matchesRef = database.getReference("matches");;
+         this.sportsRef = database.getReference("sports");
+         this.locationsRef = database.getReference("locations");
+     }
+@@ -89,77 +56,32 @@
+         return u;
+     }
+ 
+-    public void saveUser(String uid, Models._User user) {
+-        if (user != null) {
+-            this.usersRef.child(uid).setValue(user);
+-        }
++    public DatabaseReference getMatchesRef() {
++        return matchesRef;
+     }
+ 
+-    public void saveMatch(Models._Match match) {
+-        if (match != null) {
+-            this.matchesRef.push().setValue(match);
+-        }
++    public DatabaseReference getUsersRef() {
++        return usersRef;
+     }
+ 
+-    public void saveLocation(Models._Location location) {
++    public void saveLocation(_Location location) {
+         if (location != null) {
+             this.locationsRef.push().setValue(location);
+         }
+     }
+ 
+-    public void fetchUserById(String id, final FirebaseCallback fc) {
+-        final List<Models._User> list = new ArrayList<>();
+-        Query getUser = this.usersRef.equalTo(id);
+-        getUser.addValueEventListener(new ValueEventListener() {
+-            @Override
+-            public void onDataChange(DataSnapshot dataSnapshot) {
+-                list.add(dataSnapshot.getValue(Models._User.class));
+-                fc.callback(list);
+-            }
+-
+-            @Override
+-            public void onCancelled(DatabaseError databaseError) {
+-
+-            }
+-        });
+-    }
+-
+-    public void fetchUsersById(final List<String> idList, final FirebaseCallback fc) {
+-        final List<Models._User> list = new ArrayList<>();
+-        Query getUsers = this.usersRef.orderByKey();
+-        getUsers.addValueEventListener(new ValueEventListener() {
+-            @Override
+-            public void onDataChange(DataSnapshot dataSnapshot) {
+-                list.clear();
+-                for (DataSnapshot d : dataSnapshot.getChildren()) {
+-                    if (idList.contains(d.getKey().toString())) {
+-                        Models._User user = d.getValue(Models._User.class);
+-                        user.setUID(d.getKey());
+-                        list.add(user);
+-                    }
+-                }
+-                fc.callback(list);
+-            }
+-
+-            @Override
+-            public void onCancelled(DatabaseError databaseError) {
+-
+-            }
+-        });
+-    }
+-
+     public void fetchAllSports(final FirebaseCallback fc) {
+-        final List<Models._Sport> list = new ArrayList<>();
++        final List<_Sport> list = new ArrayList<>();
+         this.sportsRef.addValueEventListener(new ValueEventListener() {
+             @Override
+             public void onDataChange(DataSnapshot dataSnapshot) {
+                 // This method is called once with the initial value and again
+                 // whenever data at this location is updated.
+-                // Models._User value = dataSnapshot.getValue(Models._User.class);
++                // DbModels._User value = dataSnapshot.getValue(DbModels._User.class);
+                 list.clear();
+                 for (DataSnapshot d : dataSnapshot.getChildren()) {
+-                    list.add(d.getValue(Models._Sport.class));
+-                    ((Models._Sport) list.get(list.size() - 1)).setID(d.getKey());
++                    list.add(d.getValue(_Sport.class));
++                    ((_Sport) list.get(list.size() - 1)).setID(d.getKey());
+                 }
+                 fc.callback(list);
+             }
+@@ -172,71 +94,8 @@
+         });
+     }
+ 
+-    public void fetchMatches(String param, String value, final FirebaseCallback fc) {
+-        Query queryRef = null;
+ 
+-        if (param == null) {
+-            queryRef = this.matchesRef.orderByKey();
+-        } else {
+-            queryRef = this.matchesRef.orderByChild(param).equalTo(value);
+-        }
+-
+-        final List<Models._Match> matches_list = new ArrayList<>();
+-        final List<String> locations_creators = new ArrayList<>();
+-
+-        queryRef.addValueEventListener(new ValueEventListener() {
+-            @Override
+-            public void onDataChange(DataSnapshot dataSnapshot) {
+-                // This method is called once with the initial value and again
+-                // whenever data at this location is updated.
+-                // Models._User value = dataSnapshot.getValue(Models._User.class);
+-                matches_list.clear();
+-                for (DataSnapshot d: dataSnapshot.getChildren()) {
+-                    Models._Match match = d.getValue(Models._Match.class);
+-                    matches_list.add(match);
+-
+-                    if (!locations_creators.contains(match.location.idUserCreator)) {
+-                        locations_creators.add(match.location.idUserCreator);
+-                    }
+-                }
+-                fc.callback(matches_list);
+-            }
+-
+-            @Override
+-            public void onCancelled(DatabaseError error) {
+-                // Failed to read value
+-                Log.w("FIREBASE", "Failed to read value.", error.toException());
+-            }
+-        });
+-
+-                /*addChildEventListener(new ChildEventListener() {
+-            @Override
+-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+-                Models._Match m = dataSnapshot.getValue(Models._Match.class);
+-                list.add(m);
+-                Log.d("MATCHES LIST", list.toString());
+-            }
+-
+-            @Override
+-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+-
+-            }
+-
+-            @Override
+-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+-
+-            }
+-
+-            @Override
+-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+-
+-            }
+-
+-            @Override
+-            public void onCancelled(DatabaseError databaseError) {
+-                Log.w("FETCH_MATCHES", "loadMatch:onCancelled", databaseError.toException());
+-            }
+-        });*/
+-    }
+-
++    public interface OnDataChangedListener<T> {
++        void onDataChanged(T data);
++    }
+ }
+Index: app/src/main/java/com/example/david/ermes/Presenter/Location.java
+===================================================================
+--- app/src/main/java/com/example/david/ermes/Presenter/Location.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/Model/models/Location.java	(revision )
+@@ -1,7 +1,7 @@
+-package com.example.david.ermes.Presenter;
++package com.example.david.ermes.Model.models;
+ 
+-import com.example.david.ermes.Model.DatabaseManager;
+-import com.example.david.ermes.Model.Models;
++import com.example.david.ermes.Model.db.DbModels;
++import com.example.david.ermes.Model.db.DatabaseManager;
+ 
+ import java.io.Serializable;
+ 
+@@ -67,7 +67,7 @@
+     }
+ 
+     public void save() {
+-        Models._Location location = new Models._Location(
++        DbModels._Location location = new DbModels._Location(
+                 this.name,
+                 this.latitude,
+                 this.longitude,
+Index: app/src/main/java/com/example/david/ermes/Presenter/Sport.java
+===================================================================
+--- app/src/main/java/com/example/david/ermes/Presenter/Sport.java	(revision c9cb57916a5d7dc1845dcc7a50019c04ce99c656)
++++ app/src/main/java/com/example/david/ermes/Model/models/Sport.java	(revision )
+@@ -1,8 +1,8 @@
+-package com.example.david.ermes.Presenter;
++package com.example.david.ermes.Model.models;
+ 
+-import com.example.david.ermes.Model.DatabaseManager;
+-import com.example.david.ermes.Model.Models;
+-import com.example.david.ermes.Presenter.FirebaseCallback;
++import com.example.david.ermes.Model.db.DbModels;
++import com.example.david.ermes.Model.db.DatabaseManager;
++import com.example.david.ermes.Model.db.FirebaseCallback;
+ 
+ import java.util.List;
+ 
+@@ -39,7 +39,7 @@
+         (new DatabaseManager()).fetchAllSports(new FirebaseCallback() {
+             @Override
+             public void callback(List list) {
+-                fCallback.callback(Models._Sport.convertToSportList(list));
++                fCallback.callback(DbModels._Sport.convertToSportList(list));
+             }
+         });
+     }
+Index: app/src/main/java/com/example/david/ermes/Model/db/MatchesDatabaseRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/david/ermes/Model/db/MatchesDatabaseRepository.java	(revision )
++++ app/src/main/java/com/example/david/ermes/Model/db/MatchesDatabaseRepository.java	(revision )
+@@ -0,0 +1,151 @@
++package com.example.david.ermes.Model.db;
++
++import android.util.Log;
++
++import com.example.david.ermes.Model.db.DbModels._Match;
++import com.example.david.ermes.Model.db.DatabaseManager.OnDataChangedListener;
++import com.example.david.ermes.Model.models.Match;
++import com.google.firebase.database.DataSnapshot;
++import com.google.firebase.database.DatabaseError;
++import com.google.firebase.database.DatabaseReference;
++import com.google.firebase.database.Query;
++import com.google.firebase.database.ValueEventListener;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public class MatchesDatabaseRepository {
++    private static final MatchesDatabaseRepository instance = new MatchesDatabaseRepository();
++
++   public static MatchesDatabaseRepository getInstance() {
++        return instance;
++    }
++
++    private DatabaseReference matchesRef;
++
++    private MatchesDatabaseRepository() {
++        DatabaseManager databaseManager = DatabaseManager.get();
++
++        matchesRef = databaseManager.getMatchesRef();
++
++    }
++
++    public void setDataChangedListener(final OnDataChangedListener<Match> listener) {
++        matchesRef.addValueEventListener(new ValueEventListener() {
++            @Override
++            public void onDataChange(DataSnapshot dataSnapshot) {
++                // This method is called once with the initial value and again
++                // whenever data at this location is updated.
++                DbModels._Match value = dataSnapshot.getValue(DbModels._Match.class);
++                Log.d("FIREBASE", "Value is: " + value);
++
++                listener.onDataChanged(value.convertToMatch());
++            }
++
++            @Override
++            public void onCancelled(DatabaseError error) {
++                // Failed to read value
++                Log.w("FIREBASE", "Failed to read value.", error.toException());
++            }
++        });
++    }
++
++    public void fetchMatchesByIdOwner(String id, final FirebaseCallback fCallback) {
++        fetchMatches("idOwner", id, new FirebaseCallback() {
++            @Override
++            public void callback(List list) {
++                fCallback.callback(DbModels._Match.convertToMatchList(list));
++            }
++        });
++    }
++
++    public void fetchAllMatches(final FirebaseCallback fCallback) {
++        fetchMatches(null, null, new FirebaseCallback() {
++            @Override
++            public void callback(List list) {
++                fCallback.callback(DbModels._Match.convertToMatchList(list));
++            }
++        });
++    }
++
++    public void save(Match match) {
++        DbModels._Location l = new DbModels._Location(match.getLocation().getName(),
++                match.getLocation().getLatitude(),
++                match.getLocation().getLongitude(),
++                match.getLocation().getLocation_creator().getUID()
++        );
++
++        DbModels._Match m = new DbModels._Match(match.getIdOwner(), match.getDate().getTime(), l, match.isPublic(),
++                match.getIdSport(), match.getMaxPlayers(), match.getNumGuests(), match.getMissingStuff());
++
++        this.matchesRef.push().setValue(m);
++    }
++
++    private void fetchMatches(String param, String value, final FirebaseCallback fc) {
++        Query queryRef = null;
++
++        if (param == null) {
++            queryRef = this.matchesRef.orderByKey();
++        } else {
++            queryRef = this.matchesRef.orderByChild(param).equalTo(value);
++        }
++
++        final List<_Match> matches_list = new ArrayList<>();
++        final List<String> locations_creators = new ArrayList<>();
++
++        queryRef.addValueEventListener(new ValueEventListener() {
++            @Override
++            public void onDataChange(DataSnapshot dataSnapshot) {
++                // This method is called once with the initial value and again
++                // whenever data at this location is updated.
++                // DbModels._User value = dataSnapshot.getValue(DbModels._User.class);
++                matches_list.clear();
++                for (DataSnapshot d : dataSnapshot.getChildren()) {
++                    _Match match = d.getValue(_Match.class);
++                    matches_list.add(match);
++
++                    if (!locations_creators.contains(match.location.idUserCreator)) {
++                        locations_creators.add(match.location.idUserCreator);
++                    }
++                }
++                fc.callback(matches_list);
++            }
++
++            @Override
++            public void onCancelled(DatabaseError error) {
++                // Failed to read value
++                Log.w("FIREBASE", "Failed to read value.", error.toException());
++            }
++        });
++
++                /*addChildEventListener(new ChildEventListener() {
++            @Override
++            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
++                DbModels._Match m = dataSnapshot.getValue(DbModels._Match.class);
++                list.add(m);
++                Log.d("MATCHES LIST", list.toString());
++            }
++
++            @Override
++            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
++
++            }
++
++            @Override
++            public void onChildRemoved(DataSnapshot dataSnapshot) {
++
++            }
++
++            @Override
++            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
++
++            }
++
++            @Override
++            public void onCancelled(DatabaseError databaseError) {
++                Log.w("FETCH_MATCHES", "loadMatch:onCancelled", databaseError.toException());
++            }
++        });*/
++    }
++
++}
