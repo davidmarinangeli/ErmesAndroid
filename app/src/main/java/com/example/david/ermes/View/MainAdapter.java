@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.david.ermes.Presenter.FirebaseCallback;
-import com.example.david.ermes.Presenter.Match;
-import com.example.david.ermes.Presenter.User;
+import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.EventActivity;
 
@@ -46,32 +44,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         holder.bind(position);
     }
 
-    public void initList() {
-
-        User user = User.getCurrentUser();
-        if ((user != null)) {
-            Match.fetchMatchesByIdOwner(User.getCurrentUser().getUID(), new FirebaseCallback() {
-                @Override
-                public void callback(List list) {
-                    if (list != null) {
-                        matchList = list;
-                    }
-                    notifyDataSetChanged();
-
-                    // lo aggiungo nel db, quello va a chiamare intermente un ondatachange
-
-                }
-            });
-        }
-    }
-
     @Override
     public int getItemCount() {
-        if (matchList != null) {
-            return matchList.size();
-        } else {
-            return 0;
-        }
+        return matchList.size();
+
+    }
+
+    public void refreshList(List<Match> matches){
+        matchList = matches;
+
+        notifyDataSetChanged();
     }
 
     public class MainViewHolder extends RecyclerView.ViewHolder {
