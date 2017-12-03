@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Button;
 
 import com.example.david.ermes.Presenter.FirebaseCallback;
 import com.example.david.ermes.Presenter.Match;
@@ -22,6 +23,8 @@ public class PickPlaceActivity extends AppCompatActivity {
 
     MapView mMapView;
     private GoogleMap googleMap;
+    private Button dismiss;
+    private Button fine;
 
 
     @Override
@@ -29,7 +32,10 @@ public class PickPlaceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_place);
 
-        mMapView = findViewById(R.id.map);
+        dismiss = findViewById(R.id.dismiss);
+        fine = findViewById(R.id.accept);
+
+        mMapView = findViewById(R.id.pick_place_map);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume(); // needed to get the map to display immediately
 
@@ -44,19 +50,19 @@ public class PickPlaceActivity extends AppCompatActivity {
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-            }
-        });
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng point) {
+                        // TODO Auto-generated method stub
+                        String location = (String) getIntent().getExtras().get("location");
+                        MarkerOptions marker = new MarkerOptions().position(
+                                new LatLng(point.latitude, point.longitude)).title(location);
 
-            @Override
-            public void onMapClick(LatLng point) {
-                // TODO Auto-generated method stub
-                MarkerOptions marker = new MarkerOptions().position(
-                        new LatLng(point.latitude, point.longitude)).title("New Marker");
+                        googleMap.addMarker(marker);
 
-                googleMap.addMarker(marker);
-
+                    }
+                });
             }
         });
 
