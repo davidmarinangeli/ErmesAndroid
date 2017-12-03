@@ -13,11 +13,11 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import com.example.david.ermes.Presenter.FirebaseCallback;
-import com.example.david.ermes.Presenter.Location;
-import com.example.david.ermes.Presenter.Match;
-import com.example.david.ermes.Presenter.Sport;
-import com.example.david.ermes.Presenter.User;
+import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.models.Location;
+import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.models.Sport;
+import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
