@@ -1,7 +1,7 @@
-package com.example.david.ermes.Presenter;
+package com.example.david.ermes.Model.models;
 
-import com.example.david.ermes.Model.DatabaseManager;
-import com.example.david.ermes.Model.Models;
+import com.example.david.ermes.Model.db.DbModels;
+import com.example.david.ermes.Model.db.DatabaseManager;
 
 import java.io.Serializable;
 
@@ -67,7 +67,7 @@ public class Location implements Serializable{
     }
 
     public void save() {
-        Models._Location location = new Models._Location(
+        DbModels._Location location = new DbModels._Location(
                 this.name,
                 this.latitude,
                 this.longitude,
