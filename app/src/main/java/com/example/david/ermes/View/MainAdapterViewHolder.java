@@ -6,10 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.david.ermes.Presenter.Match;
+import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.Date;
