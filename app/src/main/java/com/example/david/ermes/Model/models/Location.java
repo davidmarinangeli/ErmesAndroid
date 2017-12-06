@@ -2,6 +2,7 @@ package com.example.david.ermes.Model.models;
 
 import com.example.david.ermes.Model.db.DbModels;
 import com.example.david.ermes.Model.db.DatabaseManager;
+import com.example.david.ermes.Model.repository.LocationRepository;
 
 import java.io.Serializable;
 
@@ -15,15 +16,10 @@ public class Location implements Serializable{
     private double longitude;
     private String name;
 
-    private DatabaseManager db;
-
-    public Location() {
-        this.db = new DatabaseManager();
-    }
+    public Location() {}
 
     public Location(String name){
         this.name = name;
-        this.db = new DatabaseManager();
     }
 
     public Location(String name, double lat, double lon, User creator) {
@@ -31,7 +27,6 @@ public class Location implements Serializable{
         this.latitude = lat;
         this.longitude = lon;
         this.location_creator = creator;
-        this.db = new DatabaseManager();
     }
 
     public User getLocation_creator() {
@@ -66,14 +61,16 @@ public class Location implements Serializable{
         this.name = name;
     }
 
-    public void save() {
-        DbModels._Location location = new DbModels._Location(
+    public DbModels._Location convertTo_Location() {
+        return new DbModels._Location(
                 this.name,
                 this.latitude,
                 this.longitude,
                 this.location_creator.getUID()
         );
+    }
 
-        this.db.saveLocation(location);
+    public void save() {
+        LocationRepository.getInstance().saveLocation(this);
     }
 }

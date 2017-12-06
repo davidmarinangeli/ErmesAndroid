@@ -24,7 +24,7 @@ public class DatabaseManager {
 
     private static DatabaseManager instance = new DatabaseManager();
 
-     static DatabaseManager get() {
+    public static DatabaseManager get() {
         return instance;
     }
 
@@ -64,11 +64,9 @@ public class DatabaseManager {
         return usersRef;
     }
 
-    public void saveLocation(_Location location) {
-        if (location != null) {
-            this.locationsRef.push().setValue(location);
-        }
-    }
+    public DatabaseReference getLocationsRef() { return locationsRef; }
+
+    public DatabaseReference getSportsRef() { return sportsRef; }
 
     public void fetchAllSports(final FirebaseCallback fc) {
         final List<_Sport> list = new ArrayList<>();
@@ -81,7 +79,7 @@ public class DatabaseManager {
                 list.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     list.add(d.getValue(_Sport.class));
-                    ((_Sport) list.get(list.size() - 1)).setID(d.getKey());
+//                    ((_Sport) list.get(list.size() - 1)).setID(d.getKey());
                 }
                 fc.callback(list);
             }

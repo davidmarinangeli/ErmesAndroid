@@ -2,6 +2,7 @@ package com.example.david.ermes.Model.repository;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.db.MatchesDatabaseRepository;
+import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.User;
 
 /**
@@ -19,7 +20,15 @@ public class MatchRepository {
 
     }
 
-    public void fetchMatchesByIdOwner(User user, FirebaseCallback firebaseCallback) {
+    public void fetchMatches(FirebaseCallback firebaseCallback) {
+        MatchesDatabaseRepository.getInstance().fetchAllMatches(firebaseCallback);
+    }
+
+    public void fetchMatchesByOwner(User user, FirebaseCallback firebaseCallback) {
         MatchesDatabaseRepository.getInstance().fetchMatchesByIdOwner(user.getUID(), firebaseCallback);
+    }
+
+    public void saveMatch(Match match) {
+        MatchesDatabaseRepository.getInstance().push(match.convertTo_Match());
     }
 }

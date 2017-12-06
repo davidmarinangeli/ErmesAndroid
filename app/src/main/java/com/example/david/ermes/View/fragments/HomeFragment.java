@@ -71,12 +71,10 @@ public class HomeFragment extends Fragment {
         User user = UserRepository.getInstance().getUser();
 
         if ((user != null)) {
-
-            MatchRepository.getInstance().fetchMatchesByIdOwner(user, new FirebaseCallback() {
+            MatchRepository.getInstance().fetchMatches(new FirebaseCallback() {
                 @Override
                 public void callback(List list) {
                     adapter.refreshList(list);
-
                 }
             });
         }
