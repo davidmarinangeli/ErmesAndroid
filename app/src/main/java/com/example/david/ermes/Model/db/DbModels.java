@@ -92,10 +92,10 @@ public class DbModels {
         }
     }
 
-    public static class _Sport implements Serializable {
+    public static class _Sport {
         public String name;
         public int numPlayers;
-        private String id;
+        public String id;
 
         public _Sport(String name, int numPlayers) {
             this.name = name;
