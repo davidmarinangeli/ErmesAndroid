@@ -13,11 +13,13 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import com.example.david.ermes.Presenter.FirebaseCallback;
-import com.example.david.ermes.Presenter.Location;
-import com.example.david.ermes.Presenter.Match;
-import com.example.david.ermes.Presenter.Sport;
-import com.example.david.ermes.Presenter.User;
+import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.models.Location;
+import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.models.Sport;
+import com.example.david.ermes.Model.models.User;
+import com.example.david.ermes.Model.repository.SportRepository;
+import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -76,7 +78,7 @@ public class CreateEventActivity extends AppCompatActivity {
         sport_selector.setOnItemSelectedListener(new itemSelectedListener());
 
         final ArrayList<String> arraySpinner = new ArrayList<>();
-        Sport.fetchAllSports(new FirebaseCallback() {
+        SportRepository.getInstance().fetchAll(new FirebaseCallback() {
             @Override
             public void callback(List list) {
                 for (Sport s : (ArrayList<Sport>) list) {
@@ -95,7 +97,7 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                User current_user = User.getCurrentUser();
+                User current_user = UserRepository.getInstance().getUser();
 
                 location = new Location("Alessandro Volta", 46.0490089, 11.123597, current_user);
 

@@ -1,22 +1,14 @@
-package com.example.david.ermes.Presenter;
+package com.example.david.ermes.Model.models;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 
-import com.example.david.ermes.Model.DatabaseManager;
-import com.example.david.ermes.Model.Models;
+import com.example.david.ermes.Model.db.DbModels;
+import com.example.david.ermes.Model.repository.MatchRepository;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * Created by David on 30/05/2017.
@@ -35,9 +27,8 @@ public class Match implements Serializable, Parcelable {
     private int numGuests;
     private List<String> missingStuff;
 
-    private DatabaseManager db;
 
-    public Match() { this.db = new DatabaseManager(); }
+    public Match() { }
 
     public Match(String idOwner, Location location, Date date, boolean isPublic,
                  String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
@@ -49,8 +40,6 @@ public class Match implements Serializable, Parcelable {
         this.maxPlayers = maxPlayers;
         this.numGuests = numGuests;
         this.missingStuff = missingStuff;
-
-        this.db = new DatabaseManager();
     }
 
     protected Match(Parcel in) {
@@ -74,18 +63,6 @@ public class Match implements Serializable, Parcelable {
             return new Match[size];
         }
     };
-
-    public void save() {
-        Models._Location l = new Models._Location(this.location.getName(),
-                this.location.getLatitude(),
-                this.location.getLongitude(),
-                this.location.getLocation_creator().getUID()
-        );
-
-        Models._Match m = new Models._Match(this.idOwner, this.date.getTime(), l, this.isPublic,
-                this.idSport, this.maxPlayers, this.numGuests, this.missingStuff);
-        this.db.saveMatch(m);
-    }
 
     public Location getLocation() {
         return this.location;
@@ -170,23 +147,23 @@ public class Match implements Serializable, Parcelable {
     // repository -> in cui inserire i fetchmatch così come tutti i database manager
     // il repository deve essere un singleton (una sola istanza)
 
-    public static void fetchMatchesByIdOwner(String id, final FirebaseCallback fCallback) {
-        (new DatabaseManager()).fetchMatches("idOwner", id, new FirebaseCallback() {
-            @Override
-            public void callback(List list) {
-                fCallback.callback(Models._Match.convertToMatchList(list));
-            }
-        });
+    public DbModels._Match convertTo_Match() {
+        return new DbModels._Match(
+                this.idOwner,
+                this.date.getTime(),
+                this.location.convertTo_Location(),
+                this.isPublic,
+                this.idSport,
+                this.maxPlayers,
+                this.numGuests,
+                this.missingStuff
+        );
     }
 
-    public static void fetchAllMatches(final FirebaseCallback fCallback) {
-        (new DatabaseManager()).fetchMatches(null, null, new FirebaseCallback() {
-            @Override
-            public void callback(List list) {
-                fCallback.callback(Models._Match.convertToMatchList(list));
-            }
-        });
+    public void save() {
+        MatchRepository.getInstance().saveMatch(this);
     }
+
 
     @Override
     public int describeContents() {

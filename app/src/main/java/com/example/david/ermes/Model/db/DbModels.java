@@ -1,21 +1,20 @@
-package com.example.david.ermes.Model;
+package com.example.david.ermes.Model.db;
 
-import com.example.david.ermes.Presenter.FirebaseCallback;
-import com.example.david.ermes.Presenter.Location;
-import com.example.david.ermes.Presenter.Match;
-import com.example.david.ermes.Presenter.Sport;
-import com.example.david.ermes.Presenter.User;
+import com.example.david.ermes.Model.models.Location;
+import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.models.Sport;
+import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by nicol on 17/10/2017.
  */
 
-public class Models {
+public class DbModels {
     public static class _User {
         public String idFavSport;
         public String city;
@@ -84,23 +83,19 @@ public class Models {
                     this.idSport, this.maxPlayers, this.numGuests, this.missingStuff);
         }
 
-        public static List<Match> convertToMatchList(List<Models._Match> list) {
+        public static List<Match> convertToMatchList(List<DbModels._Match> list) {
             List<Match> matches = new ArrayList<>();
-            for (Models._Match m : list) {
+            for (DbModels._Match m : list) {
                 matches.add(m.convertToMatch());
             }
             return matches;
         }
     }
 
-    public static class _Sport {
+    public static class _Sport implements Serializable {
         public String name;
         public int numPlayers;
         private String id;
-
-        public _Sport() {
-            this.id = "";
-        }
 
         public _Sport(String name, int numPlayers) {
             this.name = name;
@@ -108,17 +103,20 @@ public class Models {
             this.id = "";
         }
 
+        public _Sport() {
+        }
+
         public Sport convertToSport() {
             return new Sport(
-                    this.id,
+                    "",
                     this.name,
                     this.numPlayers
             );
         }
 
-        public static List<Sport> convertToSportList(List<Models._Sport> list) {
+        public static List<Sport> convertToSportList(List<DbModels._Sport> list) {
             List<Sport> sports = new ArrayList<>();
-            for (Models._Sport s : list) {
+            for (DbModels._Sport s : list) {
                 sports.add(s.convertToSport());
             }
             return sports;

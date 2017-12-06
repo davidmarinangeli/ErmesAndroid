@@ -1,23 +1,15 @@
 package com.example.david.ermes;
 
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.example.david.ermes.Presenter.FirebaseCallback;
-import com.example.david.ermes.Presenter.Match;
-import com.example.david.ermes.Presenter.User;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.List;
 
 public class PickPlaceActivity extends AppCompatActivity {
 

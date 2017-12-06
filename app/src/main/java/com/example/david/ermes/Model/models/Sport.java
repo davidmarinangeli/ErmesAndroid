@@ -1,8 +1,8 @@
-package com.example.david.ermes.Presenter;
+package com.example.david.ermes.Model.models;
 
-import com.example.david.ermes.Model.DatabaseManager;
-import com.example.david.ermes.Model.Models;
-import com.example.david.ermes.Presenter.FirebaseCallback;
+import com.example.david.ermes.Model.db.DbModels;
+import com.example.david.ermes.Model.db.DatabaseManager;
+import com.example.david.ermes.Model.db.FirebaseCallback;
 
 import java.util.List;
 
@@ -33,14 +33,5 @@ public class Sport {
 
     public String getID() {
         return this.id;
-    }
-
-    public static void fetchAllSports(final FirebaseCallback fCallback) {
-        (new DatabaseManager()).fetchAllSports(new FirebaseCallback() {
-            @Override
-            public void callback(List list) {
-                fCallback.callback(Models._Sport.convertToSportList(list));
-            }
-        });
     }
 }

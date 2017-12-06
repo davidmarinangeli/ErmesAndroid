@@ -1,5 +1,4 @@
-package com.example.david.ermes.Presenter;
-import com.example.david.ermes.Model.Models;
+package com.example.david.ermes.Model.db;
 
 import java.util.List;
 
