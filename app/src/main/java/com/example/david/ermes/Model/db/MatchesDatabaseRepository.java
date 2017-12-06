@@ -36,7 +36,7 @@ public class MatchesDatabaseRepository {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                DbModels._Match value = dataSnapshot.getValue(DbModels._Match.class);
+                DbModels._Match value = dataSnapshot.getValue(_Match.class);
                 Log.d("FIREBASE", "Value is: " + value);
 
                 listener.onDataChanged(value.convertToMatch());
@@ -54,7 +54,7 @@ public class MatchesDatabaseRepository {
         fetchMatches("idOwner", id, new FirebaseCallback() {
             @Override
             public void callback(List list) {
-                fCallback.callback(DbModels._Match.convertToMatchList(list));
+                fCallback.callback(_Match.convertToMatchList(list));
             }
         });
     }
@@ -63,26 +63,17 @@ public class MatchesDatabaseRepository {
         fetchMatches(null, null, new FirebaseCallback() {
             @Override
             public void callback(List list) {
-                fCallback.callback(DbModels._Match.convertToMatchList(list));
+                fCallback.callback(_Match.convertToMatchList(list));
             }
         });
     }
 
-    public void save(Match match) {
-        DbModels._Location l = new DbModels._Location(match.getLocation().getName(),
-                match.getLocation().getLatitude(),
-                match.getLocation().getLongitude(),
-                match.getLocation().getLocation_creator().getUID()
-        );
-
-        DbModels._Match m = new DbModels._Match(match.getIdOwner(), match.getDate().getTime(), l, match.isPublic(),
-                match.getIdSport(), match.getMaxPlayers(), match.getNumGuests(), match.getMissingStuff());
-
-        this.matchesRef.push().setValue(m);
+    public void push(_Match match) {
+        this.matchesRef.push().setValue(match);
     }
 
     private void fetchMatches(String param, String value, final FirebaseCallback fc) {
-        Query queryRef = null;
+        Query queryRef;
 
         if (param == null) {
             queryRef = this.matchesRef.orderByKey();

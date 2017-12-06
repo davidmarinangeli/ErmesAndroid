@@ -6,6 +6,7 @@ import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,14 +92,10 @@ public class DbModels {
         }
     }
 
-    public static class _Sport {
+    public static class _Sport implements Serializable {
         public String name;
         public int numPlayers;
         private String id;
-
-        public _Sport() {
-            this.id = "";
-        }
 
         public _Sport(String name, int numPlayers) {
             this.name = name;
@@ -106,9 +103,12 @@ public class DbModels {
             this.id = "";
         }
 
+        public _Sport() {
+        }
+
         public Sport convertToSport() {
             return new Sport(
-                    this.id,
+                    "",
                     this.name,
                     this.numPlayers
             );

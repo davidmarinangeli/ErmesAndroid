@@ -34,13 +34,4 @@ public class Sport {
     public String getID() {
         return this.id;
     }
-
-    public static void fetchAllSports(final FirebaseCallback fCallback) {
-        (new DatabaseManager()).fetchAllSports(new FirebaseCallback() {
-            @Override
-            public void callback(List list) {
-                fCallback.callback(DbModels._Sport.convertToSportList(list));
-            }
-        });
-    }
 }

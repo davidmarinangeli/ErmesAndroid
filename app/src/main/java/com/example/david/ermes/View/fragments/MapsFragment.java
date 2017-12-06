@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
-import com.example.david.ermes.Model.models.User;
+import com.example.david.ermes.Model.repository.MatchRepository;
+import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -53,7 +54,7 @@ public class MapsFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-                Match.fetchMatchesByIdOwner(User.getCurrentUser().getUID(), new FirebaseCallback() {
+                MatchRepository.getInstance().fetchMatchesByOwner(UserRepository.getInstance().getUser(), new FirebaseCallback() {
                     @Override
                     public void callback(List list) {
                         if (list != null && list.size() > 0) {

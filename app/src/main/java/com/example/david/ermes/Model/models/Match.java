@@ -3,6 +3,9 @@ package com.example.david.ermes.Model.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.david.ermes.Model.db.DbModels;
+import com.example.david.ermes.Model.repository.MatchRepository;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -144,6 +147,22 @@ public class Match implements Serializable, Parcelable {
     // repository -> in cui inserire i fetchmatch così come tutti i database manager
     // il repository deve essere un singleton (una sola istanza)
 
+    public DbModels._Match convertTo_Match() {
+        return new DbModels._Match(
+                this.idOwner,
+                this.date.getTime(),
+                this.location.convertTo_Location(),
+                this.isPublic,
+                this.idSport,
+                this.maxPlayers,
+                this.numGuests,
+                this.missingStuff
+        );
+    }
+
+    public void save() {
+        MatchRepository.getInstance().saveMatch(this);
+    }
 
 
     @Override
