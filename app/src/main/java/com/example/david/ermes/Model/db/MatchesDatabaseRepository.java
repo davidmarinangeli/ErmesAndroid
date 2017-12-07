@@ -92,6 +92,7 @@ public class MatchesDatabaseRepository {
                 // DbModels._User value = dataSnapshot.getValue(DbModels._User.class);
                 matches_list.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    Log.d("DATASNAPSHOT_MATCH", d.toString());
                     _Match match = d.getValue(_Match.class);
                     matches_list.add(match);
 

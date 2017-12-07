@@ -36,7 +36,9 @@ public class SportDatabaseRepository {
                 // DbModels._User value = dataSnapshot.getValue(DbModels._User.class);
                 list.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    list.add(d.getValue(_Sport.class));
+                    Log.d("DATASNAPSHOT", d.toString());
+                    _Sport sport = d.getValue(_Sport.class);
+                    list.add(sport);
 //                    list.get(list.size() - 1).setID(d.getKey().toString());
                 }
                 fc.callback(list);
