@@ -1,9 +1,12 @@
 package com.example.david.ermes.Model.repository;
 
+import com.example.david.ermes.Model.db.DbModels;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.db.MatchesDatabaseRepository;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.User;
+
+import java.util.List;
 
 /**
  * Created by carlo on 30/11/2017.
@@ -20,12 +23,22 @@ public class MatchRepository {
 
     }
 
-    public void fetchMatches(FirebaseCallback firebaseCallback) {
-        MatchesDatabaseRepository.getInstance().fetchAllMatches(firebaseCallback);
+    public void fetchMatches(final FirebaseCallback firebaseCallback) {
+        MatchesDatabaseRepository.getInstance().fetchAllMatches(new FirebaseCallback() {
+            @Override
+            public void callback(List list) {
+                firebaseCallback.callback(DbModels._Match.convertToMatchList(list));
+            }
+        });
     }
 
-    public void fetchMatchesByOwner(User user, FirebaseCallback firebaseCallback) {
-        MatchesDatabaseRepository.getInstance().fetchMatchesByIdOwner(user.getUID(), firebaseCallback);
+    public void fetchMatchesByOwner(User user, final FirebaseCallback firebaseCallback) {
+        MatchesDatabaseRepository.getInstance().fetchMatchesByIdOwner(user.getUID(), new FirebaseCallback() {
+            @Override
+            public void callback(List list) {
+                firebaseCallback.callback(DbModels._Match.convertToMatchList(list));
+            }
+        });
     }
 
     public void saveMatch(Match match) {

@@ -51,21 +51,11 @@ public class MatchesDatabaseRepository {
     }
 
     public void fetchMatchesByIdOwner(String id, final FirebaseCallback fCallback) {
-        fetchMatches("idOwner", id, new FirebaseCallback() {
-            @Override
-            public void callback(List list) {
-                fCallback.callback(_Match.convertToMatchList(list));
-            }
-        });
+        fetchMatches("idOwner", id, fCallback);
     }
 
     public void fetchAllMatches(final FirebaseCallback fCallback) {
-        fetchMatches(null, null, new FirebaseCallback() {
-            @Override
-            public void callback(List list) {
-                fCallback.callback(_Match.convertToMatchList(list));
-            }
-        });
+        fetchMatches(null, null, fCallback);
     }
 
     public void push(_Match match) {
