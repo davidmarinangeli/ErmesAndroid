@@ -6,16 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.david.ermes.View.activities.EventActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/event_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="?attr/colorPrimary"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/AppTheme.PopupOverlay"
-        app:theme="@style/ToolBarStyle" />
+
 
 
     <ScrollView
@@ -23,7 +14,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_toolbar">
+        app:layout_constraintTop_toBottomOf="parent">
 
 
         <LinearLayout
@@ -33,10 +24,22 @@
             android:orientation="vertical">
 
 
+
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintParent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/event_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="?attr/colorPrimary"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    app:theme="@style/ToolBarStyle" />
 
                 <ImageView
                     android:id="@+id/imageViewFavSport"
@@ -47,7 +50,7 @@
                     android:scaleType="centerCrop"
                     app:layout_constraintLeft_toLeftOf="@+id/constraintParent"
                     app:layout_constraintRight_toRightOf="@+id/constraintParent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintParent"
+                    app:layout_constraintTop_toBottomOf="@+id/event_toolbar"
                     app:srcCompat="@drawable/basketball_field" />
 
                 <android.support.v7.widget.CardView
@@ -182,6 +185,8 @@
                     android:layout_marginTop="8dp"
                     app:cardCornerRadius="2dp"
                     app:cardElevation="2dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintEnd_toEndOf="@+id/constraintParent"
                     app:layout_constraintStart_toStartOf="@+id/constraintParent"
                     app:layout_constraintTop_toBottomOf="@+id/eventDetailCard">
@@ -319,7 +324,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:clickable="true"
                     app:cardCornerRadius="2dp"
                     app:cardElevation="2dp"
