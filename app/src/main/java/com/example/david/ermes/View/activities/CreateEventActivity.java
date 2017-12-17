@@ -63,15 +63,15 @@ public class CreateEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(onDateSetListener);
-                datePickerDialog.show(getFragmentManager(),"datepickerdialog");
+                datePickerDialog.show(getFragmentManager(), "datepickerdialog");
             }
         });
 
         event_orario_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(onTimeSetListener,true);
-                timePickerDialog.show(getFragmentManager(),"timepickerdialog");
+                TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(onTimeSetListener, true);
+                timePickerDialog.show(getFragmentManager(), "timepickerdialog");
             }
         });
 
@@ -88,51 +88,10 @@ public class CreateEventActivity extends AppCompatActivity {
                 sport_selector.setAdapter(adapter);
 
 
-
             }
         });
 
-        fine_creazione.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                User current_user = UserRepository.getInstance().getUser();
-
-                location = new Location("Alessandro Volta", 46.0490089, 11.123597, current_user);
-
-                //sport = (Sport) sport_selector.getSelectedItem();
-
-                List<String> missingstuff = new ArrayList<>();
-                missingstuff.add("rete");
-                missingstuff.add("pallone");
-
-                //qui mettere il comportamento alla creazione del match
-                Match result_match = new Match(
-                        current_user.getUID(),
-                        location,
-                        com.example.david.ermes.Presenter.utils.TimeUtils.fromMillisToDate(match_calendar_time.getTimeInMillis()),
-                        true,
-                        //sport.getName()
-                        selected_sport,
-                        //sport.getNumPlayers()
-                        10,
-                        2,
-                        missingstuff
-                );
-
-                result_match.save();
-
-                Intent result_intent = new Intent(v.getContext(),MainActivity.class);
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("new_event",result_match);
-                result_intent.putExtras(bundle);
-                setResult(Activity.RESULT_OK,result_intent);
-
-                finish();
-            }
-        });
+        fine_creazione.setOnClickListener(clickListener);
     }
 
     public class itemSelectedListener implements AdapterView.OnItemSelectedListener {
@@ -146,26 +105,66 @@ public class CreateEventActivity extends AppCompatActivity {
         }
     }
 
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            User current_user = UserRepository.getInstance().getUser();
+
+            location = new Location("Alessandro Volta", 46.0490089, 11.123597, current_user);
+
+            //sport = (Sport) sport_selector.getSelectedItem();
+
+            List<String> missingstuff = new ArrayList<>();
+            missingstuff.add("rete");
+            missingstuff.add("pallone");
+
+            //qui mettere il comportamento alla creazione del match
+            Match result_match = new Match(
+                    current_user.getUID(),
+                    location,
+                    com.example.david.ermes.Presenter.utils.TimeUtils.fromMillisToDate(match_calendar_time.getTimeInMillis()),
+                    true,
+                    //sport.getName()
+                    selected_sport,
+                    //sport.getNumPlayers()
+                    10,
+                    2,
+                    missingstuff
+            );
+
+            result_match.save();
+
+            Intent result_intent = new Intent(v.getContext(), MainActivity.class);
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("new_event", result_match);
+            result_intent.putExtras(bundle);
+            setResult(Activity.RESULT_OK, result_intent);
+
+            finish();
+        }
+    };
+
     private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePickerDialog datePicker, int year, int month, int day) {
-            match_calendar_time.set(Calendar.YEAR,year);
-            match_calendar_time.set(Calendar.MONTH,month);
-            match_calendar_time.set(Calendar.DAY_OF_MONTH,day);
+            match_calendar_time.set(Calendar.YEAR, year);
+            match_calendar_time.set(Calendar.MONTH, month);
+            match_calendar_time.set(Calendar.DAY_OF_MONTH, day);
 
             event_data_textview.setText(com.example.david.ermes.Presenter.utils.TimeUtils.fromMillistoYearMonthDay(match_calendar_time.getTimeInMillis()));
 
         }
     };
 
-    private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener(){
+    private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-            match_calendar_time.set(Calendar.HOUR_OF_DAY,hourOfDay);
-            match_calendar_time.set(Calendar.MINUTE,minute);
-            match_calendar_time.set(Calendar.SECOND,second);
+            match_calendar_time.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            match_calendar_time.set(Calendar.MINUTE, minute);
+            match_calendar_time.set(Calendar.SECOND, second);
 
-            String hour_minute = hourOfDay +":"+minute;
+            String hour_minute = hourOfDay + ":" + minute;
             event_orario_textview.setText(hour_minute);
         }
     };
