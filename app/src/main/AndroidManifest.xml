@@ -66,8 +66,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".View.activities.AddLocationActivity" />
-        <activity android:name=".PickPlaceActivity"></activity>
+        <activity android:name=".View.activities.PickPlaceActivity"></activity>
     </application>
 
 </manifest>
