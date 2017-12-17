@@ -58,7 +58,7 @@
             android:name=".View.activities.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".View.activities.LoginActivity"
+            android:name=".View.activities.MainSignInActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme" />
 
@@ -66,7 +66,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".View.activities.PickPlaceActivity"></activity>
+        <activity android:name=".View.activities.PickPlaceActivity" />
+        <activity android:name=".View.activities.SignUpActivity"></activity>
     </application>
 
 </manifest>

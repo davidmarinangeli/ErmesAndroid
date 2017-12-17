@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.david.ermes.R;
-import com.example.david.ermes.View.activities.LoginActivity;
+import com.example.david.ermes.View.activities.MainSignInActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,7 +51,7 @@ public class AccountFragment extends Fragment {
         loginbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(view.getContext(), LoginActivity.class);
+                Intent i = new Intent(view.getContext(), MainSignInActivity.class);
                 startActivity(i);
 
             }
