@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -26,40 +27,49 @@
         android:id="@+id/textInputLayoutInvitati"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         app:hintTextAppearance="@style/MyHintText"
-        app:layout_constraintBottom_toBottomOf="@+id/dismiss"
-        app:layout_constraintEnd_toStartOf="@+id/dismiss"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/dismiss">
+        fab:layout_constraintBottom_toBottomOf="parent"
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintTop_toTopOf="@+id/view">
 
         <EditText
-            android:imeOptions="actionDone"
             android:id="@+id/nome_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nome luogo"
+            android:imeOptions="actionDone"
             android:theme="@style/MyEditText" />
 
     </android.support.design.widget.TextInputLayout>
-    <Button
-        android:id="@+id/accept"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="@string/fine"
-        app:layout_constraintBottom_toBottomOf="@+id/dismiss"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/dismiss" />
 
-    <Button
-        android:id="@+id/dismiss"
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:layout_marginEnd="8dp"
-        android:text="Annulla"
-        app:layout_constraintEnd_toStartOf="@+id/accept"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+        android:src="@drawable/ic_close_white_24dp"
+        app:fab_size="mini"
+        fab:fab_colorNormal="@color/redButton"
+        fab:layout_constraintBottom_toBottomOf="parent"
+        fab:layout_constraintEnd_toStartOf="@+id/acceptButton" />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/acceptButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_done_white_24dp"
+        app:fab_size="mini
+"
+        fab:fab_colorNormal="@color/greenButton"
+        fab:layout_constraintBottom_toBottomOf="parent"
+        fab:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

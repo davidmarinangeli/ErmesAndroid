@@ -11,6 +11,8 @@
     <color name="colorAccentLight">#83b9ff</color>
 
     <!-- misc colors -->
+    <color name="greenButton">#4286f4</color>
+    <color name="redButton">#ce29e8</color>
     <color name="red">#FF0000</color>
     <color name="white">#FFFFFF</color>
     <color name="bright_foreground_holo_light">#150707</color>
