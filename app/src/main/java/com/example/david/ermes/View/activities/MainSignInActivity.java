@@ -30,10 +30,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class MainSignInActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
-    private SignInButton logInButton;
-    private Button normalbutton;
+    private SignInButton googleLogInButton;
+    private Button signUpButton;
+    private Button loginInButton;
     private EditText login_editext;
     private EditText password_editext;
     private TextView userlogintext;
@@ -67,14 +68,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
         // setto i parametri dei bottoni di Login
-        logInButton = findViewById(R.id.google_login_button);
-        normalbutton = findViewById(R.id.loginbutton);
-        normalbutton.setOnClickListener(this);
+        googleLogInButton = findViewById(R.id.google_login_button);
+        loginInButton = findViewById(R.id.loginbutton);
+        signUpButton = findViewById(R.id.signupbutton);
+        loginInButton.setOnClickListener(this);
+        signUpButton.setOnClickListener(this);
 
         userlogintext = findViewById(R.id.user_email_login);
-        logInButton.setOnClickListener(this);
+        googleLogInButton.setOnClickListener(this);
 
-        TextView textView = (TextView) logInButton.getChildAt(0);
+        TextView textView = (TextView) googleLogInButton.getChildAt(0);
         textView.setPadding(0, 0, 14, 0);
         textView.setText("Accedi con Google");
 
@@ -113,6 +116,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     //TODO: settare il comportamento in caso di bad filling
                 }
                     break;
+            case R.id.signupbutton:
+                Intent signupactivity = new Intent(this,SignUpActivity.class);
+                startActivity(signupactivity);
+
             case R.id.logoutbutton:
                 signOut();
             default:
@@ -121,19 +128,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void signInNormal(final String email, final String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
+                            Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(MainSignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
@@ -183,7 +190,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(MainSignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }

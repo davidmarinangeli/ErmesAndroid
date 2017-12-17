@@ -50,6 +50,9 @@
     <string name="e_mail">E-mail</string>
     <string name="luogo">Luogo</string>
     <string name="fine">Fine</string>
+    <string name="registrati">Registrati</string>
+    <string name="username">Username</string>
+    <string name="city">Città</string>
 
 
     <!-- buro gaio -->
