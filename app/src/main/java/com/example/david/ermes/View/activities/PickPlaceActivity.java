@@ -35,9 +35,9 @@ public class PickPlaceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_place);
 
-        dismiss = findViewById(R.id.dismiss);
+        dismiss = findViewById(R.id.cancelButton);
         place_name = findViewById(R.id.nome_location);
-        fine = findViewById(R.id.accept);
+        fine = findViewById(R.id.acceptButton);
 
         mMapView = findViewById(R.id.pick_place_map);
         mMapView.onCreate(savedInstanceState);

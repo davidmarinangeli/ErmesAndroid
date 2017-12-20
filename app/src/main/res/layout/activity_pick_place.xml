@@ -23,6 +23,23 @@
 
     </View>
 
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Premi sulla mappa un luogo "
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintHorizontal_bias="1.0"
+        fab:layout_constraintTop_toTopOf="@+id/textInputLayoutInvitati"
+        fab:layout_constraintVertical_bias="1.0" />
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInputLayoutInvitati"
         android:layout_width="0dp"
@@ -35,7 +52,8 @@
         fab:layout_constraintBottom_toBottomOf="parent"
         fab:layout_constraintEnd_toEndOf="parent"
         fab:layout_constraintStart_toStartOf="parent"
-        fab:layout_constraintTop_toTopOf="@+id/view">
+        fab:layout_constraintTop_toTopOf="@+id/view"
+        tools:visibility="invisible">
 
         <EditText
             android:id="@+id/nome_location"
@@ -66,8 +84,7 @@
         android:layout_marginBottom="32dp"
         android:layout_marginEnd="8dp"
         android:src="@drawable/ic_done_white_24dp"
-        app:fab_size="mini
-"
+        app:fab_size="mini"
         fab:fab_colorNormal="@color/greenButton"
         fab:layout_constraintBottom_toBottomOf="parent"
         fab:layout_constraintEnd_toEndOf="parent" />
