@@ -4,14 +4,13 @@ import com.example.david.ermes.Model.db.DbModels;
 import com.example.david.ermes.Model.db.DatabaseManager;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by nicol on 02/11/2017.
  */
 
-public class Sport implements Serializable {
+public class Sport {
     private String name;
     private int numPlayers;
     private String id;
