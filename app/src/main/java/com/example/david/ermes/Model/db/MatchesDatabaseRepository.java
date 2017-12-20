@@ -17,7 +17,7 @@ import java.util.List;
 public class MatchesDatabaseRepository {
     private static final MatchesDatabaseRepository instance = new MatchesDatabaseRepository();
 
-   public static MatchesDatabaseRepository getInstance() {
+    public static MatchesDatabaseRepository getInstance() {
         return instance;
     }
 
@@ -82,14 +82,12 @@ public class MatchesDatabaseRepository {
                 // DbModels._User value = dataSnapshot.getValue(DbModels._User.class);
                 matches_list.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    Log.d("DATASNAPSHOT_MATCH", d.toString());
                     _Match match = d.getValue(_Match.class);
-                    matches_list.add(match);
+                    match.setId(dataSnapshot.getKey());
 
-                    if (!locations_creators.contains(match.location.idUserCreator)) {
-                        locations_creators.add(match.location.idUserCreator);
-                    }
+                    matches_list.add(match);
                 }
+
                 fc.callback(matches_list);
             }
 
@@ -97,37 +95,8 @@ public class MatchesDatabaseRepository {
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
                 Log.w("FIREBASE", "Failed to read value.", error.toException());
+                fc.callback(null);
             }
         });
-
-                /*addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                DbModels._Match m = dataSnapshot.getValue(DbModels._Match.class);
-                list.add(m);
-                Log.d("MATCHES LIST", list.toString());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("FETCH_MATCHES", "loadMatch:onCancelled", databaseError.toException());
-            }
-        });*/
     }
-
 }

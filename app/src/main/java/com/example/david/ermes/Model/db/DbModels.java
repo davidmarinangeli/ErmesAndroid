@@ -18,17 +18,16 @@ public class DbModels {
     public static class _User {
         public String idFavSport;
         public String city;
-        private String name;
-        private String email;
+        public String name;
+        public String email;
         private String UID;
 
         public _User() {
-            this.name = "";
-            this.email = "";
-            this.UID = "";
         }
 
-        public _User(String idFavSport, String city) {
+        public _User(String name, String email, String idFavSport, String city) {
+            this.name = name;
+            this.email = email;
             this.idFavSport = idFavSport;
             this.city = city;
         }
@@ -54,7 +53,7 @@ public class DbModels {
 
     public static class _Match {
         public long date;
-        public _Location location;
+        public String idLocation;
         public String idOwner;
         public boolean isPublic;
         public String idSport;
@@ -62,13 +61,15 @@ public class DbModels {
         public int numGuests;
         public List<String> missingStuff;
 
+        private String id;
+
         public _Match() {
         }
 
-        public _Match(String idOwner, long date, _Location location, boolean isPublic,
+        public _Match(String idOwner, long date, String idLocation, boolean isPublic,
                       String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
             this.date = date;
-            this.location = location;
+            this.idLocation = idLocation;
             this.idOwner = idOwner;
             this.isPublic = isPublic;
             this.idSport = idSport;
@@ -77,10 +78,24 @@ public class DbModels {
             this.missingStuff = missingStuff;
         }
 
+        public void setId(String id) { this.id = id; }
+
         public Match convertToMatch() {
-            System.out.println(this.location);
-            return new Match(this.idOwner, this.location.convertToLocation(), TimeUtils.fromMillisToDate(this.date), this.isPublic,
-                    this.idSport, this.maxPlayers, this.numGuests, this.missingStuff);
+            if (this.id == null || this.id.length() <= 0) {
+                return null;
+            }
+
+            return new Match(
+                    this.id,
+                    this.idOwner,
+                    this.idLocation,
+                    TimeUtils.fromMillisToDate(this.date),
+                    this.isPublic,
+                    this.idSport,
+                    this.maxPlayers,
+                    this.numGuests,
+                    this.missingStuff
+            );
         }
 
         public static List<Match> convertToMatchList(List<DbModels._Match> list) {
@@ -95,6 +110,7 @@ public class DbModels {
     public static class _Sport {
         public String name;
         public int numPlayers;
+        private String id;
 
         public _Sport(String name, int numPlayers) {
             this.name = name;
@@ -106,7 +122,7 @@ public class DbModels {
 
         public Sport convertToSport() {
             return new Sport(
-                    "",
+                    this.id,
                     this.name,
                     this.numPlayers
             );
@@ -121,7 +137,7 @@ public class DbModels {
         }
 
         public void setID(String id) {
-
+            this.id = id;
         }
     }
 
@@ -130,10 +146,9 @@ public class DbModels {
         public double x;
         public double y;
         public String idUserCreator;
-        private _User userCreator;
+        private String id;
 
         public _Location() {
-            this.userCreator = null;
         }
 
         public _Location(String location, double x, double y, String idUser) {
@@ -141,25 +156,18 @@ public class DbModels {
             this.x = x;
             this.y = y;
             this.location = location;
-            this.userCreator = null;
         }
 
-        public Location convertToLocation() {
-            User user = null;
-            if (this.userCreator != null) {
-                user = this.userCreator.convertToUser();
-            }
+        public void setId(String id) { this.id = id; }
 
+        public Location convertToLocation() {
             return new Location(
+                    this.id,
                     this.location,
                     this.x,
                     this.y,
-                    user
+                    this.idUserCreator
             );
-        }
-
-        public void setUserCreator(_User user) {
-            this.userCreator = user;
         }
     }
 }

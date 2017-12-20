@@ -4,7 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.example.david.ermes.Model.db.DbModels;
+import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.MatchRepository;
+import com.example.david.ermes.Model.repository.SportRepository;
+import com.example.david.ermes.Model.repository.UserRepository;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,27 +20,47 @@ import java.util.List;
  */
 
 public class Match implements Serializable, Parcelable {
+    private String id;
+
     private Location location;
-    private Date date;
+    private User owner;
+    private Sport sport;
+
+    private String idLocation;
     private String idOwner;
-    private boolean isPublic;
     private String idSport;
+
+    private Date date;
+    private boolean isPublic;
     private int maxPlayers;
     private List<User> pending;
     private List<User> partecipants;
     private int numGuests;
     private List<String> missingStuff;
 
+    public Match() {
+    }
 
-    public Match() { }
-
-    public Match(String idOwner, Location location, Date date, boolean isPublic,
+    public Match(String id, String idOwner, String idLocation, Date date, boolean isPublic,
                  String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
-        this.location = location;
+        this.id = id;
+        this.idLocation = idLocation;
         this.date = date;
         this.idOwner = idOwner;
         this.isPublic = isPublic;
         this.idSport = idSport;
+        this.maxPlayers = maxPlayers;
+        this.numGuests = numGuests;
+        this.missingStuff = missingStuff;
+    }
+
+    public Match(User owner, Location location, Date date, boolean isPublic,
+                 Sport sport, int maxPlayers, int numGuests, List<String> missingStuff) {
+        this.location = location;
+        this.date = date;
+        this.owner = owner;
+        this.isPublic = isPublic;
+        this.sport = sport;
         this.maxPlayers = maxPlayers;
         this.numGuests = numGuests;
         this.missingStuff = missingStuff;
@@ -74,10 +98,6 @@ public class Match implements Serializable, Parcelable {
 
     public String getIdOwner() {
         return idOwner;
-    }
-
-    public void setIdOwner(String idOwner) {
-        this.idOwner = idOwner;
     }
 
     public Date getDate() {
@@ -144,16 +164,105 @@ public class Match implements Serializable, Parcelable {
         this.missingStuff = missingStuff;
     }
 
+    public User getOwner() {
+        return this.owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public String getId() { return this.id; }
+
     // repository -> in cui inserire i fetchmatch così come tutti i database manager
     // il repository deve essere un singleton (una sola istanza)
 
+    public void fetchOwner(final FirebaseCallback firebaseCallback) {
+        UserRepository.getInstance().fetchUserById(this.idOwner, new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                if (object != null) {
+                    owner = (User) object;
+                }
+
+                firebaseCallback.callback(owner);
+            }
+        });
+    }
+
+    public void fetchLocation(final FirebaseCallback firebaseCallback) {
+        if (this.idLocation != null && this.idLocation.length() > 0) {
+            LocationRepository.getInstance().fetchLocationById(this.idLocation, new FirebaseCallback() {
+                @Override
+                public void callback(Object object) {
+                    location = null;
+                    if (object != null) {
+                        Location loc = (Location) object;
+
+                        idLocation = loc.getId();
+                        location = loc;
+                    }
+
+                    firebaseCallback.callback(location);
+                }
+            });
+        } else {
+            firebaseCallback.callback(null);
+        }
+    }
+
+    public void fetchSport(final FirebaseCallback firebaseCallback) {
+        if (this.idSport != null && this.idSport.length() > 0) {
+            SportRepository.getInstance().fetchSportById(this.idSport, new FirebaseCallback() {
+                @Override
+                public void callback(Object object) {
+                    sport = null;
+                    if (object != null) {
+                        sport = (Sport) object;
+                        idSport = sport.getID();
+                    }
+
+                    firebaseCallback.callback(sport);
+                }
+            });
+        } else {
+            firebaseCallback.callback(null);
+        }
+    }
+
     public DbModels._Match convertTo_Match() {
+        String id_owner, id_location, id_sport;
+
+        if (this.idOwner != null && this.idOwner.length() > 0) {
+            id_owner = this.idOwner;
+        } else if (this.owner != null) {
+            id_owner = this.owner.getUID();
+        } else {
+            return null;
+        }
+
+        if (this.idLocation != null && this.idLocation.length() > 0) {
+            id_location = this.idLocation;
+        } else if (this.location != null) {
+            id_location = this.location.getId();
+        } else {
+            return null;
+        }
+
+        if (this.idSport != null && this.idSport.length() > 0) {
+            id_sport = this.idSport;
+        } else if (this.sport != null) {
+            id_sport = this.sport.getID();
+        } else {
+            return null;
+        }
+
         return new DbModels._Match(
-                this.idOwner,
+                id_owner,
                 this.date.getTime(),
-                this.location.convertTo_Location(),
+                id_location,
                 this.isPublic,
-                this.idSport,
+                id_sport,
                 this.maxPlayers,
                 this.numGuests,
                 this.missingStuff
