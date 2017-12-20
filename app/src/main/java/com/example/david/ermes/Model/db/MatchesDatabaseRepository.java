@@ -85,7 +85,7 @@ public class MatchesDatabaseRepository {
                     Log.d("DATASNAPSHOT_MATCH", d.toString());
                     _Match match = d.getValue(_Match.class);
                     matches_list.add(match);
-
+                    
                     if (!locations_creators.contains(match.location.idUserCreator)) {
                         locations_creators.add(match.location.idUserCreator);
                     }
