@@ -12,6 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.models.Sport;
+import com.example.david.ermes.Model.models.User;
+import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -185,8 +189,32 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+
+                            final FirebaseUser u = mAuth.getCurrentUser();
+                            updateUI(u);
+
+                            UserRepository.getInstance().fetchUserById(u.getUid(), new FirebaseCallback() {
+                                @Override
+                                public void callback(Object object) {
+                                    if (object != null) {
+                                        final User fetch_user = (User) object;
+
+                                        fetch_user.fetchFavoriteSport(new FirebaseCallback() {
+                                            @Override
+                                            public void callback(Object object) {
+                                                fetch_user.setName(u.getDisplayName());
+
+                                                if (object != null) {
+                                                    fetch_user.setFavSport((Sport) object);
+                                                    Log.d("USER FAVSPORT", fetch_user.getFavSport().toString());
+                                                }
+
+                                                fetch_user.save();
+                                            }
+                                        });
+                                    }
+                                }
+                            });
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

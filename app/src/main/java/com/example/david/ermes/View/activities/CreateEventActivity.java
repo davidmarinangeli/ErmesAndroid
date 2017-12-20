@@ -80,8 +80,8 @@ public class CreateEventActivity extends AppCompatActivity {
         final ArrayList<String> arraySpinner = new ArrayList<>();
         SportRepository.getInstance().fetchAll(new FirebaseCallback() {
             @Override
-            public void callback(List list) {
-                for (Sport s : (ArrayList<Sport>) list) {
+            public void callback(Object object) {
+                for (Sport s : (ArrayList<Sport>) object) {
                     arraySpinner.add(s.getName());
                 }
                 adapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
@@ -91,7 +91,54 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
-        fine_creazione.setOnClickListener(clickListener);
+        fine_creazione.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+
+                UserRepository.getInstance().getUser(new FirebaseCallback() {
+                    @Override
+                    public void callback(Object object) {
+                        if (object != null) {
+                            User current_user = (User) object;
+
+                            location = new Location("Alessandro Volta", 46.0490089, 11.123597, current_user);
+
+                            //sport = (Sport) sport_selector.getSelectedItem();
+
+                            List<String> missingstuff = new ArrayList<>();
+                            missingstuff.add("rete");
+                            missingstuff.add("pallone");
+
+                            //qui mettere il comportamento alla creazione del match
+                            Match result_match = new Match(
+                                    current_user,
+                                    location,
+                                    com.example.david.ermes.Presenter.utils.TimeUtils.fromMillisToDate(match_calendar_time.getTimeInMillis()),
+                                    true,
+                                    //sport.getName()
+                                    new Sport("1", "Volley", 12),
+                                    //sport.getNumPlayers()
+                                    10,
+                                    2,
+                                    missingstuff
+                            );
+
+                            result_match.setOwner(current_user);
+                            result_match.save();
+
+                            Intent result_intent = new Intent(v.getContext(),MainActivity.class);
+
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("new_event",result_match);
+                            result_intent.putExtras(bundle);
+                            setResult(Activity.RESULT_OK,result_intent);
+
+                            finish();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public class itemSelectedListener implements AdapterView.OnItemSelectedListener {
@@ -104,46 +151,6 @@ public class CreateEventActivity extends AppCompatActivity {
             // Do nothing.
         }
     }
-
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            User current_user = UserRepository.getInstance().getUser();
-
-            location = new Location("Alessandro Volta", 46.0490089, 11.123597, current_user);
-
-            //sport = (Sport) sport_selector.getSelectedItem();
-
-            List<String> missingstuff = new ArrayList<>();
-            missingstuff.add("rete");
-            missingstuff.add("pallone");
-
-            //qui mettere il comportamento alla creazione del match
-            Match result_match = new Match(
-                    current_user.getUID(),
-                    location,
-                    com.example.david.ermes.Presenter.utils.TimeUtils.fromMillisToDate(match_calendar_time.getTimeInMillis()),
-                    true,
-                    //sport.getName()
-                    selected_sport,
-                    //sport.getNumPlayers()
-                    10,
-                    2,
-                    missingstuff
-            );
-
-            result_match.save();
-
-            Intent result_intent = new Intent(v.getContext(), MainActivity.class);
-
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("new_event", result_match);
-            result_intent.putExtras(bundle);
-            setResult(Activity.RESULT_OK, result_intent);
-
-            finish();
-        }
-    };
 
     private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -164,7 +171,7 @@ public class CreateEventActivity extends AppCompatActivity {
             match_calendar_time.set(Calendar.MINUTE, minute);
             match_calendar_time.set(Calendar.SECOND, second);
 
-            String hour_minute = hourOfDay + ":" + minute;
+            String hour_minute = hourOfDay +":"+minute;
             event_orario_textview.setText(hour_minute);
         }
     };

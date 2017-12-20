@@ -48,7 +48,7 @@ android {
 
 ext {
     support = "26.1.0"
-    firebase = "11.6.0"
+    firebase = "11.6.2"
 }
 
 dependencies {

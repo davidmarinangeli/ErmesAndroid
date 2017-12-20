@@ -2,11 +2,16 @@ package com.example.david.ermes.View;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 
 import java.util.Calendar;
@@ -25,15 +30,14 @@ public class MainAdapterViewHolder {
 
     public static void bindElements(List<Match> matchList,
                                     int position,
-                                    View itemView,
+                                    final View itemView,
                                     TextView date_of_event,
                                     TextView hour_of_event,
                                     ImageView sport_icon,
-                                    TextView place){
+                                    final TextView place){
 
         Date date = matchList.get(position).getDate();
         //int sport_id = itemView
-        String where = matchList.get(position).getLocation().getName();
 
         Context cx = itemView.getContext();
 
@@ -45,7 +49,21 @@ public class MainAdapterViewHolder {
 
         hour_of_event.setText(TimeUtils.getFormattedHourMinute(c));
 
-        place.setText(where);
+        if (matchList.get(position).getLocation() != null) {
+            String where = matchList.get(position).getLocation().getName();
+            place.setText(where);
+        } else {
+            matchList.get(position).fetchLocation(new FirebaseCallback() {
+                @Override
+                public void callback(Object object) {
+                    if (object != null) {
+                        Location loc = (Location) object;
+
+                        place.setText(loc.getName());
+                    }
+                }
+            });
+        }
         //Picasso.with(cx).load(sport_id).memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
 
     }
