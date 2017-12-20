@@ -19,15 +19,30 @@ public class SportRepository {
 
     public SportRepository() {}
 
-    public void fetchAll(final FirebaseCallback fc) {
+    public void fetchSportById(String id, final FirebaseCallback firebaseCallback) {
+        SportDatabaseRepository.getInstance().fetchSportById(id, new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                Sport sport = null;
+
+                if (object != null) {
+                    sport = ((DbModels._Sport) object).convertToSport();
+                }
+
+                firebaseCallback.callback(sport);
+            }
+        });
+    }
+
+    public void fetchAll(final FirebaseCallback firebaseCallback) {
         SportDatabaseRepository.getInstance().fetchAllSports(new FirebaseCallback() {
             @Override
-            public void callback(List list) {
+            public void callback(Object object) {
                 List<Sport> sports = new ArrayList<>();
-                for (DbModels._Sport s : (List<DbModels._Sport>) list) {
+                for (DbModels._Sport s : (List<DbModels._Sport>) object) {
                     sports.add(s.convertToSport());
                 }
-                fc.callback(sports);
+                firebaseCallback.callback(sports);
             }
         });
     }

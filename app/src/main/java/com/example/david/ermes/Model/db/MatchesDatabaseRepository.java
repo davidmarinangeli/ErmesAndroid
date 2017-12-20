@@ -17,7 +17,7 @@ import java.util.List;
 public class MatchesDatabaseRepository {
     private static final MatchesDatabaseRepository instance = new MatchesDatabaseRepository();
 
-   public static MatchesDatabaseRepository getInstance() {
+    public static MatchesDatabaseRepository getInstance() {
         return instance;
     }
 
@@ -82,14 +82,12 @@ public class MatchesDatabaseRepository {
                 // DbModels._User value = dataSnapshot.getValue(DbModels._User.class);
                 matches_list.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    Log.d("DATASNAPSHOT_MATCH", d.toString());
                     _Match match = d.getValue(_Match.class);
+                    match.setId(dataSnapshot.getKey());
+
                     matches_list.add(match);
-                    
-                    if (!locations_creators.contains(match.location.idUserCreator)) {
-                        locations_creators.add(match.location.idUserCreator);
-                    }
                 }
+
                 fc.callback(matches_list);
             }
 
@@ -97,6 +95,7 @@ public class MatchesDatabaseRepository {
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
                 Log.w("FIREBASE", "Failed to read value.", error.toException());
+                fc.callback(null);
             }
         });
 

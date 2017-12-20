@@ -25,14 +25,33 @@ public class UserDatabaseRepository {
 
     private DatabaseReference usersRef;
 
+    private User currentUser;
+
     private UserDatabaseRepository() {
         DatabaseManager databaseManager = DatabaseManager.get();
 
         usersRef = databaseManager.getUsersRef();
+        currentUser = null;
     }
 
-    public User getCurrentUser(){
-        return DatabaseManager.get().getCurrentUser();
+    public void getCurrentUser(final FirebaseCallback firebaseCallback){
+        if (currentUser == null) {
+            DatabaseManager.get().getCurrentUser(new FirebaseCallback() {
+                @Override
+                public void callback(Object object) {
+                    if (object != null) {
+                        _User user = (_User) object;
+                        currentUser = user.convertToUser();
+
+                        firebaseCallback.callback(currentUser);
+                    } else {
+                        firebaseCallback.callback(null);
+                    }
+                }
+            });
+        } else {
+            firebaseCallback.callback(currentUser);
+        }
     }
 
     public void setUserDataChangedListener(final OnDataChangedListener<User> listener) {
@@ -55,19 +74,18 @@ public class UserDatabaseRepository {
         });
     }
 
-    public void save(String uid, User user) {
-        DbModels._User u = new DbModels._User(user.getIdFavSport(), user.getCity());
-        this.usersRef.child(uid).setValue(user);
+    public void save(User user) {
+        this.usersRef.child(user.getUID()).setValue(user.convertTo_User());
     }
 
-    public void fetchUserById(String id, final FirebaseCallback fc) {
-        final List<_User> list = new ArrayList<>();
-        Query getUser = this.usersRef.equalTo(id);
-        getUser.addValueEventListener(new ValueEventListener() {
+    public void fetchUserById(final String id, final FirebaseCallback fc) {
+        this.usersRef.child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                list.add(dataSnapshot.getValue(_User.class));
-                fc.callback(list);
+                _User user = dataSnapshot.getValue(_User.class);
+                user.setUID(id);
+
+                fc.callback(user);
             }
 
             @Override

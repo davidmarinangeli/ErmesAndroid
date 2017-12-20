@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.UserRepository;
@@ -60,19 +61,25 @@ public class PickPlaceActivity extends AppCompatActivity {
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
                     @Override
-                    public void onMapClick(LatLng point) {
-                        // TODO Auto-generated method stub
-                        marker[0] = new MarkerOptions()
-                                //.title(String.valueOf(place_name.getText()))
-                                .position(new LatLng(point.latitude, point.longitude));
-                        googleMap.clear();
-                        googleMap.addMarker(marker[0]);
+                    public void onMapClick(final LatLng point) {
+                        UserRepository.getInstance().getUser(new FirebaseCallback() {
+                            @Override
+                            public void callback(Object object) {
+                                if (object != null) {
+                                    // TODO Auto-generated method stub
+                                    marker[0] = new MarkerOptions()
+                                            //.title(String.valueOf(place_name.getText()))
+                                            .position(new LatLng(point.latitude, point.longitude));
+                                    googleMap.clear();
+                                    googleMap.addMarker(marker[0]);
 
-                        location_create.setLatitude(marker[0].getPosition().latitude);
-                        location_create.setLongitude(marker[0].getPosition().longitude);
-                        location_create.setName(String.valueOf(place_name.getText()));
-                        location_create.setLocation_creator(UserRepository.getInstance().getUser());
-
+                                    location_create.setLatitude(marker[0].getPosition().latitude);
+                                    location_create.setLongitude(marker[0].getPosition().longitude);
+                                    location_create.setName(String.valueOf(place_name.getText()));
+                                    location_create.setLocation_creator((User) object);
+                                }
+                            }
+                        });
                     }
                 });
             }

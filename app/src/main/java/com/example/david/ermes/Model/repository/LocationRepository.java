@@ -1,11 +1,9 @@
 package com.example.david.ermes.Model.repository;
 
-import com.example.david.ermes.Model.db.DbModels;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.db.LocationDatabaseRepository;
-import com.example.david.ermes.Model.db.MatchesDatabaseRepository;
 import com.example.david.ermes.Model.models.Location;
-import com.example.david.ermes.Model.models.User;
+import com.example.david.ermes.Model.db.DbModels._Location;
 
 /**
  * Created by nicol on 04/12/2017.
@@ -26,5 +24,19 @@ public class LocationRepository {
         if (location != null) {
             LocationDatabaseRepository.getInstance().push(location.convertTo_Location());
         }
+    }
+
+    public void fetchLocationById(String id, final FirebaseCallback firebaseCallback) {
+        LocationDatabaseRepository.getInstance().fetchLocationById(id, new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                Location location = null;
+                if (object != null) {
+                    location = ((_Location) object).convertToLocation();
+                }
+
+                firebaseCallback.callback(location);
+            }
+        });
     }
 }

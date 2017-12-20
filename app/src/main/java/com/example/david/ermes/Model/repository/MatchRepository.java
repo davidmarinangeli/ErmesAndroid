@@ -26,8 +26,8 @@ public class MatchRepository {
     public void fetchMatches(final FirebaseCallback firebaseCallback) {
         MatchesDatabaseRepository.getInstance().fetchAllMatches(new FirebaseCallback() {
             @Override
-            public void callback(List list) {
-                firebaseCallback.callback(DbModels._Match.convertToMatchList(list));
+            public void callback(Object object) {
+                firebaseCallback.callback(DbModels._Match.convertToMatchList((List<DbModels._Match>) object));
             }
         });
     }
@@ -35,8 +35,8 @@ public class MatchRepository {
     public void fetchMatchesByOwner(User user, final FirebaseCallback firebaseCallback) {
         MatchesDatabaseRepository.getInstance().fetchMatchesByIdOwner(user.getUID(), new FirebaseCallback() {
             @Override
-            public void callback(List list) {
-                firebaseCallback.callback(DbModels._Match.convertToMatchList(list));
+            public void callback(Object object) {
+                firebaseCallback.callback(DbModels._Match.convertToMatchList((List<DbModels._Match>) object));
             }
         });
     }

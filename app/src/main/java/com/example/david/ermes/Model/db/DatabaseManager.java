@@ -41,19 +41,26 @@ public class DatabaseManager {
         this.locationsRef = database.getReference("locations");
     }
 
-    public User getCurrentUser() {
-        User u = null;
-
+    public void getCurrentUser(final FirebaseCallback firebaseCallback) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-            String UID = user.getUid();
+            this.usersRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    DbModels._User user = dataSnapshot.getValue(DbModels._User.class);
+                    user.setUID(dataSnapshot.getKey());
 
-            u = new User(name, email, UID, "", "sport a caso");
+                    firebaseCallback.callback(user);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    firebaseCallback.callback(null);
+                }
+            });
+        } else {
+            firebaseCallback.callback(null);
         }
-
-        return u;
     }
 
     public DatabaseReference getMatchesRef() {

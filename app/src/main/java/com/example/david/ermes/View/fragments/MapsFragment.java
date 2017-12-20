@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.MatchRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
@@ -54,29 +55,46 @@ public class MapsFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-                MatchRepository.getInstance().fetchMatchesByOwner(UserRepository.getInstance().getUser(), new FirebaseCallback() {
-                    @Override
-                    public void callback(List list) {
-                        if (list != null && list.size() > 0) {
-                            match_list = list;
-                            for (Match match : match_list) {
-                                LatLng location_latlng = new LatLng(
-                                        match.getLocation().getLatitude(),
-                                        match.getLocation().getLongitude()
-                                );
 
-                                googleMap.addMarker(new MarkerOptions()
-                                        .position(location_latlng)
-                                        .title(match.getLocation().getName())
-                                        .snippet(match.getIdSport()));
-                            }
-                            LatLng randomlatlng = new LatLng(
-                                    match_list.get(0).getLocation().getLatitude(),
-                                    match_list.get(0).getLocation().getLongitude()
-                            );
-                            // For zooming automatically to the location of the marker
-                            CameraPosition cameraPosition = new CameraPosition.Builder().zoom(12).target(randomlatlng).build();
-                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                UserRepository.getInstance().getUser(new FirebaseCallback() {
+                    @Override
+                    public void callback(Object object) {
+                        if (object != null) {
+                            MatchRepository.getInstance().fetchMatchesByOwner((User) object, new FirebaseCallback() {
+                                @Override
+                                public void callback(Object object) {
+                                    if (object != null && ((List<Match>)object).size() > 0) {
+                                        match_list = (List<Match>)object;
+                                        final boolean first_match = true;
+
+                                        for (final Match match : match_list) {
+                                            match.fetchLocation(new FirebaseCallback() {
+                                                @Override
+                                                public void callback(Object object) {
+                                                    if (object != null) {
+                                                        LatLng location_latlng = new LatLng(
+                                                                match.getLocation().getLatitude(),
+                                                                match.getLocation().getLongitude()
+                                                        );
+
+                                                        googleMap.addMarker(new MarkerOptions()
+                                                                .position(location_latlng)
+                                                                .title(match.getLocation().getName())
+                                                                .snippet(match.getIdSport()));
+
+                                                        if (first_match) {
+                                                            // For zooming automatically to the location of the marker
+                                                            CameraPosition cameraPosition = new CameraPosition.Builder().zoom(12).target(location_latlng
+                                                            ).build();
+                                                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            });
                         }
                     }
                 });

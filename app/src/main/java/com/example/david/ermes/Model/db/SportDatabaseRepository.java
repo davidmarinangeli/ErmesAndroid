@@ -6,6 +6,7 @@ import com.example.david.ermes.Model.db.DbModels._Sport;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -24,6 +25,28 @@ public class SportDatabaseRepository {
 
     public SportDatabaseRepository() {
         this.ref = DatabaseManager.get().getSportsRef();
+    }
+
+    public void fetchSportById(final String id, final FirebaseCallback firebaseCallback) {
+        if (id != null && id.length() > 0) {
+            Query query = this.ref.child(id);
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    _Sport sport = dataSnapshot.getValue(_Sport.class);
+                    sport.setID(id);
+
+                    firebaseCallback.callback(sport);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            firebaseCallback.callback(null);
+        }
     }
 
     public void fetchAllSports(final FirebaseCallback fc) {
