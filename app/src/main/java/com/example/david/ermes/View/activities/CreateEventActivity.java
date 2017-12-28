@@ -101,7 +101,7 @@ public class CreateEventActivity extends AppCompatActivity {
                         if (object != null) {
                             User current_user = (User) object;
 
-                            location = new Location("Alessandro Volta", 46.0490089, 11.123597, current_user);
+                            location = new Location("Alessandro Volta", 46.0490089, 11.123597, current_user.getUID());
 
                             //sport = (Sport) sport_selector.getSelectedItem();
 
@@ -111,25 +111,25 @@ public class CreateEventActivity extends AppCompatActivity {
 
                             //qui mettere il comportamento alla creazione del match
                             Match result_match = new Match(
-                                    current_user,
-                                    location,
+                                    current_user.getUID(),
+                                    location.getId(),
                                     com.example.david.ermes.Presenter.utils.TimeUtils.fromMillisToDate(match_calendar_time.getTimeInMillis()),
                                     true,
                                     //sport.getName()
-                                    new Sport("1", "Volley", 12),
+                                    "1",
                                     //sport.getNumPlayers()
                                     10,
                                     2,
                                     missingstuff
                             );
 
-                            result_match.setOwner(current_user);
+                            // result_match.setOwner(current_user);
                             result_match.save();
 
                             Intent result_intent = new Intent(v.getContext(),MainActivity.class);
 
                             Bundle bundle = new Bundle();
-                            bundle.putSerializable("new_event",result_match);
+                            bundle.putParcelable("new_event",result_match);
                             result_intent.putExtras(bundle);
                             setResult(Activity.RESULT_OK,result_intent);
 
