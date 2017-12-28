@@ -83,14 +83,19 @@ public class UserDatabaseRepository {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 _User user = dataSnapshot.getValue(_User.class);
-                user.setUID(id);
 
-                fc.callback(user);
+                if (user != null) {
+                    user.setUID(id);
+
+                    fc.callback(user);
+                } else {
+                    fc.callback(null);
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                fc.callback(null);
             }
         });
     }

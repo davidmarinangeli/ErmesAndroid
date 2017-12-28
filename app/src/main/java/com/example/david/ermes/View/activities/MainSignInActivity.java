@@ -212,6 +212,8 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                                                 fetch_user.save();
                                             }
                                         });
+                                    } else {
+                                        new User(u.getDisplayName(), u.getEmail(), u.getUid(), "", "").save();
                                     }
                                 }
                             });

@@ -19,9 +19,11 @@ import java.util.List;
  * Classe Match per creare una struttura per gli eventi sportivi
  */
 
-public class Match implements Serializable, Parcelable {
+public class Match implements Parcelable {
     private String id;
 
+
+    // TODO : togliere questi tre oggetti da qui dentro. Noi utilizziamo solo la referenza con ID tramite la quale poi scarichiamo l'oggetto.
     private Location location;
     private User owner;
     private Sport sport;
@@ -177,6 +179,8 @@ public class Match implements Serializable, Parcelable {
     // repository -> in cui inserire i fetchmatch così come tutti i database manager
     // il repository deve essere un singleton (una sola istanza)
 
+
+    //TODO spostare i metodi fetch sulle repository di appartenenza ( fetchOwner su User, fetchLocation su Location... )
     public void fetchOwner(final FirebaseCallback firebaseCallback) {
         UserRepository.getInstance().fetchUserById(this.idOwner, new FirebaseCallback() {
             @Override
