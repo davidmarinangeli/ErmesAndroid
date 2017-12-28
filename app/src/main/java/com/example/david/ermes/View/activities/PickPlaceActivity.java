@@ -76,7 +76,7 @@ public class PickPlaceActivity extends AppCompatActivity {
                                     location_create.setLatitude(marker[0].getPosition().latitude);
                                     location_create.setLongitude(marker[0].getPosition().longitude);
                                     location_create.setName(String.valueOf(place_name.getText()));
-                                    location_create.setLocation_creator((User) object);
+                                    location_create.setIdUserCreator(((User) object).getUID());
                                 }
                             }
                         });

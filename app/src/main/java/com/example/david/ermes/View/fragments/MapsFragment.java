@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.User;
+import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.MatchRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
@@ -68,18 +70,20 @@ public class MapsFragment extends Fragment {
                                         final boolean first_match = true;
 
                                         for (final Match match : match_list) {
-                                            match.fetchLocation(new FirebaseCallback() {
+                                            LocationRepository.getInstance().fetchLocationById(match.getIdLocation(), new FirebaseCallback() {
                                                 @Override
                                                 public void callback(Object object) {
                                                     if (object != null) {
+                                                        Location loc = (Location) object;
+
                                                         LatLng location_latlng = new LatLng(
-                                                                match.getLocation().getLatitude(),
-                                                                match.getLocation().getLongitude()
+                                                                loc.getLatitude(),
+                                                                loc.getLongitude()
                                                         );
 
                                                         googleMap.addMarker(new MarkerOptions()
                                                                 .position(location_latlng)
-                                                                .title(match.getLocation().getName())
+                                                                .title(loc.getName())
                                                                 .snippet(match.getIdSport()));
 
                                                         if (first_match) {

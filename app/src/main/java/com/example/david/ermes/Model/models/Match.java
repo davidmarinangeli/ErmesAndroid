@@ -22,12 +22,6 @@ import java.util.List;
 public class Match implements Parcelable {
     private String id;
 
-
-    // TODO : togliere questi tre oggetti da qui dentro. Noi utilizziamo solo la referenza con ID tramite la quale poi scarichiamo l'oggetto.
-    private Location location;
-    private User owner;
-    private Sport sport;
-
     private String idLocation;
     private String idOwner;
     private String idSport;
@@ -56,13 +50,13 @@ public class Match implements Parcelable {
         this.missingStuff = missingStuff;
     }
 
-    public Match(User owner, Location location, Date date, boolean isPublic,
-                 Sport sport, int maxPlayers, int numGuests, List<String> missingStuff) {
-        this.location = location;
+    public Match(String idOwner, String idLocation, Date date, boolean isPublic,
+                 String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
+        this.idLocation = idLocation;
         this.date = date;
-        this.owner = owner;
+        this.idOwner = idOwner;
         this.isPublic = isPublic;
-        this.sport = sport;
+        this.idSport = idSport;
         this.maxPlayers = maxPlayers;
         this.numGuests = numGuests;
         this.missingStuff = missingStuff;
@@ -90,14 +84,6 @@ public class Match implements Parcelable {
         }
     };
 
-    public Location getLocation() {
-        return this.location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
     public String getIdOwner() {
         return idOwner;
     }
@@ -117,6 +103,10 @@ public class Match implements Parcelable {
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
     }
+
+    public String getIdLocation() {return this.idLocation; }
+
+    public void setIdLocation(String idLocation) { this.idLocation = idLocation; }
 
     public String getIdSport() {
         return idSport;
@@ -166,107 +156,18 @@ public class Match implements Parcelable {
         this.missingStuff = missingStuff;
     }
 
-    public User getOwner() {
-        return this.owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
     public String getId() { return this.id; }
 
     // repository -> in cui inserire i fetchmatch così come tutti i database manager
     // il repository deve essere un singleton (una sola istanza)
 
-
-    //TODO spostare i metodi fetch sulle repository di appartenenza ( fetchOwner su User, fetchLocation su Location... )
-    public void fetchOwner(final FirebaseCallback firebaseCallback) {
-        UserRepository.getInstance().fetchUserById(this.idOwner, new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null) {
-                    owner = (User) object;
-                }
-
-                firebaseCallback.callback(owner);
-            }
-        });
-    }
-
-    public void fetchLocation(final FirebaseCallback firebaseCallback) {
-        if (this.idLocation != null && this.idLocation.length() > 0) {
-            LocationRepository.getInstance().fetchLocationById(this.idLocation, new FirebaseCallback() {
-                @Override
-                public void callback(Object object) {
-                    location = null;
-                    if (object != null) {
-                        Location loc = (Location) object;
-
-                        idLocation = loc.getId();
-                        location = loc;
-                    }
-
-                    firebaseCallback.callback(location);
-                }
-            });
-        } else {
-            firebaseCallback.callback(null);
-        }
-    }
-
-    public void fetchSport(final FirebaseCallback firebaseCallback) {
-        if (this.idSport != null && this.idSport.length() > 0) {
-            SportRepository.getInstance().fetchSportById(this.idSport, new FirebaseCallback() {
-                @Override
-                public void callback(Object object) {
-                    sport = null;
-                    if (object != null) {
-                        sport = (Sport) object;
-                        idSport = sport.getID();
-                    }
-
-                    firebaseCallback.callback(sport);
-                }
-            });
-        } else {
-            firebaseCallback.callback(null);
-        }
-    }
-
     public DbModels._Match convertTo_Match() {
-        String id_owner, id_location, id_sport;
-
-        if (this.idOwner != null && this.idOwner.length() > 0) {
-            id_owner = this.idOwner;
-        } else if (this.owner != null) {
-            id_owner = this.owner.getUID();
-        } else {
-            return null;
-        }
-
-        if (this.idLocation != null && this.idLocation.length() > 0) {
-            id_location = this.idLocation;
-        } else if (this.location != null) {
-            id_location = this.location.getId();
-        } else {
-            return null;
-        }
-
-        if (this.idSport != null && this.idSport.length() > 0) {
-            id_sport = this.idSport;
-        } else if (this.sport != null) {
-            id_sport = this.sport.getID();
-        } else {
-            return null;
-        }
-
         return new DbModels._Match(
-                id_owner,
+                this.idOwner,
                 this.date.getTime(),
-                id_location,
+                this.idLocation,
                 this.isPublic,
-                id_sport,
+                this.idSport,
                 this.maxPlayers,
                 this.numGuests,
                 this.missingStuff

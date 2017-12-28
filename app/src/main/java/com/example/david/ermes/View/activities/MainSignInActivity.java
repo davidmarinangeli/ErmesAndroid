@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
+import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.google.android.gms.auth.api.Auth;
@@ -199,14 +200,14 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                                     if (object != null) {
                                         final User fetch_user = (User) object;
 
-                                        fetch_user.fetchFavoriteSport(new FirebaseCallback() {
+                                        SportRepository.getInstance().fetchSportById(fetch_user.getIdFavSport(), new FirebaseCallback() {
                                             @Override
                                             public void callback(Object object) {
                                                 fetch_user.setName(u.getDisplayName());
 
                                                 if (object != null) {
-                                                    fetch_user.setFavSport((Sport) object);
-                                                    Log.d("USER FAVSPORT", fetch_user.getFavSport().toString());
+                                                    fetch_user.setIdFavSport(((Sport) object).getID());
+                                                    Log.d("USER FAVSPORT", fetch_user.getIdFavSport());
                                                 }
 
                                                 fetch_user.save();

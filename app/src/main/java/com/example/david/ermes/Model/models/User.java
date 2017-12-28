@@ -14,7 +14,6 @@ public class User {
     private String email;
     private String UID;
     private String city;
-    private Sport favSport;
     private String idFavSport;
 
     public User() {
@@ -45,15 +44,6 @@ public class User {
         return this.UID;
     }
 
-    public Sport getFavSport() {
-        return favSport;
-    }
-
-    public void setFavSport(Sport favSport) {
-        this.favSport = favSport;
-        this.idFavSport = favSport.getID();
-    }
-
     public void setCity(String city) {
         this.city = city;
     }
@@ -61,6 +51,10 @@ public class User {
     public String getCity() {
         return this.city;
     }
+
+    public String getIdFavSport() { return this.idFavSport; }
+
+    public void setIdFavSport(String idFavSport) { this.idFavSport = idFavSport; }
 
     public void save() {
         UserRepository.getInstance().saveUser(this);
@@ -73,18 +67,5 @@ public class User {
                 this.idFavSport,
                 this.city
         );
-    }
-
-    public void fetchFavoriteSport(final FirebaseCallback firebaseCallback) {
-        SportRepository.getInstance().fetchSportById(this.idFavSport, new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null) {
-                    favSport = (Sport) object;
-                }
-
-                firebaseCallback.callback(favSport);
-            }
-        });
     }
 }
