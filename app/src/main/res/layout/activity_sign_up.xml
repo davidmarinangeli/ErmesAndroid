@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/username"
-            android:inputType="textVisiblePassword"
+            android:inputType="textPassword"
             android:theme="@style/MyEditText" />
     </android.support.design.widget.TextInputLayout>
 
@@ -83,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/city"
-            android:inputType="textVisiblePassword"
+            android:inputType="text"
             android:theme="@style/MyEditText" />
     </android.support.design.widget.TextInputLayout>
 

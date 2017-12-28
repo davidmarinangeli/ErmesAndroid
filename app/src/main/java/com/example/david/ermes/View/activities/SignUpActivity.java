@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,8 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
-
-
+    // TODO : creare un sign-in/up presenter in cui creare la logica dell'activity
     private FirebaseAuth mAuth;
     private static final String TAG = "SignUpActivity";
 
@@ -42,8 +42,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         mAuth = FirebaseAuth.getInstance();
 
         // setto i parametri dell'editext login e password
-        mail_editText = findViewById(R.id.mail);
-        password_editText = findViewById(R.id.pwd);
+        mail_editText = findViewById(R.id.signup_mail);
+        password_editText = findViewById(R.id.signup_pwd);
         city_editText = findViewById(R.id.city_signup);
         username_editText = findViewById(R.id.username_signup);
 
@@ -77,19 +77,20 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.registrati_button){
-            if ((mail_editText.getText() != null) &&
-                    (password_editText.getText() != null) &&
-                    (username_editText.getText() != null) &&
-                    (city_editText.getText() != null))
+            if (!TextUtils.isEmpty(mail_editText.getText().toString()) &&
+                    (!TextUtils.isEmpty(password_editText.getText().toString())) &&
+                    (!TextUtils.isEmpty(username_editText.getText().toString())) &&
+                    (!TextUtils.isEmpty(city_editText.getText().toString()))
+                    )
             {
                 signUpNormal(mail_editText.getText().toString(), password_editText.getText().toString());
 
             } else {
-                if (mail_editText.getText() == null)
-                    mail_til.setError("Inserisci una mail");
-                if (password_editText.getText() == null)
+                if (TextUtils.isEmpty(password_editText.getText().toString()))
                     password_til.setError("Inserisci una password");
 
+                if (TextUtils.isEmpty(mail_editText.getText().toString()))
+                    mail_til.setError("Inserisci una mail");
             }
         }
     }

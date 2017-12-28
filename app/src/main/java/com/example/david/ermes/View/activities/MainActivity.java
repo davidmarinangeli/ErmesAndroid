@@ -146,14 +146,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //comportamento da avere nel caso in cui torno da un'altra activity
-        
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
