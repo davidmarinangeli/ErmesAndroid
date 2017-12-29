@@ -36,21 +36,21 @@ public class DatabaseManager {
         this.database = FirebaseDatabase.getInstance();
 
         this.usersRef = database.getReference("users");
-        this.matchesRef = database.getReference("matches");;
+        this.matchesRef = database.getReference("matches");
         this.sportsRef = database.getReference("sports");
         this.locationsRef = database.getReference("locations");
     }
 
     public void getCurrentUser(final FirebaseCallback firebaseCallback) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user.getUid().isEmpty()) {
+        if (!user.getUid().isEmpty()) {
             this.usersRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    DbModels._User user = dataSnapshot.getValue(DbModels._User.class);
-                    user.setUID(dataSnapshot.getKey());
+                    DbModels._User u = dataSnapshot.getValue(DbModels._User.class);
+                    u.setUID(dataSnapshot.getKey());
 
-                    firebaseCallback.callback(user);
+                    firebaseCallback.callback(u);
                 }
 
                 @Override
