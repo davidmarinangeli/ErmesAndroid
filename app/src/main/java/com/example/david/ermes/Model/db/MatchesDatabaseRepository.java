@@ -83,7 +83,7 @@ public class MatchesDatabaseRepository {
                 matches_list.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     _Match match = d.getValue(_Match.class);
-                    match.setId(dataSnapshot.getKey());
+                    match.setID(dataSnapshot.getKey());
 
                     matches_list.add(match);
                 }

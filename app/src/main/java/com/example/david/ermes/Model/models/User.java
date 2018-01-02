@@ -15,17 +15,19 @@ public class User {
     private String UID;
     private String city;
     private String idFavSport;
+    private boolean isLoggedIn;
 
     public User() {
 
     }
 
-    public User(String name, String email, String UID, String city, String idFavSport) {
+    public User(String name, String email, String UID, String city, String idFavSport, boolean isLoggedIn) {
         this.name = name;
         this.email = email;
         this.UID = UID;
         this.city = city;
         this.idFavSport = idFavSport;
+        this.isLoggedIn = isLoggedIn;
     }
 
     public void setName(String name) {
@@ -55,6 +57,14 @@ public class User {
     public String getIdFavSport() { return this.idFavSport; }
 
     public void setIdFavSport(String idFavSport) { this.idFavSport = idFavSport; }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
 
     public void save() {
         UserRepository.getInstance().saveUser(this);

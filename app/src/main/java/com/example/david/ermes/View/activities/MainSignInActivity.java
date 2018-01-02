@@ -214,7 +214,7 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                                             }
                                         });
                                     } else {
-                                        new User(u.getDisplayName(), u.getEmail(), u.getUid(), "", "").save();
+                                        new User(u.getDisplayName(), u.getEmail(), u.getUid(), "", "", true).save();
                                     }
                                 }
                             });
@@ -249,6 +249,12 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                 userlogintext.setText("");
             }
         });
+    }
+
+    private void noRegistration() {
+        UserRepository.getUnregisteredUser();
+        // TODO gestire gli utenti non registrati (vedi l'oggetto che ritorna la funzione chiamata prima)
+        // controllare la nuova proprietà isLoggedIn dell'oggetto User
     }
 
 }

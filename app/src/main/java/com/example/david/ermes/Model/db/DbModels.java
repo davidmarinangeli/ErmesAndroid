@@ -6,7 +6,6 @@ import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class DbModels {
         }
 
         public User convertToUser() {
-            return new User(this.name, this.email, this.UID, this.city, this.idFavSport);
+            return new User(this.name, this.email, this.UID, this.city, this.idFavSport, true);
         }
 
         public void setName(String name) {
@@ -78,7 +77,7 @@ public class DbModels {
             this.missingStuff = missingStuff;
         }
 
-        public void setId(String id) { this.id = id; }
+        public void setID(String id) { this.id = id; }
 
         public Match convertToMatch() {
             if (this.id == null || this.id.length() <= 0) {
@@ -110,6 +109,7 @@ public class DbModels {
     public static class _Sport {
         public String name;
         public int numPlayers;
+
         private String id;
 
         public _Sport(String name, int numPlayers) {
@@ -146,6 +146,7 @@ public class DbModels {
         public double x;
         public double y;
         public String idUserCreator;
+
         private String id;
 
         public _Location() {
@@ -158,7 +159,7 @@ public class DbModels {
             this.location = location;
         }
 
-        public void setId(String id) { this.id = id; }
+        public void setID(String id) { this.id = id; }
 
         public Location convertToLocation() {
             return new Location(
