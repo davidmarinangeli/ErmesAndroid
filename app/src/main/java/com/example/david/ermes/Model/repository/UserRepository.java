@@ -11,6 +11,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository {
+    private static User unregisteredUser = null;
+
+    public static User getUnregisteredUser() {
+        if (unregisteredUser == null) {
+            unregisteredUser = new User(
+                    "unregistered",
+                    "unregistered",
+                    "unregistered",
+                    "unregistered",
+                    "unregistered",
+                    false
+            );
+        }
+
+        return unregisteredUser;
+    }
+
     private static final UserRepository instance = new UserRepository();
 
     public static UserRepository getInstance() {
@@ -32,7 +49,7 @@ public class UserRepository {
     }
 
     public void saveUser(User user) {
-        UserDatabaseRepository.getInstance().save(user);
+        UserDatabaseRepository.getInstance().save(user.getUID(), user.convertTo_User());
     }
 
     public void fetchUserById(String id, final FirebaseCallback firebaseCallback) {

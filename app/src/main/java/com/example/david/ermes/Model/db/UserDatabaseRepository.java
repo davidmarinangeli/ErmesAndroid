@@ -74,8 +74,8 @@ public class UserDatabaseRepository {
         });
     }
 
-    public void save(User user) {
-        this.usersRef.child(user.getUID()).setValue(user.convertTo_User());
+    public void save(String id, _User user) {
+        this.usersRef.child(id).setValue(user);
     }
 
     public void fetchUserById(final String id, final FirebaseCallback fc) {

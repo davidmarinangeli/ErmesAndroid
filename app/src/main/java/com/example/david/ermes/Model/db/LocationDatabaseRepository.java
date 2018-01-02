@@ -29,7 +29,7 @@ public class LocationDatabaseRepository {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 DbModels._Location location = dataSnapshot.getValue(DbModels._Location.class);
-                location.setId(dataSnapshot.getKey());
+                location.setID(dataSnapshot.getKey());
 
                 firebaseCallback.callback(location);
             }
