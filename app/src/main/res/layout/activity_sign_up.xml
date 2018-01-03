@@ -6,86 +6,74 @@
     android:layout_height="match_parent"
     tools:context="com.example.david.ermes.View.activities.SignUpActivity">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputLayoutMail"
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/signup_mail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:hintTextAppearance="@style/MyHintText"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutName">
-
-        <EditText
-            android:id="@+id/signup_mail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/e_mail"
-            android:inputType="textEmailAddress"
-            android:theme="@style/MyEditText" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputLayoutPwd"
-        android:layout_width="match_parent"
-        android:layout_height="53dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:hintTextAppearance="@style/MyHintText"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutMail">
-
-        <EditText
-            android:id="@+id/signup_pwd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textVisiblePassword"
-            android:hint="@string/password"
-            android:theme="@style/MyEditText" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputLayoutName"
-        android:layout_width="match_parent"
-        android:layout_height="53dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:hint="@string/e_mail"
+        android:inputType="textEmailAddress"
         android:orientation="vertical"
-        app:hintTextAppearance="@style/MyHintText"
+        android:theme="@style/MyEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/username_signup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/username"
-            android:inputType="textPassword"
-            android:theme="@style/MyEditText" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputLayoutCity"
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/signup_pwd"
         android:layout_width="match_parent"
-        android:layout_height="53dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:hint="@string/password"
+        android:inputType="textPassword"
         android:orientation="vertical"
+        android:theme="@style/MyEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPwd">
+        app:layout_constraintTop_toBottomOf="@+id/username_signup"
+        app:met_minCharacters="6" />
 
-        <EditText
-            android:id="@+id/city_signup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/city"
-            android:inputType="text"
-            android:theme="@style/MyEditText" />
-    </android.support.design.widget.TextInputLayout>
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/username_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="@string/username"
+        android:inputType="text"
+        android:orientation="vertical"
+        android:theme="@style/MyEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signup_mail" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/city_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="@string/city"
+        android:inputType="text"
+        android:orientation="vertical"
+        android:theme="@style/MyEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signup_pwd" />
+
+    <Spinner
+        android:id="@+id/sport_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/city_signup" />
 
     <Button
         android:id="@+id/registrati_button"

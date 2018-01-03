@@ -32,11 +32,14 @@ android {
     buildTypes {
         release {
 
+            useProguard true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
+
+            useProguard true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
@@ -48,7 +51,7 @@ android {
 
 ext {
     support = "26.1.0"
-    firebase = "11.6.2"
+    firebase = "11.8.0"
 }
 
 dependencies {
