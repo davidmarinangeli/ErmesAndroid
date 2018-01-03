@@ -11,22 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository {
-    private static User unregisteredUser = null;
-
-    public static User getUnregisteredUser() {
-        if (unregisteredUser == null) {
-            unregisteredUser = new User(
-                    "unregistered",
-                    "unregistered",
-                    "unregistered",
-                    "unregistered",
-                    "unregistered",
-                    false
-            );
-        }
-
-        return unregisteredUser;
-    }
 
     private static final UserRepository instance = new UserRepository();
 
