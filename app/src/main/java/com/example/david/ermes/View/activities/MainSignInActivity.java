@@ -83,8 +83,8 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
         googleLogInButton.setOnClickListener(this);
 
         TextView textView = (TextView) googleLogInButton.getChildAt(0);
-        textView.setPadding(0, 0, 14, 0);
-        textView.setText("Accedi con Google");
+        textView.setPadding(8, 0, 0, 0);
+        textView.setText(R.string.logingoogle);
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

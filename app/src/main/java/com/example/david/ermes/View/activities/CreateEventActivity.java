@@ -39,6 +39,7 @@ public class CreateEventActivity extends AppCompatActivity {
     Calendar match_calendar_time;
 
     String selected_sport;
+    final String SPORT_HINT = "Seleziona uno sport...";
     Sport sport;
     Location location;
 
@@ -83,8 +84,23 @@ public class CreateEventActivity extends AppCompatActivity {
             public void callback(Object object) {
                 for (Sport s : (ArrayList<Sport>) object) {
                     arraySpinner.add(s.getName());
+                    arraySpinner.add(0,SPORT_HINT);
                 }
-                adapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
+                adapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner){
+                    @Override
+                    public boolean isEnabled(int position){
+                        if(position == 0)
+                        {
+                            // Disable the first item from Spinner
+                            // First item will be use for hint
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                };
                 sport_selector.setAdapter(adapter);
 
 
@@ -141,7 +157,7 @@ public class CreateEventActivity extends AppCompatActivity {
         });
     }
 
-    public class itemSelectedListener implements AdapterView.OnItemSelectedListener {
+    private class itemSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             selected_sport = parent.getItemAtPosition(pos).toString();

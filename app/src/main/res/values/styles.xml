@@ -29,8 +29,11 @@
     </style>
 
     <style name="MyEditText" parent="Theme.AppCompat.Light">
-        <item name="colorControlNormal">@color/colorAccent</item>
-        <item name="colorControlActivated">@color/colorAccent</item>
+
+        <item name="android:textCursorDrawable">@drawable/custom_cursor</item>
+        <item name="met_floatingLabel">highlight</item>
+        <item name="met_floatingLabelTextColor">@color/colorAccent</item>
+        <item name="met_primaryColor">@color/colorAccent</item>
     </style>
 
     <style name="ButtonStyle" parent="Theme.AppCompat.Light.NoActionBar">

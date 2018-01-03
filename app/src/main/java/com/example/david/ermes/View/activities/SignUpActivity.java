@@ -7,15 +7,25 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.models.Sport;
+import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.rengwuxian.materialedittext.MaterialEditText;
+
+import java.util.ArrayList;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,13 +35,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private Button registrati_button;
 
-    private EditText mail_editText;
-    private EditText password_editText;
-    private EditText city_editText;
-    private EditText username_editText;
+    private Spinner sportspinner;
+    private SpinnerAdapter adapter;
+    private String selected_sport;
 
-    private TextInputLayout mail_til;
-    private TextInputLayout password_til;
+    private MaterialEditText mail_editText;
+    private MaterialEditText password_editText;
+    private MaterialEditText city_editText;
+    private MaterialEditText username_editText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +52,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         // prendo l'istanza del FBAuth
         mAuth = FirebaseAuth.getInstance();
+
+
+        // vado ad istanziare lo spinner
+        sportspinner = findViewById(R.id.sport_spinner);
 
         // setto i parametri dell'editext login e password
         mail_editText = findViewById(R.id.signup_mail);
@@ -50,8 +66,23 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         registrati_button = findViewById(R.id.registrati_button);
         registrati_button.setOnClickListener(this);
 
-        mail_til = findViewById(R.id.textInputLayoutMail);
-        password_til = findViewById(R.id.textInputLayoutPwd);
+        sportspinner.setOnItemSelectedListener(new itemSelectedListener());
+
+        final ArrayList<String> arraySpinner = new ArrayList<>();
+        SportRepository.getInstance().fetchAll(new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                for (Sport s : (ArrayList<Sport>) object) {
+                    arraySpinner.add(s.getName());
+                }
+                adapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
+                sportspinner.setAdapter(adapter);
+
+
+            }
+        });
+
+
     }
 
     private void signUpNormal(final String email, final String password){
@@ -62,6 +93,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -73,6 +105,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 });
     }
+
+    private class itemSelectedListener implements AdapterView.OnItemSelectedListener {
+
+        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+            selected_sport = parent.getItemAtPosition(pos).toString();
+        }
+
+        public void onNothingSelected(AdapterView parent) {
+            // Do nothing.
+        }
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -87,10 +131,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
             } else {
                 if (TextUtils.isEmpty(password_editText.getText().toString()))
-                    password_til.setError("Inserisci una password");
+                    password_editText.setError("Inserisci una password");
 
                 if (TextUtils.isEmpty(mail_editText.getText().toString()))
-                    mail_til.setError("Inserisci una mail");
+                    mail_editText.setError("Inserisci una mail");
+
+                if (TextUtils.isEmpty(username_editText.getText().toString()))
+                    username_editText.setError("Inserisci un username");
+
+                if (TextUtils.isEmpty(city_editText.getText().toString()))
+                    city_editText.setError("Inserisci una città");
             }
         }
     }
