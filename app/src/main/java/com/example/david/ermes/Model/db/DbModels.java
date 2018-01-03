@@ -32,7 +32,7 @@ public class DbModels {
         }
 
         public User convertToUser() {
-            return new User(this.name, this.email, this.UID, this.city, this.idFavSport, true);
+            return new User(this.name, this.email, this.UID, this.city, this.idFavSport);
         }
 
         public void setName(String name) {
