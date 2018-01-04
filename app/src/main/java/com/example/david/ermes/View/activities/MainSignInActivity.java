@@ -191,33 +191,27 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
 
-                            final FirebaseUser u = mAuth.getCurrentUser();
-                            updateUI(u);
+                            final FirebaseUser user = task.getResult().getUser();
 
-                            UserRepository.getInstance().fetchUserById(u.getUid(), new FirebaseCallback() {
+                            UserRepository.getInstance().fetchUserById(user.getUid(), new FirebaseCallback() {
                                 @Override
                                 public void callback(Object object) {
-                                    if (object != null) {
-                                        final User fetch_user = (User) object;
+                                    if (object == null) {
+                                        Intent signupactivity = new Intent(getBaseContext(),SignUpActivity.class);
+                                        Bundle extras = new Bundle();
 
-                                        SportRepository.getInstance().fetchSportById(fetch_user.getIdFavSport(), new FirebaseCallback() {
-                                            @Override
-                                            public void callback(Object object) {
-                                                fetch_user.setName(u.getDisplayName());
+                                        // c'è un modo più bello di fare sto schifo?
+                                        extras.putString("mail",user.getEmail());
+                                        extras.putString("uid",user.getUid());
+                                        extras.putString("name",user.getDisplayName());
 
-                                                if (object != null) {
-                                                    fetch_user.setIdFavSport(((Sport) object).getID());
-                                                    Log.d("USER FAVSPORT", fetch_user.getIdFavSport());
-                                                }
-
-                                                fetch_user.save();
-                                            }
-                                        });
-                                    } else {
-                                        new User(u.getDisplayName(), u.getEmail(), u.getUid(), "", "", true).save();
-                                    }
+                                        signupactivity.putExtras(extras);
+                                        startActivity(signupactivity);
+                                        }
                                 }
                             });
+
+                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

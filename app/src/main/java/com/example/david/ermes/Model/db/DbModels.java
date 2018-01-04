@@ -107,6 +107,7 @@ public class DbModels {
     }
 
     public static class _Sport {
+
         public String name;
         public int numPlayers;
 
@@ -119,6 +120,19 @@ public class DbModels {
 
         public _Sport() {
         }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setID(String id) {
+            this.id = id;
+        }
+
 
         public Sport convertToSport() {
             return new Sport(
@@ -134,10 +148,6 @@ public class DbModels {
                 sports.add(s.convertToSport());
             }
             return sports;
-        }
-
-        public void setID(String id) {
-            this.id = id;
         }
     }
 
