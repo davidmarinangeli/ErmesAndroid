@@ -48,7 +48,8 @@ public class DatabaseManager {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     DbModels._User u = dataSnapshot.getValue(DbModels._User.class);
-                    u.setUID(dataSnapshot.getKey());
+                    if ((dataSnapshot.getKey() != null) && (u != null))
+                        u.setUID(dataSnapshot.getKey());
 
                     firebaseCallback.callback(u);
                 }
