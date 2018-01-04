@@ -46,4 +46,19 @@ public class SportRepository {
             }
         });
     }
+
+    public void fetchSportByName(String sport, final FirebaseCallback firebaseCallback) {
+        SportDatabaseRepository.getInstance().fetchSportByName(sport, new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                Sport sport = null;
+
+                if (object != null) {
+                    sport = ((DbModels._Sport) object).convertToSport();
+                }
+
+                firebaseCallback.callback(sport);
+            }
+        });
+    }
 }

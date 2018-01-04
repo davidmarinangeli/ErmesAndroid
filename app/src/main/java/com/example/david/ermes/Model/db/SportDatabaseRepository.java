@@ -19,7 +19,9 @@ import java.util.List;
 public class SportDatabaseRepository {
     private static SportDatabaseRepository instance = new SportDatabaseRepository();
 
-    public static SportDatabaseRepository getInstance() { return instance; }
+    public static SportDatabaseRepository getInstance() {
+        return instance;
+    }
 
     private DatabaseReference ref;
 
@@ -37,6 +39,32 @@ public class SportDatabaseRepository {
                     sport.setID(id);
 
                     firebaseCallback.callback(sport);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            firebaseCallback.callback(null);
+        }
+    }
+
+    public void fetchSportByName(final String name, final FirebaseCallback firebaseCallback) {
+        if (name != null && name.length() > 0) {
+
+            Query query = this.ref.orderByChild("name").equalTo(name);
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        _Sport sport = d.getValue(_Sport.class);
+
+                        sport.setID(d.getKey());
+                        firebaseCallback.callback(sport);
+                    }
+
                 }
 
                 @Override
