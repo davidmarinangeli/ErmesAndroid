@@ -113,8 +113,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                     User new_user = new User(name,
                                             email,
                                             task.getResult().getUser().getUid(),
-                                            city, found_sport.getID(),
-                                            true);
+                                            city, found_sport.getID()
+                                    );
 
                                     new_user.save();
                                     finish();
@@ -168,8 +168,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                     result_intent.getStringExtra("mail"),
                                     result_intent.getStringExtra("uid"),
                                     city_editText.getText().toString(),
-                                    found_sport.getID(),
-                                    true);
+                                    found_sport.getID()
+                            );
 
 
                             new_user.save();
