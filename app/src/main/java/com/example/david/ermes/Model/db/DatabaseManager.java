@@ -43,7 +43,7 @@ public class DatabaseManager {
 
     public void getCurrentUser(final FirebaseCallback firebaseCallback) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (!user.getUid().isEmpty()) {
+        if (user != null && !user.getUid().isEmpty()) {
             this.usersRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
