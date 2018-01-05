@@ -116,13 +116,13 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                 String email = login_editext.getText().toString();
                 String password = password_editext.getText().toString();
                 if ((!email.isEmpty()) && (!password.isEmpty())) {
-                    signInNormal(email,password);
+                    signInNormal(email, password);
                 } else {
                     //TODO: settare il comportamento in caso di bad filling
                 }
-                    break;
+                break;
             case R.id.signupbutton:
-                Intent signupactivity = new Intent(this,SignUpActivity.class);
+                Intent signupactivity = new Intent(this, SignUpActivity.class);
                 startActivity(signupactivity);
 
             case R.id.logoutbutton:
@@ -197,17 +197,30 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                                 @Override
                                 public void callback(Object object) {
                                     if (object == null) {
-                                        Intent signupactivity = new Intent(getBaseContext(),SignUpActivity.class);
+                                        Intent signupactivity = new Intent(getBaseContext(), SignUpActivity.class);
                                         Bundle extras = new Bundle();
 
                                         // c'è un modo più bello di fare sto schifo?
-                                        extras.putString("mail",user.getEmail());
-                                        extras.putString("uid",user.getUid());
-                                        extras.putString("name",user.getDisplayName());
+
+                                        /* TODO si può fare a meno di inserire gli extras:
+                                            il FirebaseUser lo puoi ottenere in qualsiasi activity,
+                                            ______FirebaseAuth.getInstance().getCurrentUser()______
+                                            quindi anche nell'activity per il completamento della
+                                            registrazione
+
+                                            Alternativa: passare solamente l'oggetto user
+                                            con il bundle, ma è più fico il primo modo
+                                         */
+
+                                        extras.putString("mail", user.getEmail());
+                                        extras.putString("uid", user.getUid());
+                                        extras.putString("name", user.getDisplayName());
 
                                         signupactivity.putExtras(extras);
                                         startActivity(signupactivity);
-                                        }
+                                    } else {
+                                        // TODO redirect home
+                                    }
                                 }
                             });
 
