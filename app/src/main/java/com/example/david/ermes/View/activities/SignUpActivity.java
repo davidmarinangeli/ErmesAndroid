@@ -2,6 +2,7 @@ package com.example.david.ermes.View.activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,6 +27,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
+
+import javax.xml.datatype.Duration;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -121,7 +124,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                                         finish();
                                     } else {
-                                        // TODO alert "qualcosa è andato storto"? Bo
+                                        Snackbar.make(getWindow().getDecorView(),"Errore nella ricerca dello sport",Snackbar.LENGTH_LONG)
+                                        .setAction(":(",null);
+
                                     }
                                 }
                             });
