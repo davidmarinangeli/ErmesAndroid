@@ -109,15 +109,20 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             SportRepository.getInstance().fetchSportByName(selected_sport, new FirebaseCallback() {
                                 @Override
                                 public void callback(Object object) {
-                                    Sport found_sport = (Sport) object;
-                                    User new_user = new User(name,
-                                            email,
-                                            task.getResult().getUser().getUid(),
-                                            city, found_sport.getID()
-                                    );
+                                    if (object != null) {
+                                        Sport found_sport = (Sport) object;
+                                        new User(
+                                                name,
+                                                email,
+                                                task.getResult().getUser().getUid(),
+                                                city,
+                                                found_sport.getID()
+                                        ).save();
 
-                                    new_user.save();
-                                    finish();
+                                        finish();
+                                    } else {
+                                        // TODO alert "qualcosa è andato storto"? Bo
+                                    }
                                 }
                             });
 
@@ -164,15 +169,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         public void callback(Object object) {
                             Sport found_sport = (Sport) object;
 
-                            User new_user = new User(result_intent.getStringExtra("name"),
+                            new User(result_intent.getStringExtra("name"),
                                     result_intent.getStringExtra("mail"),
                                     result_intent.getStringExtra("uid"),
                                     city_editText.getText().toString(),
                                     found_sport.getID()
-                            );
+                            ).save();
 
-
-                            new_user.save();
                             finish();
                         }
                     });
