@@ -69,33 +69,33 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
             e.printStackTrace();
         }
 
-        //Initialize Google Play Services
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this.getContext(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                //Location Permission already granted
-                buildGoogleApiClient();
-                googleMap.setMyLocationEnabled(true);
-            } else {
-                //Request Location Permission
-                checkLocationPermission();
-            }
-        } else {
-            buildGoogleApiClient();
-            googleMap.setMyLocationEnabled(true);
-        }
-
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
+                //Initialize Google Play Services
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(getContext(),
+                            android.Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        //Location Permission already granted
+                        buildGoogleApiClient();
+                        googleMap.setMyLocationEnabled(true);
+                    } else {
+                        //Request Location Permission
+                        checkLocationPermission();
+                    }
+                } else {
+                    buildGoogleApiClient();
+                    googleMap.setMyLocationEnabled(true);
+                }
+
                 UserRepository.getInstance().getUser(new FirebaseCallback() {
                     @Override
                     public void callback(Object object) {
                         if (object != null) {
-                            MatchRepository.getInstance().fetchMatchesByOwner((User) object, new FirebaseCallback() {
+                            MatchRepository.getInstance().fetchMatches(new FirebaseCallback() {
                                 @Override
                                 public void callback(Object object) {
                                     if (object != null && ((List<Match>)object).size() > 0) {
