@@ -14,20 +14,17 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
-import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Sport;
-import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.SportRepository;
-import com.example.david.ermes.Model.repository.UserRepository;
-import com.example.david.ermes.Presenter.utils.CreateEventPresenter;
+import com.example.david.ermes.Presenter.CreateEventPresenter;
+import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class CreateEventActivity extends AppCompatActivity {
 
@@ -147,7 +144,7 @@ public class CreateEventActivity extends AppCompatActivity {
             match_calendar_time.set(Calendar.MONTH, month);
             match_calendar_time.set(Calendar.DAY_OF_MONTH, day);
 
-            event_data_textview.setText(com.example.david.ermes.Presenter.utils.TimeUtils.fromMillistoYearMonthDay(match_calendar_time.getTimeInMillis()));
+            event_data_textview.setText(TimeUtils.fromMillistoYearMonthDay(match_calendar_time.getTimeInMillis()));
 
         }
     };

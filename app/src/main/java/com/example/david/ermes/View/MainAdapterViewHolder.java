@@ -2,18 +2,20 @@ package com.example.david.ermes.View;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.repository.LocationRepository;
+import com.example.david.ermes.Model.repository.SportRepository;
+import com.example.david.ermes.Presenter.utils.FetchMatchUtils;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -35,13 +37,13 @@ public class MainAdapterViewHolder {
                                     final View itemView,
                                     TextView date_of_event,
                                     TextView hour_of_event,
-                                    ImageView sport_icon,
+                                    final ImageView sport_icon,
                                     final TextView place) {
 
         Date date = matchList.get(position).getDate();
         //int sport_id = itemView
 
-        Context cx = itemView.getContext();
+        final Context cx = itemView.getContext();
 
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(date.getTime());
@@ -61,7 +63,22 @@ public class MainAdapterViewHolder {
                 }
             }
         });
-        //Picasso.with(cx).load(sport_id).memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
+
+        final String sport_id = matchList.get(position).getIdSport();
+        SportRepository.getInstance().fetchSportById(sport_id, new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                Sport found = (Sport) object;
+                if (found != null) {
+                    String sport_name = found.getName();
+
+                    Picasso.with(cx)
+                            .load(FetchMatchUtils.setImageToMatch(cx, sport_name))
+                            .memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
+                }
+            }
+        });
+
 
     }
 }

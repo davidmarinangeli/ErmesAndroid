@@ -1,9 +1,6 @@
-package com.example.david.ermes.Presenter.utils;
-
-import android.support.annotation.NonNull;
+package com.example.david.ermes.Presenter;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
-import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.MissingStuffElement;
 import com.example.david.ermes.Model.models.Sport;
@@ -13,12 +10,7 @@ import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.View.activities.CreateEventActivity;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
 /**
  * Created by david on 1/3/2018.
@@ -39,9 +31,6 @@ public class CreateEventPresenter {
             public void callback(Object object) {
                 if (object != null) {
                     final User current_user = (User) object;
-
-//                   final Location location = new Location("Alessandro Volta", 46.0490089, 11.123597, current_user.getUID());
-
 
                     SportRepository.getInstance().fetchSportByName(sport, new FirebaseCallback() {
                         @Override

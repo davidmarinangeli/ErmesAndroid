@@ -31,13 +31,11 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity{
 
     private Toolbar toolbar;
     private CoolViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
-    private DrawerLayout drawer;
     private FloatingActionMenu menu;
     private AHBottomNavigation bottomNavigation;
     private FragmentManager manager;
@@ -49,23 +47,12 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        drawer = findViewById(R.id.drawer_layout);
 
         setSupportActionBar(toolbar);
 
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
-/*
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.main_contenitore, new HomeFragment()).commit();
-
-        }
-        */
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
 
         menu = findViewById(R.id.main_fab_menu);
         menu.setAnimated(true);
@@ -76,12 +63,6 @@ public class MainActivity extends AppCompatActivity
 
 
         defaulteventfab.setColorFilter(R.color.white);
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
 
         defaulteventfab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,31 +203,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
 }
