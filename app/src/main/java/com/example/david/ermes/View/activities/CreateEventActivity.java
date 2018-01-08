@@ -19,8 +19,10 @@ import android.widget.TextView;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Sport;
+import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Presenter.CreateEventPresenter;
+import com.example.david.ermes.Presenter.utils.LocationUtils;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -39,7 +41,8 @@ public class CreateEventActivity extends AppCompatActivity {
     EditText location_edittext;
     Spinner sport_selector;
     Button fine_creazione;
-    SpinnerAdapter adapter;
+    SpinnerAdapter sportadapter;
+    SpinnerAdapter locationadapter;
     Calendar match_calendar_time;
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -48,6 +51,7 @@ public class CreateEventActivity extends AppCompatActivity {
     String selected_sport;
     final String SPORT_HINT = "Seleziona uno sport...";
     Sport sport;
+    Location user_location;
 
     private CreateEventPresenter createEventPresenter;
 
@@ -94,6 +98,7 @@ public class CreateEventActivity extends AppCompatActivity {
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
+                            location = user_location;
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
                                 // Logic to handle location object
@@ -102,31 +107,34 @@ public class CreateEventActivity extends AppCompatActivity {
                     });
         }
 
-        final ArrayList<String> arraySpinner = new ArrayList<>();
-        SportRepository.getInstance().fetchAll(new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                for (Sport s : (ArrayList<Sport>) object) {
-                    arraySpinner.add(s.getName());
-                    //arraySpinner.add(0,SPORT_HINT);
-                }
-                adapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner) {
+        createSportSpinner();
+
+        final ArrayList<String> locationSpinner = new ArrayList<>();
+        LocationRepository.getInstance().fetchLocationsByProximity(
+                LocationUtils.fromAndroidLocationtoErmesLocation(user_location),
+                new FirebaseCallback() {
                     @Override
-                    public boolean isEnabled(int position) {
-                        if (position == 0) {
-                            // Disable the first item from Spinner
-                            // First item will be use for hint
-                            return false;
-                        } else {
-                            return true;
+                    public void callback(Object object) {
+                        for (com.example.david.ermes.Model.models.Location l : (ArrayList<com.example.david.ermes.Model.models.Location>) object) {
+                            locationSpinner.add(l.getName());
                         }
+                        locationadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, locationSpinner) {
+                            @Override
+                            public boolean isEnabled(int position) {
+                                if (position == 0) {
+                                    // Disable the first item from Spinner
+                                    // First item will be use for hint
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            }
+                        };
+                        sport_selector.setAdapter(locationadapter);
+
+
                     }
-                };
-                sport_selector.setAdapter(adapter);
-
-
-            }
-        });
+                });
 
         fine_creazione.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +146,33 @@ public class CreateEventActivity extends AppCompatActivity {
         });
 
         createEventPresenter = new CreateEventPresenter(this);
+    }
+
+    private void createSportSpinner() {
+        final ArrayList<String> arraySpinner = new ArrayList<>();
+        SportRepository.getInstance().fetchAll(new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                for (Sport s : (ArrayList<Sport>) object) {
+                    arraySpinner.add(s.getName());
+                }
+                sportadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner) {
+                    @Override
+                    public boolean isEnabled(int position) {
+                        if (position == 0) {
+                            // Disable the first item from Spinner
+                            // First item will be use for hint
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                };
+                sport_selector.setAdapter(sportadapter);
+
+
+            }
+        });
     }
 
     public void goToMainActivity(Match resultMatch) {
