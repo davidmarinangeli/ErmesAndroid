@@ -2,7 +2,10 @@ package com.example.david.ermes.View.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,6 +23,9 @@ import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Presenter.CreateEventPresenter;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -35,6 +41,9 @@ public class CreateEventActivity extends AppCompatActivity {
     Button fine_creazione;
     SpinnerAdapter adapter;
     Calendar match_calendar_time;
+
+    private FusedLocationProviderClient mFusedLocationClient;
+
 
     String selected_sport;
     final String SPORT_HINT = "Seleziona uno sport...";
@@ -56,6 +65,7 @@ public class CreateEventActivity extends AppCompatActivity {
         match_calendar_time = Calendar.getInstance();
 
         sport = new Sport();
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         event_data_textview.setOnClickListener(new View.OnClickListener() {
 
@@ -75,6 +85,22 @@ public class CreateEventActivity extends AppCompatActivity {
         });
 
         sport_selector.setOnItemSelectedListener(new itemSelectedListener());
+
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                // Logic to handle location object
+                            }
+                        }
+                    });
+        }
 
         final ArrayList<String> arraySpinner = new ArrayList<>();
         SportRepository.getInstance().fetchAll(new FirebaseCallback() {

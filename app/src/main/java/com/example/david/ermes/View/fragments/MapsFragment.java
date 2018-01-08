@@ -91,47 +91,40 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
                     googleMap.setMyLocationEnabled(true);
                 }
 
-                UserRepository.getInstance().getUser(new FirebaseCallback() {
+                MatchRepository.getInstance().fetchMatches(new FirebaseCallback() {
                     @Override
                     public void callback(Object object) {
-                        if (object != null) {
-                            MatchRepository.getInstance().fetchMatches(new FirebaseCallback() {
-                                @Override
-                                public void callback(Object object) {
-                                    if (object != null && ((List<Match>)object).size() > 0) {
-                                        match_list = (List<Match>)object;
-                                        final boolean first_match = true;
+                        if (object != null && ((List<Match>) object).size() > 0) {
+                            match_list = (List<Match>) object;
+                            final boolean first_match = true;
 
-                                        for (final Match match : match_list) {
-                                            LocationRepository.getInstance().fetchLocationById(match.getIdLocation(), new FirebaseCallback() {
-                                                @Override
-                                                public void callback(Object object) {
-                                                    if (object != null) {
-                                                        Location loc = (Location) object;
+                            for (final Match match : match_list) {
+                                LocationRepository.getInstance().fetchLocationById(match.getIdLocation(), new FirebaseCallback() {
+                                    @Override
+                                    public void callback(Object object) {
+                                        if (object != null) {
+                                            Location loc = (Location) object;
 
-                                                        LatLng location_latlng = new LatLng(
-                                                                loc.getLatitude(),
-                                                                loc.getLongitude()
-                                                        );
+                                            LatLng location_latlng = new LatLng(
+                                                    loc.getLatitude(),
+                                                    loc.getLongitude()
+                                            );
 
-                                                        googleMap.addMarker(new MarkerOptions()
-                                                                .position(location_latlng)
-                                                                .title(loc.getName())
-                                                                .snippet(match.getIdSport()));
+                                            googleMap.addMarker(new MarkerOptions()
+                                                    .position(location_latlng)
+                                                    .title(loc.getName())
+                                                    .snippet(match.getIdSport()));
 
-                                                        if (first_match) {
-                                                            // For zooming automatically to the location of the marker
-                                                            CameraPosition cameraPosition = new CameraPosition.Builder().zoom(12).target(location_latlng
-                                                            ).build();
-                                                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                                                        }
-                                                    }
-                                                }
-                                            });
+                                            if (first_match) {
+                                                // For zooming automatically to the location of the marker
+                                                CameraPosition cameraPosition = new CameraPosition.Builder().zoom(12).target(location_latlng
+                                                ).build();
+                                                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                                            }
                                         }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 });
