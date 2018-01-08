@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,9 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
-import com.example.david.ermes.Model.models.Sport;
-import com.example.david.ermes.Model.models.User;
-import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.google.android.gms.auth.api.Auth;
@@ -40,7 +38,7 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
     private SignInButton googleLogInButton;
     private Button signUpButton;
     private Button loginInButton;
-    private EditText login_editext;
+    private EditText email_editext;
     private EditText password_editext;
     private TextView userlogintext;
 
@@ -60,9 +58,10 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_login);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("Login in Ermes");
 
         // setto i parametri dell'editext login e password
-        login_editext = findViewById(R.id.mail);
+        email_editext = findViewById(R.id.mail);
         password_editext = findViewById(R.id.pwd);
 
         logoutbutton = findViewById(R.id.logoutbutton);
@@ -113,12 +112,16 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                 signInGoogle();
                 break;
             case R.id.loginbutton:
-                String email = login_editext.getText().toString();
+                String email = email_editext.getText().toString();
                 String password = password_editext.getText().toString();
                 if ((!email.isEmpty()) && (!password.isEmpty())) {
                     signInNormal(email, password);
                 } else {
-                    //TODO: settare il comportamento in caso di bad filling
+                    if (email.isEmpty())
+                        email_editext.setError("Inserisci una mail");
+
+                    if (password.isEmpty())
+                        password_editext.setError("Inserisci una password");
                 }
                 break;
             case R.id.signupbutton:
@@ -219,11 +222,12 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                                         signupactivity.putExtras(extras);
                                         startActivity(signupactivity);
                                     } else {
-                                        // TODO redirect home
-                                        updateUI(user);
+                                        finish();
                                     }
                                 }
                             });
+
+                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -258,7 +262,7 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void noRegistration() {
-        // TODO gestire gli utenti non registrati (vedi l'oggetto che ritorna la funzione chiamata prima)
+        // TODO Buro wtf is this?
         // controllare la nuova proprietà isLoggedIn dell'oggetto User
     }
 
