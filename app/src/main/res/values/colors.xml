@@ -16,4 +16,6 @@
     <color name="bright_foreground_holo_light">#150707</color>
     <color name="button_gray">#757575</color>
     <color name="inactive">#747474</color>
+    <color name="black">#000000</color>
+
 </resources>
