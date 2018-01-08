@@ -220,11 +220,10 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                                         startActivity(signupactivity);
                                     } else {
                                         // TODO redirect home
+                                        updateUI(user);
                                     }
                                 }
                             });
-
-                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

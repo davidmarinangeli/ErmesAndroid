@@ -72,6 +72,19 @@ public class Location implements Serializable{
 
     public String getId() { return this.id; }
 
+    public double getDistanceFromLocation(Location location) {
+        double distance = 0.0;
+
+        if (location != null) {
+            distance = Math.sqrt(
+                    Math.abs(this.getLatitude() - location.getLatitude()) +
+                    Math.abs(this.getLongitude() - location.getLongitude())
+            );
+        }
+
+        return distance;
+    }
+
     public DbModels._Location convertTo_Location() {
         return new DbModels._Location(
                 this.name,

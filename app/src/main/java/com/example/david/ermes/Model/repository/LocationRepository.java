@@ -1,9 +1,13 @@
 package com.example.david.ermes.Model.repository;
 
+import com.example.david.ermes.Model.db.DbModels;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.db.LocationDatabaseRepository;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.db.DbModels._Location;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nicol on 04/12/2017.
@@ -38,5 +42,27 @@ public class LocationRepository {
                 firebaseCallback.callback(location);
             }
         });
+    }
+
+    public void fetchLocationsByRange(Location location, double range, final FirebaseCallback firebaseCallback) {
+        LocationDatabaseRepository.getInstance().fetchLocationsByRange(
+                location.getLatitude(),
+                location.getLongitude(),
+                range,
+                new FirebaseCallback() {
+                    @Override
+                    public void callback(Object object) {
+                        if (object != null) {
+                            firebaseCallback.callback(DbModels._Location.convertToLocationList(
+                                    (List<DbModels._Location>) object
+                            ));
+                        }
+                    }
+                }
+        );
+    }
+
+    public void fetchLocationsByProximity(Location location, FirebaseCallback firebaseCallback) {
+        LocationDatabaseRepository.getInstance().fetchLocationsByProximity(location, firebaseCallback);
     }
 }

@@ -5,10 +5,7 @@ import android.os.Parcelable;
 
 import com.example.david.ermes.Model.db.DbModels;
 import com.example.david.ermes.Model.db.FirebaseCallback;
-import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.MatchRepository;
-import com.example.david.ermes.Model.repository.SportRepository;
-import com.example.david.ermes.Model.repository.UserRepository;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -29,16 +26,17 @@ public class Match implements Parcelable {
     private Date date;
     private boolean isPublic;
     private int maxPlayers;
-    private List<User> pending;
-    private List<User> partecipants;
+    private List<String> pending;
+    private List<String> idsPartecipants;
     private int numGuests;
-    private List<String> missingStuff;
+    private List<MissingStuffElement> missingStuff;
 
     public Match() {
     }
 
     public Match(String id, String idOwner, String idLocation, Date date, boolean isPublic,
-                 String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
+                 String idSport, int maxPlayers, int numGuests, List<MissingStuffElement> missingStuff,
+                 List<String> idsPartecipants, List<String> pending) {
         this.id = id;
         this.idLocation = idLocation;
         this.date = date;
@@ -48,10 +46,13 @@ public class Match implements Parcelable {
         this.maxPlayers = maxPlayers;
         this.numGuests = numGuests;
         this.missingStuff = missingStuff;
+        this.idsPartecipants = idsPartecipants;
+        this.pending = pending;
     }
 
     public Match(String idOwner, String idLocation, Date date, boolean isPublic,
-                 String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
+                 String idSport, int maxPlayers, int numGuests, List<MissingStuffElement> missingStuff,
+                 List<String> idsPartecipants, List<String> pending) {
         this.idLocation = idLocation;
         this.date = date;
         this.idOwner = idOwner;
@@ -60,6 +61,8 @@ public class Match implements Parcelable {
         this.maxPlayers = maxPlayers;
         this.numGuests = numGuests;
         this.missingStuff = missingStuff;
+        this.idsPartecipants = idsPartecipants;
+        this.pending = pending;
     }
 
     protected Match(Parcel in) {
@@ -69,7 +72,9 @@ public class Match implements Parcelable {
         idSport = in.readString();
         maxPlayers = in.readInt();
         numGuests = in.readInt();
-        missingStuff = in.createStringArrayList();
+
+        // TODO questo serve?
+        // missingStuff = in.createStringArrayList();
     }
 
     public static final Creator<Match> CREATOR = new Creator<Match>() {
@@ -124,20 +129,20 @@ public class Match implements Parcelable {
         this.maxPlayers = maxPlayers;
     }
 
-    public List<User> getPending() {
+    public List<String> getPending() {
         return pending;
     }
 
-    public void setPending(List<User> pending) {
+    public void setPending(List<String> pending) {
         this.pending = pending;
     }
 
-    public List<User> getPartecipants() {
-        return partecipants;
+    public List<String> getPartecipants() {
+        return idsPartecipants;
     }
 
-    public void setPartecipants(List<User> partecipants) {
-        this.partecipants = partecipants;
+    public void setPartecipants(List<String> partecipants) {
+        this.idsPartecipants = partecipants;
     }
 
     public int getNumGuests() {
@@ -148,15 +153,40 @@ public class Match implements Parcelable {
         this.numGuests = numGuests;
     }
 
-    public List<String> getMissingStuff() {
+    public List<MissingStuffElement> getMissingStuff() {
         return missingStuff;
     }
 
-    public void setMissingStuff(List<String> missingStuff) {
+    public void setMissingStuff(List<MissingStuffElement> missingStuff) {
         this.missingStuff = missingStuff;
     }
 
     public String getId() { return this.id; }
+
+
+    public void addPartecipant(String id) {
+        if (!this.idsPartecipants.contains(id)) {
+            this.idsPartecipants.add(id);
+
+            this.removePending(id);
+        }
+    }
+
+    public void removePartecipant(String id) {
+        this.idsPartecipants.remove(id);
+    }
+
+    public void addPending(String id) {
+        if (!this.pending.contains(id)) {
+            this.pending.add(id);
+
+            this.removePartecipant(id);
+        }
+    }
+
+    public void removePending(String id) {
+        this.pending.remove(id);
+    }
 
     // repository -> in cui inserire i fetchmatch così come tutti i database manager
     // il repository deve essere un singleton (una sola istanza)
@@ -170,7 +200,9 @@ public class Match implements Parcelable {
                 this.idSport,
                 this.maxPlayers,
                 this.numGuests,
-                this.missingStuff
+                MissingStuffElement.convertTo_MissingStuffElementList(this.missingStuff),
+                this.idsPartecipants,
+                this.pending
         );
     }
 
@@ -192,6 +224,8 @@ public class Match implements Parcelable {
         parcel.writeString(idSport);
         parcel.writeInt(maxPlayers);
         parcel.writeInt(numGuests);
-        parcel.writeStringList(missingStuff);
+
+        // TODO questo serve?
+        // parcel.writeStringList(missingStuff);
     }
 }

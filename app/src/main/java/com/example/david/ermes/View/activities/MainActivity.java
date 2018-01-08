@@ -10,12 +10,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.models.Location;
+import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.View.ViewPagerAdapter;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.customviews.CoolViewPager;
@@ -94,6 +98,17 @@ public class MainActivity extends AppCompatActivity
                 startActivityForResult(i,1);
             }
         });
+
+        LocationRepository.getInstance().fetchLocationsByRange(
+                new Location("", 50.0, 50.0, ""),
+                50.0,
+                new FirebaseCallback() {
+                    @Override
+                    public void callback(Object object) {
+                        Log.d("PROXIMITY FETCH", object.toString());
+                    }
+                }
+        );
 
         initBottomNavigationView();
     }
