@@ -108,7 +108,7 @@ public class CreateEventActivity extends AppCompatActivity {
         fine_creazione.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                if (!selected_sport.isEmpty()) {
+                if (selected_sport != null && !selected_sport.isEmpty()) {
                     createEventPresenter.saveMatch(match_calendar_time.getTimeInMillis(), selected_sport);
                 }
             }

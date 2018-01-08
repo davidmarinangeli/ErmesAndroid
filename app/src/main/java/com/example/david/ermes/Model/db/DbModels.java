@@ -4,6 +4,7 @@ import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
+import com.example.david.ermes.Model.models.MissingStuffElement;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 
 import java.util.ArrayList;
@@ -50,6 +51,42 @@ public class DbModels {
         public String getUID() {return this.UID;}
     }
 
+    public static class _MissingStuffElement {
+        public String name;
+        public boolean checked;
+
+        public _MissingStuffElement() {
+            this.name = "";
+            this.checked = false;
+        }
+
+        public _MissingStuffElement(String name, boolean checked) {
+            this.name = name;
+            this.checked = checked;
+        }
+
+        public MissingStuffElement convertToMissingStuffElement() {
+            return new MissingStuffElement(
+                    this.name,
+                    this.checked
+            );
+        }
+
+        public static List<MissingStuffElement> convertToMissingStuffElementList(List<_MissingStuffElement> list) {
+            List<MissingStuffElement> l = null;
+
+            if (list != null) {
+                l = new ArrayList<>();
+
+                for (_MissingStuffElement m : list) {
+                    l.add(m.convertToMissingStuffElement());
+                }
+            }
+
+            return l;
+        }
+    }
+
     public static class _Match {
         public long date;
         public String idLocation;
@@ -58,7 +95,9 @@ public class DbModels {
         public String idSport;
         public int maxPlayers;
         public int numGuests;
-        public List<String> missingStuff;
+        public List<_MissingStuffElement> missingStuff;
+        public List<String> partecipants;
+        public List<String> pending;
 
         private String id;
 
@@ -66,7 +105,8 @@ public class DbModels {
         }
 
         public _Match(String idOwner, long date, String idLocation, boolean isPublic,
-                      String idSport, int maxPlayers, int numGuests, List<String> missingStuff) {
+                      String idSport, int maxPlayers, int numGuests, List<_MissingStuffElement> missingStuff,
+                      List<String> partecipants, List<String> pending) {
             this.date = date;
             this.idLocation = idLocation;
             this.idOwner = idOwner;
@@ -75,6 +115,8 @@ public class DbModels {
             this.maxPlayers = maxPlayers;
             this.numGuests = numGuests;
             this.missingStuff = missingStuff;
+            this.partecipants = partecipants;
+            this.pending = pending;
         }
 
         public void setID(String id) { this.id = id; }
@@ -93,7 +135,9 @@ public class DbModels {
                     this.idSport,
                     this.maxPlayers,
                     this.numGuests,
-                    this.missingStuff
+                    _MissingStuffElement.convertToMissingStuffElementList(this.missingStuff),
+                    this.partecipants,
+                    this.pending
             );
         }
 
@@ -179,6 +223,16 @@ public class DbModels {
                     this.y,
                     this.idUserCreator
             );
+        }
+
+        public static List<Location> convertToLocationList(List<DbModels._Location> list) {
+            List<Location> locations = new ArrayList<>();
+
+            for (DbModels._Location l : list) {
+                locations.add(l.convertToLocation());
+            }
+
+            return locations;
         }
     }
 }
