@@ -66,7 +66,6 @@ public class PickPlaceActivity extends AppCompatActivity {
                             @Override
                             public void callback(Object object) {
                                 if (object != null) {
-                                    // TODO Auto-generated method stub
                                     marker[0] = new MarkerOptions()
                                             //.title(String.valueOf(place_name.getText()))
                                             .position(new LatLng(point.latitude, point.longitude));
