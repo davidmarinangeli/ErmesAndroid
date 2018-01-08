@@ -1,4 +1,4 @@
-package com.example.david.ermes.Presenter.utils;
+package com.example.david.ermes.Presenter;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Location;
@@ -6,13 +6,12 @@ import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.SportRepository;
+import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.View.activities.CreateEventActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
 /**
  * Created by david on 1/3/2018.
@@ -50,7 +49,7 @@ public class CreateEventPresenter {
                               Match result_match = new Match(
                                       current_user.getUID(),
                                       location.getId(),
-                                      com.example.david.ermes.Presenter.utils.TimeUtils.fromMillisToDate(timeInMillis),
+                                      TimeUtils.fromMillisToDate(timeInMillis),
                                       true,
                                       found_sport.getID(),
                                       found_sport.getNumPlayers(),
