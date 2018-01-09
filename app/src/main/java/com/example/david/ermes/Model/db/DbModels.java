@@ -204,6 +204,7 @@ public class DbModels {
         public double x;
         public double y;
         public String idUserCreator;
+        public List<String> sportIds;
 
         private String id;
 
@@ -217,6 +218,14 @@ public class DbModels {
             this.location = location;
         }
 
+        public _Location(String location, double x, double y, String idUser, List<String> sportIds) {
+            this.idUserCreator = idUser;
+            this.x = x;
+            this.y = y;
+            this.location = location;
+            this.sportIds = sportIds;
+        }
+
         public void setID(String id) { this.id = id; }
 
         public String getID() { return this.id; }
@@ -227,7 +236,8 @@ public class DbModels {
                     this.location,
                     this.x,
                     this.y,
-                    this.idUserCreator
+                    this.idUserCreator,
+                    this.sportIds
             );
         }
 

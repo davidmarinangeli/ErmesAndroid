@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Notification {
-    public static final String MATCH_INVITE_USER = "MATCH_INVITE_USER";
+    public static class types {
+        public static final String MATCH_INVITE_USER = "MATCH_INVITE_USER";
+    }
 
-    private String id;
+    private String id = null;
     private String idOwner;
     private String title;
     private String text;
