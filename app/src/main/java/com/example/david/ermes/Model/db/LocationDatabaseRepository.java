@@ -30,9 +30,9 @@ public class LocationDatabaseRepository {
 
     public void push(DbModels._Location location) {
         if (location.getID() != null && !location.getID().isEmpty()) {
-            this.ref.push().setValue(location);
-        } else {
             this.ref.child(location.getID()).setValue(location);
+        } else {
+            this.ref.push().setValue(location);
         }
     }
 

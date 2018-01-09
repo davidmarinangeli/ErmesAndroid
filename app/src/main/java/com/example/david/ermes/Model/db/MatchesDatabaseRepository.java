@@ -60,9 +60,9 @@ public class MatchesDatabaseRepository {
 
     public void push(_Match match) {
         if (match.getID() != null && !match.getID().isEmpty()) {
-            this.matchesRef.push().setValue(match);
-        } else {
             this.matchesRef.child(match.getID()).setValue(match);
+        } else {
+            this.matchesRef.push().setValue(match);
         }
     }
 

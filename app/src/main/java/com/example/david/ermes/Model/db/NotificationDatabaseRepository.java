@@ -48,9 +48,9 @@ public class NotificationDatabaseRepository {
 
     public void push(_Notification notification) {
         if (notification.getID() != null && !notification.getID().isEmpty()) {
-            this.ref.push().setValue(notification);
-        } else {
             this.ref.child(notification.getID()).setValue(notification);
+        } else {
+            this.ref.push().setValue(notification);
         }
     }
 }
