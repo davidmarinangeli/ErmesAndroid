@@ -25,7 +25,7 @@ public class FetchMatchUtils {
             case "Football":
                 image_tag = cx.getResources().getIdentifier("soccerball96", "drawable", cx.getPackageName());
                 break;
-            case "Ping pong":
+            case "Ping Pong":
                 image_tag = cx.getResources().getIdentifier("pingpong96", "drawable", cx.getPackageName());
                 break;
         }
