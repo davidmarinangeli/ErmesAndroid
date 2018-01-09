@@ -11,13 +11,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.models.MissingStuffElement;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.SportRepository;
@@ -28,6 +29,8 @@ import com.example.david.ermes.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.tylersuehr.chips.ChipsInputLayout;
+import com.tylersuehr.chips.data.Chip;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -38,18 +41,32 @@ public class CreateEventActivity extends AppCompatActivity {
 
     TextView event_orario_textview;
     TextView event_data_textview;
-    EditText location_edittext;
+
     Spinner sport_selector;
+    Spinner location_selector;
+
     Button fine_creazione;
+
+    ChipsInputLayout missing_chips;
+
     SpinnerAdapter sportadapter;
     SpinnerAdapter locationadapter;
+
     Calendar match_calendar_time;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
 
-    String selected_sport;
+    String selected_sport_string;
+    String selected_location_string;
+
+    com.example.david.ermes.Model.models.Location selected_location;
+
+
     final String SPORT_HINT = "Seleziona uno sport...";
+
+    // mi salvo gli OGGETTI Location così da evitare una callback in più dopo per fetchare gli oggetti a partire dai nomi
+    ArrayList<com.example.david.ermes.Model.models.Location> downloaded_locations;
     Sport sport;
     Location user_location;
 
@@ -63,12 +80,18 @@ public class CreateEventActivity extends AppCompatActivity {
         event_orario_textview = findViewById(R.id.textTime);
         event_data_textview = findViewById(R.id.textDate);
 
-        location_edittext = findViewById(R.id.luogo);
+        location_selector = findViewById(R.id.location_spinner);
         sport_selector = findViewById(R.id.sport_spinner);
+
+        missing_chips = findViewById(R.id.chips_input);
+
         fine_creazione = findViewById(R.id.buttonfine);
+
         match_calendar_time = Calendar.getInstance();
 
         sport = new Sport();
+        downloaded_locations = new ArrayList<>();
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         event_data_textview.setOnClickListener(new View.OnClickListener() {
@@ -88,8 +111,14 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
-        sport_selector.setOnItemSelectedListener(new itemSelectedListener());
+        // imposto i listener per entrambi
+        sport_selector.setOnItemSelectedListener(new sportSpinnerSelectedListener());
+        location_selector.setOnItemSelectedListener(new locationSpinnerSelectedListener());
 
+        //inizializzo lo spinner per lo sport
+        createSportSpinner();
+
+        // prima di inizializzare lo spinner per la location vedo se ho la posizione...
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -98,49 +127,29 @@ public class CreateEventActivity extends AppCompatActivity {
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
-                            location = user_location;
-                            // Got last known location. In some rare situations this can be null.
+
+                            // se mi ha garantito l'accesso ed ho l'ultima location creo lo spinner
                             if (location != null) {
-                                // Logic to handle location object
+                                user_location = location;
+                                createLocationSpinner();
+                            } else {
+                                // altrimenti lo creo con altri parametri ì
                             }
                         }
                     });
         }
 
-        createSportSpinner();
-
-        final ArrayList<String> locationSpinner = new ArrayList<>();
-        LocationRepository.getInstance().fetchLocationsByProximity(
-                LocationUtils.fromAndroidLocationtoErmesLocation(user_location),
-                new FirebaseCallback() {
-                    @Override
-                    public void callback(Object object) {
-                        for (com.example.david.ermes.Model.models.Location l : (ArrayList<com.example.david.ermes.Model.models.Location>) object) {
-                            locationSpinner.add(l.getName());
-                        }
-                        locationadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, locationSpinner) {
-                            @Override
-                            public boolean isEnabled(int position) {
-                                if (position == 0) {
-                                    // Disable the first item from Spinner
-                                    // First item will be use for hint
-                                    return false;
-                                } else {
-                                    return true;
-                                }
-                            }
-                        };
-                        sport_selector.setAdapter(locationadapter);
-
-
-                    }
-                });
 
         fine_creazione.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                if (selected_sport != null && !selected_sport.isEmpty()) {
-                    createEventPresenter.saveMatch(match_calendar_time.getTimeInMillis(), selected_sport);
+                ArrayList<MissingStuffElement> chips_title_list = new ArrayList<>();
+                for (Chip chip : missing_chips.getSelectedChips()) {
+                    chips_title_list.add(new MissingStuffElement(chip.getTitle(),false));
+                }
+
+                if (selected_sport_string != null && selected_location != null) {
+                    createEventPresenter.saveMatch(match_calendar_time.getTimeInMillis(), selected_sport_string, selected_location, chips_title_list);
                 }
             }
         });
@@ -148,26 +157,40 @@ public class CreateEventActivity extends AppCompatActivity {
         createEventPresenter = new CreateEventPresenter(this);
     }
 
+    private ArrayList<com.example.david.ermes.Model.models.Location> createLocationSpinner() {
+
+        //insieme ai nomi delle location, da inserire nello spinner
+        final ArrayList<String> locationSpinner = new ArrayList<>();
+
+        LocationRepository.getInstance().fetchLocationsByProximity(
+                LocationUtils.fromAndroidLocationtoErmesLocation(user_location),
+                new FirebaseCallback() {
+                    @Override
+                    public void callback(Object object) {
+                        for (com.example.david.ermes.Model.models.Location l : (ArrayList<com.example.david.ermes.Model.models.Location>) object) {
+                            locationSpinner.add(l.getName());
+                            downloaded_locations.add(l);
+                        }
+                        locationadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, locationSpinner);
+                        location_selector.setAdapter(locationadapter);
+
+
+                    }
+                });
+        return downloaded_locations;
+    }
+
     private void createSportSpinner() {
+
         final ArrayList<String> arraySpinner = new ArrayList<>();
+
         SportRepository.getInstance().fetchAll(new FirebaseCallback() {
             @Override
             public void callback(Object object) {
                 for (Sport s : (ArrayList<Sport>) object) {
                     arraySpinner.add(s.getName());
                 }
-                sportadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner) {
-                    @Override
-                    public boolean isEnabled(int position) {
-                        if (position == 0) {
-                            // Disable the first item from Spinner
-                            // First item will be use for hint
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    }
-                };
+                sportadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
                 sport_selector.setAdapter(sportadapter);
 
 
@@ -186,17 +209,38 @@ public class CreateEventActivity extends AppCompatActivity {
         finish();
     }
 
-    private class itemSelectedListener implements AdapterView.OnItemSelectedListener {
+    // inizio abominio per i listener negli spinner
+    private class sportSpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-            selected_sport = parent.getItemAtPosition(pos).toString();
-
+            selected_sport_string = parent.getItemAtPosition(pos).toString();
         }
 
         public void onNothingSelected(AdapterView parent) {
             // Do nothing.
         }
     }
+
+    private class locationSpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+            selected_location_string = parent.getItemAtPosition(pos).toString();
+
+            for (com.example.david.ermes.Model.models.Location l : downloaded_locations) {
+                if (l.getName().equals(selected_location_string)) {
+                    selected_location = l;
+                }
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
+        }
+    }
+    // fine abominio per gli spinner
+
 
     private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override

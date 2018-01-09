@@ -14,7 +14,7 @@
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="64dp"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,27 +22,21 @@
 
     </View>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputLayoutInvitati"
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/nome_location"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:hint="Nome luogo"
+        android:imeOptions="actionDone"
+        android:theme="@style/MyEditText"
         app:hintTextAppearance="@style/MyHintText"
-        app:layout_constraintBottom_toBottomOf="@+id/dismiss"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/dismiss"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/dismiss">
+        app:layout_constraintStart_toStartOf="@+id/view" />
 
-        <EditText
-            android:imeOptions="actionDone"
-            android:id="@+id/nome_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nome luogo"
-            android:theme="@style/MyEditText" />
-
-    </android.support.design.widget.TextInputLayout>
     <Button
         android:id="@+id/accept"
         android:layout_width="wrap_content"
@@ -57,9 +51,12 @@
         android:id="@+id/dismiss"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:text="Annulla"
+        app:layout_constraintBottom_toBottomOf="@+id/nome_location"
         app:layout_constraintEnd_toStartOf="@+id/accept"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+        app:layout_constraintTop_toTopOf="@+id/nome_location" />
 
 </android.support.constraint.ConstraintLayout>

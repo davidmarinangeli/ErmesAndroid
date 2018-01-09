@@ -42,7 +42,7 @@
             android:name=".View.activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden">
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,7 +51,8 @@
         </activity>
         <activity
             android:name=".View.activities.CreateEventActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".View.activities.EventActivity" />
         <activity android:name=".View.activities.AccountActivity" />
         <activity
