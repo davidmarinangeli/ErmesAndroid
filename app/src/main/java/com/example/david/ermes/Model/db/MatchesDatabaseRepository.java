@@ -71,23 +71,23 @@ public class MatchesDatabaseRepository {
             queryRef = this.matchesRef.orderByChild(param).equalTo(value);
         }
 
-        final List<_Match> matches_list = new ArrayList<>();
-        final List<String> locations_creators = new ArrayList<>();
-
         queryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 // DbModels._User value = dataSnapshot.getValue(DbModels._User.class);
-                matches_list.clear();
-                for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    _Match match = d.getValue(_Match.class);
-                    match.setID(dataSnapshot.getKey());
+                List<_Match> matches_list = null;
+                if (dataSnapshot != null ) {
+                    matches_list = new ArrayList<>();
 
-                    matches_list.add(match);
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        _Match match = d.getValue(_Match.class);
+                        match.setID(dataSnapshot.getKey());
+
+                        matches_list.add(match);
+                    }
                 }
-
                 fc.callback(matches_list);
             }
 
@@ -98,35 +98,31 @@ public class MatchesDatabaseRepository {
                 fc.callback(null);
             }
         });
-
-                /*addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                DbModels._Match m = dataSnapshot.getValue(DbModels._Match.class);
-                list.add(m);
-                Log.d("MATCHES LIST", list.toString());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("FETCH_MATCHES", "loadMatch:onCancelled", databaseError.toException());
-            }
-        });*/
     }
 
+    public void orderMatchesByDate(Long date, final FirebaseCallback firebaseCallback){
+        if (date != null){
+            this.matchesRef.orderByChild("date").startAt(date).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    List<_Match> matches = null;
+                    if (dataSnapshot != null) {
+                        matches = new ArrayList<>();
+                        for (DataSnapshot d : dataSnapshot.getChildren()) {
+                            _Match match = d.getValue(_Match.class);
+                            match.setID(dataSnapshot.getKey());
+                            matches.add(match);
+                        }
+                    }
+                    firebaseCallback.callback(matches);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    firebaseCallback.callback(null);
+                }
+            });
+        }
+
+    }
 }
