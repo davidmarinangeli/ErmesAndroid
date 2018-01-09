@@ -75,6 +75,7 @@ dependencies {
     compile "com.google.firebase:firebase-auth:${firebase}"
     compile "com.google.android.gms:play-services-auth:${firebase}"
     compile "com.google.android.gms:play-services-location:${firebase}"
+    compile "com.google.android.gms:play-services-places:${firebase}"
     compile "com.google.android.gms:play-services-maps:${firebase}"
 
     // ** END FIREBASE **

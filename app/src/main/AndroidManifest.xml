@@ -64,7 +64,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyCUFlWr5eEaU7NR4F38DvT7enmTMf_oeqk" />
 
         <activity android:name=".View.activities.PickPlaceActivity" />
         <activity android:name=".View.activities.SignUpActivity"></activity>
