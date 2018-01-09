@@ -9,9 +9,13 @@ import android.location.Location;
 public class LocationUtils {
 
     public static com.example.david.ermes.Model.models.Location fromAndroidLocationtoErmesLocation(Location androidlocation){
-        com.example.david.ermes.Model.models.Location ermeslocation = new com.example.david.ermes.Model.models.Location();
-        ermeslocation.setLatitude(androidlocation.getLatitude());
-        ermeslocation.setLongitude(androidlocation.getLongitude());
+        com.example.david.ermes.Model.models.Location ermeslocation = null;
+
+        if (androidlocation != null) {
+            ermeslocation = new com.example.david.ermes.Model.models.Location();
+            ermeslocation.setLatitude(androidlocation.getLatitude());
+            ermeslocation.setLongitude(androidlocation.getLongitude());
+        }
 
         return ermeslocation;
     }

@@ -89,6 +89,8 @@ public class SportDatabaseRepository {
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                     Log.d("DATASNAPSHOT", d.toString());
                     _Sport sport = d.getValue(_Sport.class);
+                    sport.setID(d.getKey());
+
                     list.add(sport);
 //                    list.get(list.size() - 1).setID(d.getKey().toString());
                 }
