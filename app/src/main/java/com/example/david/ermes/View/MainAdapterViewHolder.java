@@ -28,10 +28,6 @@ import java.util.List;
 
 public class MainAdapterViewHolder {
 
-
-    public static void viewHolderConstructor(View itemView, TextView date_of_event, ImageView sport_icon, TextView place) {
-    }
-
     public static void bindElements(List<Match> matchList,
                                     int position,
                                     final View itemView,

@@ -69,7 +69,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
             // qui setto il costruttore del viewholder
 
-            // qui ci sarebbe da correggere
             date_of_event = itemView.findViewById(R.id.date_of_event);
             hour_of_event = itemView.findViewById(R.id.hour_of_event);
             sport_icon = itemView.findViewById(R.id.sport_icon_event);
