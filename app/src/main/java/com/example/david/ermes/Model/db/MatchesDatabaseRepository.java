@@ -59,7 +59,11 @@ public class MatchesDatabaseRepository {
     }
 
     public void push(_Match match) {
-        this.matchesRef.push().setValue(match);
+        if (match.getID() != null && !match.getID().isEmpty()) {
+            this.matchesRef.child(match.getID()).setValue(match);
+        } else {
+            this.matchesRef.push().setValue(match);
+        }
     }
 
     private void fetchMatches(String param, String value, final FirebaseCallback fc) {
