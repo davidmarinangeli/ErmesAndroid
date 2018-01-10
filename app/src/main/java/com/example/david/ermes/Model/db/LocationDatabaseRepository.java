@@ -29,7 +29,11 @@ public class LocationDatabaseRepository {
     }
 
     public void push(DbModels._Location location) {
-        this.ref.push().setValue(location);
+        if (location.getID() != null && !location.getID().isEmpty()) {
+            this.ref.child(location.getID()).setValue(location);
+        } else {
+            this.ref.push().setValue(location);
+        }
     }
 
     public void fetchAllLocations(final FirebaseCallback firebaseCallback) {

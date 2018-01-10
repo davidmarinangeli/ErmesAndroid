@@ -2,6 +2,7 @@ package com.example.david.ermes.Model.db;
 
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.models.MissingStuffElement;
@@ -121,6 +122,8 @@ public class DbModels {
 
         public void setID(String id) { this.id = id; }
 
+        public String getID() { return this.id; }
+
         public Match convertToMatch() {
             if (this.id == null || this.id.length() <= 0) {
                 return null;
@@ -177,6 +180,7 @@ public class DbModels {
             this.id = id;
         }
 
+        public String getID() { return this.id; }
 
         public Sport convertToSport() {
             return new Sport(
@@ -200,6 +204,7 @@ public class DbModels {
         public double x;
         public double y;
         public String idUserCreator;
+        public List<String> sportIds;
 
         private String id;
 
@@ -213,7 +218,17 @@ public class DbModels {
             this.location = location;
         }
 
+        public _Location(String location, double x, double y, String idUser, List<String> sportIds) {
+            this.idUserCreator = idUser;
+            this.x = x;
+            this.y = y;
+            this.location = location;
+            this.sportIds = sportIds;
+        }
+
         public void setID(String id) { this.id = id; }
+
+        public String getID() { return this.id; }
 
         public Location convertToLocation() {
             return new Location(
@@ -221,7 +236,8 @@ public class DbModels {
                     this.location,
                     this.x,
                     this.y,
-                    this.idUserCreator
+                    this.idUserCreator,
+                    this.sportIds
             );
         }
 
@@ -233,6 +249,55 @@ public class DbModels {
             }
 
             return locations;
+        }
+    }
+
+    public static class _Notification {
+        public String idOwner;
+        public String title;
+        public String text;
+        public String type;
+        public boolean read;
+
+        private String id;
+
+        public _Notification() {}
+
+        public _Notification(String id, String idOwner, String title, String text, String type,
+                             boolean read) {
+            this.id = id;
+            this.idOwner = idOwner;
+            this.title = title;
+            this.text = text;
+            this.type = type;
+            this.read = read;
+        }
+
+        public void setID(String id) {
+            this.id = id;
+        }
+
+        public String getID() { return id; }
+
+        public Notification convertToNotification() {
+            return new Notification(
+                    this.id,
+                    this.idOwner,
+                    this.title,
+                    this.text,
+                    this.type,
+                    this.read
+            );
+        }
+
+        public static List<Notification> convertToNotificationList(List<_Notification> list) {
+            List<Notification> l = new ArrayList<>();
+
+            for (_Notification n : list) {
+                l.add(n.convertToNotification());
+            }
+
+            return l;
         }
     }
 }

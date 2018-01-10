@@ -260,10 +260,4 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
             }
         });
     }
-
-    private void noRegistration() {
-        // TODO Buro wtf is this?
-        // controllare la nuova proprietà isLoggedIn dell'oggetto User
-    }
-
 }

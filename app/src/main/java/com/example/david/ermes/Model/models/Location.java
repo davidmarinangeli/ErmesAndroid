@@ -7,6 +7,7 @@ import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by david on 11/14/2017.
@@ -18,6 +19,7 @@ public class Location implements Serializable{
     private double longitude;
     private String name;
     private String id;
+    private List<String> sportIds;
 
     public Location() {}
 
@@ -25,12 +27,14 @@ public class Location implements Serializable{
         this.name = name;
     }
 
-    public Location(String id, String name, double lat, double lon, String idUserCreator) {
+    public Location(String id, String name, double lat, double lon, String idUserCreator,
+                    List<String> sportIds) {
         this.id = id;
         this.name = name;
         this.latitude = lat;
         this.longitude = lon;
         this.idUserCreator = idUserCreator;
+        this.sportIds = sportIds;
     }
 
     public Location(String name, double lat, double lon, String idUserCreator) {
@@ -71,6 +75,14 @@ public class Location implements Serializable{
     public void setIdUserCreator(String id) { this.idUserCreator = id; }
 
     public String getId() { return this.id; }
+
+    public List<String> getSportIds() {
+        return sportIds;
+    }
+
+    public void setSportIds(List<String> sportIds) {
+        this.sportIds = sportIds;
+    }
 
     public double getDistanceFromLocation(Location location) {
         double distance = 0.0;
