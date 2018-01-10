@@ -258,19 +258,21 @@ public class DbModels {
         public String text;
         public String type;
         public boolean read;
+        public int date;
 
         private String id;
 
         public _Notification() {}
 
         public _Notification(String id, String idOwner, String title, String text, String type,
-                             boolean read) {
+                             boolean read, int date) {
             this.id = id;
             this.idOwner = idOwner;
             this.title = title;
             this.text = text;
             this.type = type;
             this.read = read;
+            this.date = date;
         }
 
         public void setID(String id) {
@@ -286,7 +288,8 @@ public class DbModels {
                     this.title,
                     this.text,
                     this.type,
-                    this.read
+                    this.read,
+                    this.date
             );
         }
 

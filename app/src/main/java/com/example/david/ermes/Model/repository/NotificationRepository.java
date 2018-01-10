@@ -26,6 +26,8 @@ public class NotificationRepository {
                             List<_Notification> list = (List<_Notification>) object;
 
                             firebaseCallback.callback(_Notification.convertToNotificationList(list));
+                        } else {
+                            firebaseCallback.callback(null);
                         }
                     }
                 });
