@@ -7,6 +7,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.example.david.ermes.Model.db.DbModels._Notification;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -15,7 +17,10 @@ import java.util.List;
 
 public class NotificationDatabaseRepository {
     private static NotificationDatabaseRepository instance = new NotificationDatabaseRepository();
-    public static NotificationDatabaseRepository getInstance() { return instance; }
+
+    public static NotificationDatabaseRepository getInstance() {
+        return instance;
+    }
 
     private DatabaseReference ref;
 
@@ -27,13 +32,30 @@ public class NotificationDatabaseRepository {
         this.ref.orderByChild("idOwner").equalTo(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<_Notification> list = new ArrayList<>();
+                List<_Notification> list = null;
 
-                for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    _Notification n = d.getValue(_Notification.class);
-                    n.setID(d.getKey());
+                if (dataSnapshot != null) {
+                    list = new ArrayList<>();
 
-                    list.add(n);
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        _Notification n = d.getValue(_Notification.class);
+                        n.setID(d.getKey());
+
+                        list.add(n);
+                    }
+
+                    // list sort by date
+                    Collections.sort(list, new Comparator<_Notification>() {
+                        @Override
+                        public int compare(_Notification t1, _Notification t2) {
+                            final int date1 = t1.date;
+                            final int date2 = t2.date;
+
+                            return date1 > date2 ? 1
+                                    : date1 < date2 ? -1
+                                    : 0;
+                        }
+                    });
                 }
 
                 firebaseCallback.callback(list);

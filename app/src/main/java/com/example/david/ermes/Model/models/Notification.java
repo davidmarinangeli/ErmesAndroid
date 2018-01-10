@@ -21,25 +21,29 @@ public class Notification {
     private String text;
     private String type;
     private boolean read;
+    private int date;
 
     public Notification() {}
 
     public Notification(String id, String idOwner, String title, String text, String type,
-                        boolean read) {
+                        boolean read, int date) {
         this.id = id;
         this.idOwner = idOwner;
         this.title = title;
         this.text = text;
         this.type = type;
         this.read = read;
+        this.date = date;
     }
 
-    public Notification(String idOwner, String title, String text, String type, boolean read) {
+    public Notification(String idOwner, String title, String text, String type, boolean read,
+                        int date) {
         this.idOwner = idOwner;
         this.title = title;
         this.text = text;
         this.type = type;
         this.read = read;
+        this.date = date;
     }
 
     public void save() {
@@ -53,7 +57,8 @@ public class Notification {
                 this.title,
                 this.text,
                 this.type,
-                this.read
+                this.read,
+                this.date
         );
     }
 
@@ -129,5 +134,17 @@ public class Notification {
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public int getDate() {
+        return date;
+    }
+
+    public void setDate(int date) {
+        this.date = date;
+    }
+
+    public String getId() {
+        return id;
     }
 }
