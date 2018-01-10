@@ -19,6 +19,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Location;
+import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.View.ViewPagerAdapter;
 import com.example.david.ermes.R;

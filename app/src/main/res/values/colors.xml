@@ -9,6 +9,7 @@
     <color name="colorAccent">#448aff</color>
     <color name="colorAccentDark">#005ecb</color>
     <color name="colorAccentLight">#83b9ff</color>
+    <color name="notificationBackground">#cde6ff</color>
 
     <!-- misc colors -->
     <color name="red">#FF0000</color>
