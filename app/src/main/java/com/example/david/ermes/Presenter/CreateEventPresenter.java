@@ -1,6 +1,7 @@
 package com.example.david.ermes.Presenter;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.MissingStuffElement;
 import com.example.david.ermes.Model.models.Sport;
@@ -24,7 +25,7 @@ public class CreateEventPresenter {
         this.createEventActivity = createEventActivity;
     }
 
-    public void saveMatch(final long timeInMillis, final String sport) {
+    public void saveMatch(final long timeInMillis, final String sport, final Location selected_location, final ArrayList<MissingStuffElement> chips_title_list) {
 
         UserRepository.getInstance().getUser(new FirebaseCallback() {
             @Override
@@ -38,20 +39,16 @@ public class CreateEventPresenter {
                             if (object != null) {
                                 Sport found_sport = (Sport) object;
 
-                                List<MissingStuffElement> missingstuff = new ArrayList<>();
-                                missingstuff.add(new MissingStuffElement("rete", false));
-                                missingstuff.add(new MissingStuffElement("pallone", false));
-
                                 //qui mettere il comportamento alla creazione del match
                                 Match result_match = new Match(
                                         current_user.getUID(),
-                                        "-L06fg0QFeGxR1LfRurU",
+                                        selected_location.getId(),
                                         com.example.david.ermes.Presenter.utils.TimeUtils.fromMillisToDate(timeInMillis),
                                         true,
                                         found_sport.getID(),
                                         found_sport.getNumPlayers(),
                                         2,
-                                        missingstuff,
+                                        chips_title_list,
                                         new ArrayList<String>(),
                                         new ArrayList<String>()
                                 );

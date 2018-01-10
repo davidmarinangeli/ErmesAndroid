@@ -41,6 +41,15 @@ public class MatchRepository {
         });
     }
 
+    public void fetchOrderedMatchesByDate(long date, final FirebaseCallback firebaseCallback) {
+        MatchesDatabaseRepository.getInstance().orderMatchesByDate(date, new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                firebaseCallback.callback(DbModels._Match.convertToMatchList((List<DbModels._Match>) object));
+            }
+        });
+    }
+
     public void saveMatch(Match match) {
         MatchesDatabaseRepository.getInstance().push(match.convertTo_Match());
     }

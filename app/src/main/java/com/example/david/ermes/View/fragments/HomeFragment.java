@@ -18,6 +18,7 @@ import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.MainAdapter;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -67,7 +68,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void initList() {
-        MatchRepository.getInstance().fetchMatches(new FirebaseCallback() {
+        MatchRepository.getInstance().fetchOrderedMatchesByDate(Calendar.getInstance().getTimeInMillis(), new FirebaseCallback() {
             @Override
             public void callback(Object object) {
                 adapter.refreshList((List<Match>) object);

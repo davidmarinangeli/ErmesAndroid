@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity{
     ViewPagerAdapter viewPagerAdapter;
     private FloatingActionMenu menu;
     private AHBottomNavigation bottomNavigation;
-    private FragmentManager manager;
-    private MaterialSearchView searchView;
     private FloatingActionButton defaulteventfab;
     private FloatingActionButton addPlace;
 
@@ -79,17 +77,6 @@ public class MainActivity extends AppCompatActivity{
                 startActivityForResult(i,1);
             }
         });
-
-        LocationRepository.getInstance().fetchLocationsByRange(
-                new Location("", 50.0, 50.0, ""),
-                50.0,
-                new FirebaseCallback() {
-                    @Override
-                    public void callback(Object object) {
-                        Log.d("PROXIMITY FETCH", object.toString());
-                    }
-                }
-        );
 
         initBottomNavigationView();
     }
@@ -142,67 +129,5 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
-
-        searchView = findViewById(R.id.search_view);
-        searchView.setHint(getResources().getString(R.string.cerca_evento));
-        searchView.setBackIcon(ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_blue_24dp));
-        searchView.setCursorDrawable(R.drawable.custom_cursor);
-
-        MenuItem item = menu.findItem(R.id.action_search);
-        searchView.setMenuItem(item);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_search) {
-            searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    //Do some magic
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    //Do some magic
-                    return false;
-                }
-            });
-
-            searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-                @Override
-                public void onSearchViewShown() {
-                    //Do some magic
-                }
-
-                @Override
-                public void onSearchViewClosed() {
-                    //Do some magic
-                }
-            });
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
 }
