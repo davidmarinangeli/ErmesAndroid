@@ -54,6 +54,8 @@
     <string name="name">Nome</string>
     <string name="city">Città</string>
     <string name="logingoogle">Accedi o Registrati con Google</string>
+    <string name="materiali_mancanti">Materiali mancanti</string>
+    <string name="write_missing_stuff">Scrivi gli oggetti mancanti...</string>
 
 
     <!-- buro gaio -->
