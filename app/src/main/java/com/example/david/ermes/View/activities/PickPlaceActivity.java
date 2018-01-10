@@ -20,13 +20,14 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class PickPlaceActivity extends AppCompatActivity {
 
-    final Location location_create = new Location();
+    Location location_create;
     MapView mMapView;
     private GoogleMap googleMap;
-    private EditText place_name;
+    private MaterialEditText place_name;
     private Button dismiss;
     private Button fine;
 
@@ -72,9 +73,10 @@ public class PickPlaceActivity extends AppCompatActivity {
                                     googleMap.clear();
                                     googleMap.addMarker(marker[0]);
 
+                                    location_create = new Location();
                                     location_create.setLatitude(marker[0].getPosition().latitude);
                                     location_create.setLongitude(marker[0].getPosition().longitude);
-                                    location_create.setName(String.valueOf(place_name.getText()));
+                                    location_create.setName(place_name.getText().toString());
                                     location_create.setIdUserCreator(((User) object).getUID());
                                 }
                             }
@@ -85,23 +87,23 @@ public class PickPlaceActivity extends AppCompatActivity {
         });
 
 
-        fine.setOnClickListener(clickListener);
-    }
+        fine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (location_create != null) {
+                    location_create.save();
+                }
 
-    View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+                view = getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
 
-            location_create.save();
-            view = getCurrentFocus();
-            if (view != null) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                setResult(Activity.RESULT_OK);
+
+                finish();
             }
-
-            setResult(Activity.RESULT_OK);
-
-            finish();
-        }
-    };
+        });
+    }
 }
