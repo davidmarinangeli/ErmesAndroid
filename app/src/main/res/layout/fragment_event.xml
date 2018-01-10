@@ -6,9 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.david.ermes.View.activities.EventActivity">
 
-
-
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -125,15 +122,15 @@
                         android:layout_height="wrap_content">
 
                         <ImageView
-                            android:id="@+id/sport_icon"
+                            android:id="@+id/sport_icon_event"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
-                            android:scaleType="center"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/basketball_icon_grey" />
+                            android:tint="@color/colorAccent"
+                            app:srcCompat="@drawable/basketball96" />
 
                         <TextView
                             android:id="@+id/sport_name"
@@ -143,9 +140,9 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
                             android:textSize="18sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/sport_icon"
-                            app:layout_constraintStart_toEndOf="@+id/sport_icon"
-                            app:layout_constraintTop_toTopOf="@+id/sport_icon"
+                            app:layout_constraintBottom_toBottomOf="@+id/sport_icon_event"
+                            app:layout_constraintStart_toEndOf="@+id/sport_icon_event"
+                            app:layout_constraintTop_toTopOf="@+id/sport_icon_event"
                             tools:text="Basket" />
 
                         <ImageView
@@ -155,7 +152,7 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/sport_icon"
+                            app:layout_constraintTop_toBottomOf="@+id/sport_icon_event"
                             app:srcCompat="@drawable/ic_date_range_black_24dp" />
 
                         <TextView

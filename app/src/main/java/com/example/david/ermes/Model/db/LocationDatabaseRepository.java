@@ -43,7 +43,9 @@ public class LocationDatabaseRepository {
                 List<DbModels._Location> list = new ArrayList<>();
 
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    list.add(d.getValue(DbModels._Location.class));
+                    DbModels._Location loc = d.getValue(DbModels._Location.class);
+                    loc.setID(d.getKey());
+                    list.add(loc);
                 }
 
                 firebaseCallback.callback(list);

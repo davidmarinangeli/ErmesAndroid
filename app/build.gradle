@@ -81,6 +81,7 @@ dependencies {
 
     //custom libraries
 
+    compile 'com.github.tylersuehr7:chips-input-layout:1.3'
     compile 'com.github.xmuSistone:VegaLayoutManager:master-SNAPSHOT'
     compile "com.android.support:appcompat-v7:${support}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'

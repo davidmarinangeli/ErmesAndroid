@@ -6,11 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
+import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
@@ -40,6 +43,7 @@ public class EventFragment extends Fragment {
 
         Bundle args = getArguments();
         match = args.getParcelable("event");
+
     }
 
     @Override
@@ -59,25 +63,33 @@ public class EventFragment extends Fragment {
         hourofevent = view.findViewById(R.id.when_hour_text_hour);
         usercreator = view.findViewById(R.id.userNameText);
 
-        usercreator.setText("user");
         UserRepository.getInstance().fetchUserById(match.getIdOwner(), new FirebaseCallback() {
             @Override
             public void callback(Object object) {
                 if (object != null) {
                     User user = (User) object;
                     usercreator.setText(user.getName());
+                } else {
+
                 }
             }
         });
 
-
-        sportname.setText(match.getIdSport());
+        SportRepository.getInstance().fetchSportById(match.getIdSport(), new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                if (object != null){
+                    Sport match_sport = (Sport) object;
+                    sportname.setText(match_sport.getName());
+                }
+            }
+        });
         Calendar c = Calendar.getInstance();
         c.setTime(match.getDate());
 
         // lo so che pare un macello sta stringa, giuro che correggerò le API
         dateofevent.setText(c.get(Calendar.DAY_OF_MONTH) +" "+ TimeUtils.fromNumericMonthToString(c.get(Calendar.MONTH)) );
-        hourofevent.setText(String.valueOf(c.get(Calendar.HOUR_OF_DAY)));
+        hourofevent.setText(TimeUtils.getFormattedHourMinute(c));
         //placeofevent.setText(match.getPlace());
     }
 
