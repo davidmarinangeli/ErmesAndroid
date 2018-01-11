@@ -21,20 +21,30 @@ public class DbModels {
         public String city;
         public String name;
         public String email;
+        public long birthDate;
+
         private String UID;
 
         public _User() {
         }
 
-        public _User(String name, String email, String idFavSport, String city) {
+        public _User(String name, String email, String idFavSport, String city, long birthDate) {
             this.name = name;
             this.email = email;
             this.idFavSport = idFavSport;
             this.city = city;
+            this.birthDate = birthDate;
         }
 
         public User convertToUser() {
-            return new User(this.name, this.email, this.UID, this.city, this.idFavSport);
+            return new User(
+                    this.name,
+                    this.email,
+                    this.UID,
+                    this.city,
+                    this.idFavSport,
+                    this.birthDate
+            );
         }
 
         public void setName(String name) {
