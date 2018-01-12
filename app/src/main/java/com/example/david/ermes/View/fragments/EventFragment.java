@@ -3,6 +3,7 @@ package com.example.david.ermes.View.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
+import com.example.david.ermes.Model.repository.LocationRepository;
+import com.example.david.ermes.Model.repository.MatchRepository;
 import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
@@ -30,6 +34,9 @@ public class EventFragment extends Fragment {
     private TextView dateofevent;
     private TextView placeofevent;
     private TextView hourofevent;
+    private TextView participant;
+    private TextView pending;
+    private TextView freeslots;
     private TextView usercreator;
     private TextView tools;
     private Match match;
@@ -62,6 +69,8 @@ public class EventFragment extends Fragment {
         placeofevent = view.findViewById(R.id.where_text);
         hourofevent = view.findViewById(R.id.when_hour_text_hour);
         usercreator = view.findViewById(R.id.userNameText);
+        participant = view.findViewById(R.id.partecipantNumber);
+        pending = view.findViewById(R.id.invitedNumber);
 
         UserRepository.getInstance().fetchUserById(match.getIdOwner(), new FirebaseCallback() {
             @Override
@@ -87,10 +96,24 @@ public class EventFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         c.setTime(match.getDate());
 
+        LocationRepository.getInstance().fetchLocationById(match.getIdLocation(), new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                if (object != null) {
+                    Location match_location = (Location) object;
+                    placeofevent.setText(match_location.getName());
+                }
+                }
+            });
+
+
+
         // lo so che pare un macello sta stringa, giuro che correggerò le API
         dateofevent.setText(c.get(Calendar.DAY_OF_MONTH) +" "+ TimeUtils.fromNumericMonthToString(c.get(Calendar.MONTH)) );
         hourofevent.setText(TimeUtils.getFormattedHourMinute(c));
-        //placeofevent.setText(match.getPlace());
+        participant.setText(match.getPartecipants().size());
+        pending.setText(match.getPending().size());
+        freeslots.setText(match.getMaxPlayers()-match.getPartecipants().size());
     }
 
 
