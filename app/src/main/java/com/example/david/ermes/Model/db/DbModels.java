@@ -1,5 +1,6 @@
 package com.example.david.ermes.Model.db;
 
+import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Notification;
@@ -60,6 +61,45 @@ public class DbModels {
         }
 
         public String getUID() {return this.UID;}
+    }
+
+    public static class _Friendship {
+        public long date;
+
+        private String id;
+
+        public _Friendship() {}
+
+        public _Friendship(String id1, String id2, long date) {
+            this.date = date;
+
+            this.id = Friendship.getFriendshipIdFromIds(id1, id2);
+        }
+
+        public void setId(String id) { this.id = id; }
+
+        public String getId() { return this.id; }
+
+        public Friendship convertToFriendship() {
+            return new Friendship(
+                    this.id,
+                    this.date
+            );
+        }
+
+        public static List<Friendship> convertToFriendshipList(List<_Friendship> list) {
+            List<Friendship> l = null;
+
+            if (list != null) {
+                l = new ArrayList<>();
+
+                for (_Friendship f : list) {
+                    l.add(f.convertToFriendship());
+                }
+            }
+
+            return l;
+        }
     }
 
     public static class _MissingStuffElement {

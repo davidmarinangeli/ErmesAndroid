@@ -240,7 +240,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                                 email,
                                                 task.getResult().getUser().getUid(),
                                                 city,
-                                                found_sport.getID()
+                                                found_sport.getID(),
+                                                // TODO inserire la data di nascita
+                                                0
                                         ).save();
 
                                         finish();
@@ -298,7 +300,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                     result_intent.getStringExtra("mail"),
                                     result_intent.getStringExtra("uid"),
                                     place_selected.getName().toString(),
-                                    found_sport.getID()
+                                    found_sport.getID(),
+                                    // TODO inserire la data di nascita
+                                    0
                             ).save();
 
                             finish();
