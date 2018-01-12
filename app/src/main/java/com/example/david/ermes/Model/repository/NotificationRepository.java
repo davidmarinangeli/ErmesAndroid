@@ -33,7 +33,7 @@ public class NotificationRepository {
                 });
     }
 
-    public void saveNotification(Notification notification) {
+    public void sendNotification(Notification notification) {
         NotificationDatabaseRepository.getInstance().push(notification.convertTo_Notification());
     }
 }
