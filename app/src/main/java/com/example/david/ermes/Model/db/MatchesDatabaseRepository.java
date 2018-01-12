@@ -58,6 +58,20 @@ public class MatchesDatabaseRepository {
         fetchMatches(null, null, fCallback);
     }
 
+    public void fetchMatchById(String id, final FirebaseCallback firebaseCallback) {
+        fetchMatches("key", id, new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                if (object != null) {
+                    List<_Match> list = (List<_Match>) object;
+                    firebaseCallback.callback(list.get(0));
+                } else {
+                    firebaseCallback.callback(null);
+                }
+            }
+        });
+    }
+
     public void push(_Match match) {
         if (match.getID() != null && !match.getID().isEmpty()) {
             this.matchesRef.child(match.getID()).setValue(match);
@@ -66,12 +80,15 @@ public class MatchesDatabaseRepository {
         }
     }
 
-    private void fetchMatches(String param, String value, final FirebaseCallback fc) {
+    private void fetchMatches(final String param, String value, final FirebaseCallback fc) {
         Query queryRef;
 
         if (param == null) {
             queryRef = this.matchesRef.orderByKey();
-        } else {
+        } else if (param == "key") {
+            queryRef = this.matchesRef.child(value);
+        }
+        else {
             queryRef = this.matchesRef.orderByChild(param).equalTo(value);
         }
 
@@ -85,11 +102,18 @@ public class MatchesDatabaseRepository {
                 if (dataSnapshot != null ) {
                     matches_list = new ArrayList<>();
 
-                    for (DataSnapshot d : dataSnapshot.getChildren()) {
-                        _Match match = d.getValue(_Match.class);
+                    if (param == "key") {
+                        _Match match = dataSnapshot.getValue(_Match.class);
                         match.setID(dataSnapshot.getKey());
 
                         matches_list.add(match);
+                    } else {
+                        for (DataSnapshot d : dataSnapshot.getChildren()) {
+                            _Match match = d.getValue(_Match.class);
+                            match.setID(d.getKey());
+
+                            matches_list.add(match);
+                        }
                     }
                 }
                 fc.callback(matches_list);

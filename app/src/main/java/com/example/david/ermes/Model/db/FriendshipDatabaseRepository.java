@@ -1,0 +1,114 @@
+package com.example.david.ermes.Model.db;
+
+import com.example.david.ermes.Model.db.DbModels._Friendship;
+import com.example.david.ermes.Model.models.Friendship;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by nicol on 11/01/2018.
+ */
+
+public class FriendshipDatabaseRepository {
+    private static final FriendshipDatabaseRepository instance = new FriendshipDatabaseRepository();
+
+    public static FriendshipDatabaseRepository getInstance() {
+        return instance;
+    }
+
+    private static List<_Friendship> results;
+
+    private void resetResults() {
+        results = new ArrayList<>();
+    }
+
+    private static int fetch_callback_count = 0;
+
+    private int getFetchCallbackCount() {
+        return fetch_callback_count;
+    }
+
+    private void incrementFetchCallbackCount() {
+        fetch_callback_count += 1;
+    }
+
+    private void decrementFetchCallbackCount() {
+        fetch_callback_count -= 1;
+    }
+
+    private void resetFetchCallbackCount() {
+        fetch_callback_count = 0;
+    }
+
+    private DatabaseReference ref;
+
+    public FriendshipDatabaseRepository() {
+        this.ref = DatabaseManager.get().getFriendshipRef();
+
+        resetFetchCallbackCount();
+        resetResults();
+    }
+
+    public void push(_Friendship friendship) {
+        this.ref.child(friendship.getId()).setValue(friendship);
+    }
+
+    private void dispatchResults(DataSnapshot dataSnapshot, FirebaseCallback firebaseCallback) {
+        incrementFetchCallbackCount();
+
+        if (dataSnapshot != null) {
+            for (DataSnapshot d : dataSnapshot.getChildren()) {
+                _Friendship f = d.getValue(_Friendship.class);
+                f.setId(d.getKey());
+
+                results.add(f);
+            }
+        }
+
+        if (getFetchCallbackCount() == 2) {
+            if (results.size() >= 0) {
+                firebaseCallback.callback(results);
+            } else {
+                firebaseCallback.callback(null);
+            }
+        }
+    }
+
+    public void fetchListById(String id, final FirebaseCallback firebaseCallback) {
+        resetFetchCallbackCount();
+        resetResults();
+
+        this.ref.orderByKey().startAt(id + Friendship.SEPARATOR).addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        dispatchResults(dataSnapshot, firebaseCallback);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        firebaseCallback.callback(null);
+                    }
+                }
+        );
+
+        this.ref.orderByKey().endAt(Friendship.SEPARATOR + id).addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        dispatchResults(dataSnapshot, firebaseCallback);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        firebaseCallback.callback(null);
+                    }
+                }
+        );
+    }
+}

@@ -50,6 +50,19 @@ public class MatchRepository {
         });
     }
 
+    public void fetchMatchById(String id, final FirebaseCallback firebaseCallback) {
+        MatchesDatabaseRepository.getInstance().fetchMatchById(id, new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                if (object != null) {
+                    firebaseCallback.callback(((DbModels._Match) object).convertToMatch());
+                } else {
+                    firebaseCallback.callback(null);
+                }
+            }
+        });
+    }
+
     public void saveMatch(Match match) {
         MatchesDatabaseRepository.getInstance().push(match.convertTo_Match());
     }

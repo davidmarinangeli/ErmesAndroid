@@ -5,30 +5,32 @@ package com.example.david.ermes.Model.models;
  */
 
 import com.example.david.ermes.Model.db.DbModels._Notification;
+import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.repository.NotificationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Notification {
-    public static class types {
-        public static final String MATCH_INVITE_USER = "MATCH_INVITE_USER";
-    }
 
     private String id = null;
+    private String idCreator;
     private String idOwner;
+    private String idMatch;
     private String title;
     private String text;
-    private String type;
+    private NotificationType type;
     private boolean read;
     private int date;
 
     public Notification() {}
 
-    public Notification(String id, String idOwner, String title, String text, String type,
-                        boolean read, int date) {
+    public Notification(String id, String idCreator, String idOwner, String idMatch, String title,
+                        String text, NotificationType type, boolean read, int date) {
         this.id = id;
+        this.idCreator = idCreator;
         this.idOwner = idOwner;
+        this.idMatch = idMatch;
         this.title = title;
         this.text = text;
         this.type = type;
@@ -36,9 +38,11 @@ public class Notification {
         this.date = date;
     }
 
-    public Notification(String idOwner, String title, String text, String type, boolean read,
-                        int date) {
+    public Notification(String idCreator, String idOwner, String idMatch, String title, String text,
+                        NotificationType type, boolean read, int date) {
+        this.idCreator = idCreator;
         this.idOwner = idOwner;
+        this.idMatch = idMatch;
         this.title = title;
         this.text = text;
         this.type = type;
@@ -47,16 +51,27 @@ public class Notification {
     }
 
     public void save() {
-        NotificationRepository.getInstance().saveNotification(this);
+        saveInstance(null);
+    }
+
+    public void save(FirebaseCallback firebaseCallback) {
+        saveInstance(firebaseCallback);
+    }
+
+    private void saveInstance(FirebaseCallback firebaseCallback) {
+        NotificationRepository.getInstance().sendNotification(
+                this, firebaseCallback);
     }
 
     public _Notification convertTo_Notification() {
         return new _Notification(
                 this.id,
+                this.idCreator,
                 this.idOwner,
+                this.idMatch,
                 this.title,
                 this.text,
-                this.type,
+                this.type.toString(),
                 this.read,
                 this.date
         );
@@ -104,6 +119,22 @@ public class Notification {
         this.idOwner = idOwner;
     }
 
+    public String getIdCreator() {
+        return idCreator;
+    }
+
+    public void setIdCreator(String idCreator) {
+        this.idCreator = idCreator;
+    }
+
+    public String getIdMatch() {
+        return idMatch;
+    }
+
+    public void setIdMatch(String idMatch) {
+        this.idMatch = idMatch;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -120,11 +151,11 @@ public class Notification {
         this.text = text;
     }
 
-    public String getType() {
+    public NotificationType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(NotificationType type) {
         this.type = type;
     }
 
