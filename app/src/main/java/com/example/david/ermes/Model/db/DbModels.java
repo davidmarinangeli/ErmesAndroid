@@ -4,6 +4,7 @@ import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Notification;
+import com.example.david.ermes.Model.models.NotificationType;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.models.MissingStuffElement;
@@ -303,7 +304,9 @@ public class DbModels {
     }
 
     public static class _Notification {
+        public String idCreator;
         public String idOwner;
+        public String idMatch;
         public String title;
         public String text;
         public String type;
@@ -314,10 +317,12 @@ public class DbModels {
 
         public _Notification() {}
 
-        public _Notification(String id, String idOwner, String title, String text, String type,
-                             boolean read, int date) {
+        public _Notification(String id, String idCreator, String idOwner, String idMatch,
+                             String title, String text, String type, boolean read, int date) {
             this.id = id;
+            this.idCreator = idCreator;
             this.idOwner = idOwner;
+            this.idMatch = idMatch;
             this.title = title;
             this.text = text;
             this.type = type;
@@ -334,10 +339,12 @@ public class DbModels {
         public Notification convertToNotification() {
             return new Notification(
                     this.id,
+                    this.idCreator,
                     this.idOwner,
+                    this.idMatch,
                     this.title,
                     this.text,
-                    this.type,
+                    new NotificationType(this.type),
                     this.read,
                     this.date
             );
