@@ -7,14 +7,15 @@
     android:orientation="vertical">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/notification_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/notificationBackground"
-        android:minHeight="56dp"
+        android:minHeight="72dp"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingVertical="8dp">
+        android:paddingVertical="16dp">
 
         <ImageView
             android:id="@+id/notification_icon"
@@ -33,7 +34,7 @@
                 android:id="@+id/notification_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textColor="@color/colorAccentDark"
                 tools:text="Nuovo invito" />
 
@@ -41,7 +42,17 @@
                 android:id="@+id/notification_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
                 tools:text="Nicola Schiavon ti ha invitato ad una nuova partita." />
+
+            <TextView
+                android:id="@+id/notification_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                tools:text="in data x" />
 
         </LinearLayout>
 

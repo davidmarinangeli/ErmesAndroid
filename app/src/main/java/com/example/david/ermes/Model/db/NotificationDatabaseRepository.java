@@ -3,6 +3,7 @@ package com.example.david.ermes.Model.db;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.example.david.ermes.Model.db.DbModels._Notification;
 
@@ -68,11 +69,23 @@ public class NotificationDatabaseRepository {
         });
     }
 
-    public void push(_Notification notification) {
+    public void push(_Notification notification, final FirebaseCallback firebaseCallback) {
+        DatabaseReference query;
+
         if (notification.getID() != null && !notification.getID().isEmpty()) {
-            this.ref.child(notification.getID()).setValue(notification);
+            query = this.ref.child(notification.getID());
         } else {
-            this.ref.push().setValue(notification);
+            query = this.ref.push();
         }
+
+        query.setValue(notification,
+                new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(null);
+                        }
+                    }
+                });
     }
 }

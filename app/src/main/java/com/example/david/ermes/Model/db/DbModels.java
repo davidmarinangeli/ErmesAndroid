@@ -344,7 +344,7 @@ public class DbModels {
                     this.idMatch,
                     this.title,
                     this.text,
-                    new NotificationType(this.type),
+                    NotificationType.getNotificationTypeFromString(this.type),
                     this.read,
                     this.date
             );

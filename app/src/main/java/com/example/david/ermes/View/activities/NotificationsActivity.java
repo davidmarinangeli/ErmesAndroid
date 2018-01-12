@@ -3,6 +3,8 @@ package com.example.david.ermes.View.activities;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
@@ -22,6 +24,7 @@ public class NotificationsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NotificationAdapter adapter;
     private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
 
     private User currentUser;
 
@@ -31,9 +34,16 @@ public class NotificationsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notifications);
 
         adapter = new NotificationAdapter(this);
-        recyclerView = findViewById(R.id.notifications_container);
+        layoutManager = new LinearLayoutManager(this);
+
+        recyclerView = findViewById(R.id.notifications_recycler_view);
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                recyclerView.getContext(), LinearLayoutManager.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         toolbar = findViewById(R.id.notification_toolbar);
         toolbar.setTitle("Notifiche");

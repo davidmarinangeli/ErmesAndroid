@@ -5,6 +5,7 @@ package com.example.david.ermes.Model.models;
  */
 
 import com.example.david.ermes.Model.db.DbModels._Notification;
+import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.repository.NotificationRepository;
 
 import java.util.ArrayList;
@@ -50,7 +51,16 @@ public class Notification {
     }
 
     public void save() {
-        NotificationRepository.getInstance().sendNotification(this);
+        saveInstance(null);
+    }
+
+    public void save(FirebaseCallback firebaseCallback) {
+        saveInstance(firebaseCallback);
+    }
+
+    private void saveInstance(FirebaseCallback firebaseCallback) {
+        NotificationRepository.getInstance().sendNotification(
+                this, firebaseCallback);
     }
 
     public _Notification convertTo_Notification() {
