@@ -102,7 +102,8 @@ public class Location implements Serializable{
                 this.name,
                 this.latitude,
                 this.longitude,
-                this.idUserCreator
+                this.idUserCreator,
+                this.sportIds
         );
     }
 

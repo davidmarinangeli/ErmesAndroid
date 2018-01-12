@@ -18,9 +18,11 @@ import android.widget.Toast;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.MatchRepository;
+import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -55,7 +57,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     GoogleApiClient mGoogleApiClient;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
 
         mMapView = rootView.findViewById(R.id.map);
@@ -91,39 +93,47 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
                     googleMap.setMyLocationEnabled(true);
                 }
 
-                MatchRepository.getInstance().fetchMatches(new FirebaseCallback() {
+                LocationRepository.getInstance().fetchAllLocations(new FirebaseCallback() {
                     @Override
                     public void callback(Object object) {
-                        if (object != null && ((List<Match>) object).size() > 0) {
-                            match_list = (List<Match>) object;
-                            final boolean first_match = true;
+                        if (object != null) {
+                            for (final Location loc : (List<Location>) object) {
 
-                            for (final Match match : match_list) {
-                                LocationRepository.getInstance().fetchLocationById(match.getIdLocation(), new FirebaseCallback() {
+                                final LatLng location_latlng = new LatLng(
+                                        loc.getLatitude(),
+                                        loc.getLongitude()
+                                );
+
+
+                                // TODO: controllare correttezza algoritmo
+                                final List<String> sportids = new ArrayList<>();
+                                final MarkerOptions marker = new MarkerOptions();
+
+                                SportRepository.getInstance().fetchAll(new FirebaseCallback() {
                                     @Override
                                     public void callback(Object object) {
                                         if (object != null) {
-                                            Location loc = (Location) object;
+                                            List<Sport> sport = (List<Sport>) object;
 
-                                            LatLng location_latlng = new LatLng(
-                                                    loc.getLatitude(),
-                                                    loc.getLongitude()
-                                            );
-
-                                            googleMap.addMarker(new MarkerOptions()
-                                                    .position(location_latlng)
-                                                    .title(loc.getName())
-                                                    .snippet(match.getIdSport()));
-
-                                            if (first_match) {
-                                                // For zooming automatically to the location of the marker
-                                                CameraPosition cameraPosition = new CameraPosition.Builder().zoom(12).target(location_latlng
-                                                ).build();
-                                                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                                            for (Sport s : sport) {
+                                                for (String loc_id : loc.getSportIds())
+                                                    if (s.getID().equals(loc_id)) {
+                                                        sportids.add(s.getName());
+                                                    }
                                             }
+
+                                            googleMap.addMarker(marker
+                                                    .position(location_latlng)
+                                                    .title(loc.getName()).snippet(String.valueOf(sportids)));
                                         }
                                     }
                                 });
+
+
+                                // For zooming automatically to the location of the marker
+                                CameraPosition cameraPosition = new CameraPosition.Builder().zoom(12).target(location_latlng
+                                ).build();
+                                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                             }
                         }
                     }
