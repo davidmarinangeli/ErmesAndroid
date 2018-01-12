@@ -44,6 +44,23 @@ public class LocationRepository {
         });
     }
 
+
+    public void fetchAllLocations(final FirebaseCallback firebaseCallback){
+        LocationDatabaseRepository.getInstance().fetchAllLocations(new FirebaseCallback() {
+            @Override
+            public void callback(Object object) {
+                if (object != null){
+                    firebaseCallback.callback(DbModels._Location.convertToLocationList(
+                            (List<DbModels._Location>) object
+                    ));
+                } else {
+                    firebaseCallback.callback(null);
+                }
+            }
+        });
+    }
+
+
     public void fetchLocationsByRange(Location location, double range, final FirebaseCallback firebaseCallback) {
         LocationDatabaseRepository.getInstance().fetchLocationsByRange(
                 location.getLatitude(),
