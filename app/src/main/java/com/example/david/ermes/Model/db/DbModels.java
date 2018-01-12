@@ -311,14 +311,14 @@ public class DbModels {
         public String text;
         public String type;
         public boolean read;
-        public int date;
+        public long date;
 
         private String id;
 
         public _Notification() {}
 
         public _Notification(String id, String idCreator, String idOwner, String idMatch,
-                             String title, String text, String type, boolean read, int date) {
+                             String title, String text, String type, boolean read, long date) {
             this.id = id;
             this.idCreator = idCreator;
             this.idOwner = idOwner;

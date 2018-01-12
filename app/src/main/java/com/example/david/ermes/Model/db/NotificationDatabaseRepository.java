@@ -49,8 +49,8 @@ public class NotificationDatabaseRepository {
                     Collections.sort(list, new Comparator<_Notification>() {
                         @Override
                         public int compare(_Notification t1, _Notification t2) {
-                            final int date1 = t1.date;
-                            final int date2 = t2.date;
+                            final long date1 = t1.date;
+                            final long date2 = t2.date;
 
                             return date1 > date2 ? 1
                                     : date1 < date2 ? -1

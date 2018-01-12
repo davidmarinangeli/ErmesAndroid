@@ -21,12 +21,12 @@ public class Notification {
     private String text;
     private NotificationType type;
     private boolean read;
-    private int date;
+    private long date;
 
     public Notification() {}
 
     public Notification(String id, String idCreator, String idOwner, String idMatch, String title,
-                        String text, NotificationType type, boolean read, int date) {
+                        String text, NotificationType type, boolean read, long date) {
         this.id = id;
         this.idCreator = idCreator;
         this.idOwner = idOwner;
@@ -39,7 +39,7 @@ public class Notification {
     }
 
     public Notification(String idCreator, String idOwner, String idMatch, String title, String text,
-                        NotificationType type, boolean read, int date) {
+                        NotificationType type, boolean read, long date) {
         this.idCreator = idCreator;
         this.idOwner = idOwner;
         this.idMatch = idMatch;
@@ -167,11 +167,11 @@ public class Notification {
         this.read = read;
     }
 
-    public int getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
