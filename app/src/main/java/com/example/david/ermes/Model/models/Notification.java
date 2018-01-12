@@ -11,22 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Notification {
-    public static class types {
-        public static final String MATCH_INVITE_USER = "MATCH_INVITE_USER";
-    }
 
     private String id = null;
     private String idOwner;
     private String title;
     private String text;
-    private String type;
+    private NotificationType type;
     private boolean read;
     private int date;
 
     public Notification() {}
 
-    public Notification(String id, String idOwner, String title, String text, String type,
-                        boolean read, int date) {
+    public Notification(String id, String idOwner, String title, String text,
+                        NotificationType type, boolean read, int date) {
         this.id = id;
         this.idOwner = idOwner;
         this.title = title;
@@ -36,8 +33,8 @@ public class Notification {
         this.date = date;
     }
 
-    public Notification(String idOwner, String title, String text, String type, boolean read,
-                        int date) {
+    public Notification(String idOwner, String title, String text, NotificationType type,
+                        boolean read, int date) {
         this.idOwner = idOwner;
         this.title = title;
         this.text = text;
@@ -56,7 +53,7 @@ public class Notification {
                 this.idOwner,
                 this.title,
                 this.text,
-                this.type,
+                this.type.toString(),
                 this.read,
                 this.date
         );
@@ -120,11 +117,11 @@ public class Notification {
         this.text = text;
     }
 
-    public String getType() {
+    public NotificationType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(NotificationType type) {
         this.type = type;
     }
 
