@@ -13,7 +13,9 @@ import java.util.List;
 public class Notification {
 
     private String id = null;
+    private String idCreator;
     private String idOwner;
+    private String idMatch;
     private String title;
     private String text;
     private NotificationType type;
@@ -22,10 +24,12 @@ public class Notification {
 
     public Notification() {}
 
-    public Notification(String id, String idOwner, String title, String text,
-                        NotificationType type, boolean read, int date) {
+    public Notification(String id, String idCreator, String idOwner, String idMatch, String title,
+                        String text, NotificationType type, boolean read, int date) {
         this.id = id;
+        this.idCreator = idCreator;
         this.idOwner = idOwner;
+        this.idMatch = idMatch;
         this.title = title;
         this.text = text;
         this.type = type;
@@ -33,9 +37,11 @@ public class Notification {
         this.date = date;
     }
 
-    public Notification(String idOwner, String title, String text, NotificationType type,
-                        boolean read, int date) {
+    public Notification(String idCreator, String idOwner, String idMatch, String title, String text,
+                        NotificationType type, boolean read, int date) {
+        this.idCreator = idCreator;
         this.idOwner = idOwner;
+        this.idMatch = idMatch;
         this.title = title;
         this.text = text;
         this.type = type;
@@ -50,7 +56,9 @@ public class Notification {
     public _Notification convertTo_Notification() {
         return new _Notification(
                 this.id,
+                this.idCreator,
                 this.idOwner,
+                this.idMatch,
                 this.title,
                 this.text,
                 this.type.toString(),
@@ -99,6 +107,22 @@ public class Notification {
 
     public void setIdOwner(String idOwner) {
         this.idOwner = idOwner;
+    }
+
+    public String getIdCreator() {
+        return idCreator;
+    }
+
+    public void setIdCreator(String idCreator) {
+        this.idCreator = idCreator;
+    }
+
+    public String getIdMatch() {
+        return idMatch;
+    }
+
+    public void setIdMatch(String idMatch) {
+        this.idMatch = idMatch;
     }
 
     public String getTitle() {
