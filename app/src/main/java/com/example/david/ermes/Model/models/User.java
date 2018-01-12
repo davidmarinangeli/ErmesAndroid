@@ -15,17 +15,20 @@ public class User {
     private String UID;
     private String city;
     private String idFavSport;
+    private long birthDate;
 
     public User() {
 
     }
 
-    public User(String name, String email, String UID, String city, String idFavSport) {
+    public User(String name, String email, String UID, String city, String idFavSport,
+                long birthDate) {
         this.name = name;
         this.email = email;
         this.UID = UID;
         this.city = city;
         this.idFavSport = idFavSport;
+        this.birthDate = birthDate;
     }
 
     public void setName(String name) {
@@ -34,6 +37,10 @@ public class User {
 
     public String getName() {
         return this.name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getEmail() {
@@ -56,6 +63,14 @@ public class User {
 
     public void setIdFavSport(String idFavSport) { this.idFavSport = idFavSport; }
 
+    public long getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(long birthDate) {
+        this.birthDate = birthDate;
+    }
+
     public void save() {
         UserRepository.getInstance().saveUser(this);
     }
@@ -65,7 +80,8 @@ public class User {
                 this.name,
                 this.email,
                 this.idFavSport,
-                this.city
+                this.city,
+                this.birthDate
         );
     }
 }

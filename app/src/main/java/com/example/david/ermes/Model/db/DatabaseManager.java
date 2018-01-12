@@ -29,7 +29,8 @@ public class DatabaseManager {
     }
 
     private FirebaseDatabase database;
-    private DatabaseReference usersRef, matchesRef, sportsRef, locationsRef, notificationsRef;
+    private DatabaseReference usersRef, matchesRef, sportsRef, locationsRef, notificationsRef,
+        friendshipRef;
 
     private DatabaseManager() {
 
@@ -40,6 +41,7 @@ public class DatabaseManager {
         this.sportsRef = database.getReference("sports");
         this.locationsRef = database.getReference("locations");
         this.notificationsRef = database.getReference("notifications");
+        this.friendshipRef = database.getReference("friendships");
     }
 
     public void getCurrentUser(final FirebaseCallback firebaseCallback) {
@@ -78,6 +80,10 @@ public class DatabaseManager {
     public DatabaseReference getSportsRef() { return sportsRef; }
 
     public DatabaseReference getNotificationsRef() { return notificationsRef; }
+
+    public DatabaseReference getFriendshipRef() {
+        return friendshipRef;
+    }
 
     public interface OnDataChangedListener<T> {
         void onDataChanged(T data);

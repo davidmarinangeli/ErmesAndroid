@@ -33,7 +33,8 @@ public class NotificationRepository {
                 });
     }
 
-    public void saveNotification(Notification notification) {
-        NotificationDatabaseRepository.getInstance().push(notification.convertTo_Notification());
+    public void sendNotification(Notification notification, FirebaseCallback firebaseCallback) {
+        NotificationDatabaseRepository.getInstance().push(notification.convertTo_Notification(),
+                firebaseCallback);
     }
 }
