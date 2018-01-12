@@ -11,6 +11,9 @@ public class NotificationType {
     public static final NotificationType FRIENDSHIP_REQUEST =
             new NotificationType("FRIENDSHIP_REQUEST");
 
+    public static final NotificationType FRIENDSHIP_ACCEPTED =
+            new NotificationType("FRIENDSHIP_ACCEPTED");
+
 
     private String type;
 
@@ -21,5 +24,15 @@ public class NotificationType {
     @Override
     public String toString() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null) return false;
+
+        if (object.getClass() != NotificationType.class) return false;
+
+        final NotificationType obj = (NotificationType) object;
+        return this.toString().equals(obj.toString());
     }
 }

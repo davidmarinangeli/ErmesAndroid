@@ -50,7 +50,7 @@ public class Notification {
     }
 
     public void save() {
-        NotificationRepository.getInstance().saveNotification(this);
+        NotificationRepository.getInstance().sendNotification(this);
     }
 
     public _Notification convertTo_Notification() {
