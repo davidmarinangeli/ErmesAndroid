@@ -4,35 +4,44 @@ package com.example.david.ermes.Model.models;
  * Created by nicol on 12/01/2018.
  */
 
-public class NotificationType {
-    public static final NotificationType MATCH_INVITE_USER =
-            new NotificationType("MATCH_INVITE_USER");
+public enum NotificationType {
+    MATCH_INVITE_USER,
+    FRIENDSHIP_REQUEST,
+    FRIENDSHIP_ACCEPTED;
 
-    public static final NotificationType FRIENDSHIP_REQUEST =
-            new NotificationType("FRIENDSHIP_REQUEST");
+    public static String toString(NotificationType notificationType) {
+        String s = null;
 
-    public static final NotificationType FRIENDSHIP_ACCEPTED =
-            new NotificationType("FRIENDSHIP_ACCEPTED");
+        switch (notificationType) {
+            case MATCH_INVITE_USER:
+                s = "MATCH_INVITE_USER";
+                break;
+            case FRIENDSHIP_REQUEST:
+                s = "FRIENDSHIP_REQUEST";
+                break;
+            case FRIENDSHIP_ACCEPTED:
+                s = "FRIENDSHIP_ACCEPTED";
+                break;
+        }
 
-
-    private String type;
-
-    public NotificationType(String type) {
-        this.type = type;
+        return s;
     }
 
-    @Override
-    public String toString() {
-        return type;
-    }
+    public static NotificationType getNotificationTypeFromString(String string) {
+        NotificationType nt = null;
 
-    @Override
-    public boolean equals(Object object) {
-        if (object == null) return false;
+        switch (string) {
+            case "MATCH_INVITE_USER":
+                nt = MATCH_INVITE_USER;
+                break;
+            case "FRIENDSHIP_REQUEST":
+                nt = FRIENDSHIP_REQUEST;
+                break;
+            case "FRIENDSHIP_ACCEPTED":
+                nt = FRIENDSHIP_ACCEPTED;
+                break;
+        }
 
-        if (object.getClass() != NotificationType.class) return false;
-
-        final NotificationType obj = (NotificationType) object;
-        return this.toString().equals(obj.toString());
+        return nt;
     }
 }
