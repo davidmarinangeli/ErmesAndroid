@@ -82,14 +82,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        FriendshipRepository.getInstance().fetchFriendshipsByUserId("KIZZgPf1E1bguMrTuha1tHN025Y2",
-                new FirebaseCallback() {
-                    @Override
-                    public void callback(Object object) {
-                        Log.i("FRIENDSHIPS", object.toString());
-                    }
-                });
-
         initBottomNavigationView();
     }
 
