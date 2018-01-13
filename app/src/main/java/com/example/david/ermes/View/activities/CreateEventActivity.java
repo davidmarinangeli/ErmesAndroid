@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
@@ -52,6 +54,8 @@ public class CreateEventActivity extends AppCompatActivity {
     SpinnerAdapter sportadapter;
     SpinnerAdapter locationadapter;
 
+    SwitchCompat ispublic_switch;
+
     Calendar match_calendar_time;
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -86,6 +90,8 @@ public class CreateEventActivity extends AppCompatActivity {
         missing_chips = findViewById(R.id.chips_input);
 
         fine_creazione = findViewById(R.id.buttonfine);
+
+        ispublic_switch = findViewById(R.id.ispublic_switch);
 
         match_calendar_time = Calendar.getInstance();
 
@@ -149,7 +155,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 }
 
                 if (selected_sport_string != null && selected_location != null) {
-                    createEventPresenter.saveMatch(match_calendar_time.getTimeInMillis(), selected_sport_string, selected_location, chips_title_list);
+                    createEventPresenter.saveMatch(match_calendar_time.getTimeInMillis(), selected_sport_string, selected_location, chips_title_list,ispublic_switch.isChecked());
                 }
             }
         });

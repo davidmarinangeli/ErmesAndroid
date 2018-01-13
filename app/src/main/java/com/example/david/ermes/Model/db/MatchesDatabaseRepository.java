@@ -139,7 +139,9 @@ public class MatchesDatabaseRepository {
                         for (DataSnapshot d : dataSnapshot.getChildren()) {
                             _Match match = d.getValue(_Match.class);
                             match.setID(dataSnapshot.getKey());
-                            matches.add(match);
+                            if (match.isPublic)
+                                matches.add(match);
+
                         }
                     }
                     firebaseCallback.callback(matches);
