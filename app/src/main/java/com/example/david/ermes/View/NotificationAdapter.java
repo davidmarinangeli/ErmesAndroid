@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.NotificationType;
 import com.example.david.ermes.Model.repository.MatchRepository;
+import com.example.david.ermes.Presenter.utils.StyleUtils;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.AccountActivity;
 import com.example.david.ermes.View.activities.EventActivity;
@@ -72,10 +75,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public class NotificationViewHolder extends RecyclerView.ViewHolder {
 
+        View item;
+
         TextView title;
         TextView text;
         TextView date;
         LinearLayout layout;
+        Button left_button;
+        Button right_button;
+
+        ProgressDialog mDialog;
 
         public NotificationViewHolder(View itemView) {
             super(itemView);
@@ -84,6 +93,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             text = itemView.findViewById(R.id.notification_text);
             date = itemView.findViewById(R.id.notification_date);
             layout = itemView.findViewById(R.id.notification_container);
+            left_button = itemView.findViewById(R.id.notification_left_button);
+            right_button = itemView.findViewById(R.id.notification_right_button);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -93,31 +104,77 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             });
 
             date.setTypeface(null, Typeface.ITALIC);
-        }
 
-        public void bind(int position) {
-            if (notifications != null) {
-                Notification n = notifications.get(position);
-
-                title.setText(n.getTitle());
-                text.setText(n.getText());
-                date.setText(TimeUtils.fromMillisToDate(n.getDate()).toString());
-
-                if (n.isRead()) {
-                    layout.setBackgroundColor(Color.WHITE);
-                }
-            }
-        }
-
-        private void executeNotificationAction(final Notification notification) {
-            final ProgressDialog mDialog = new ProgressDialog(context);
+            mDialog = new ProgressDialog(context);
             mDialog.setMessage("Attendi...");
             mDialog.setCancelable(false);
 
+            item = itemView;
+        }
+
+        public void bind(int position) {
+            if (notifications != null && notifications.size() > 0) {
+                Notification n = notifications.get(position);
+
+                styleDefault(n);
+
+                styleByNotificationType(n);
+            }
+        }
+
+        private void styleDefault(Notification notification) {
+            // set default style
+
+            title.setText(notification.getTitle());
+            text.setText(notification.getText());
+            date.setText(TimeUtils.fromMillistoYearMonthDay(notification.getDate()));
+
+            if (notification.isRead()) {
+                layout.setBackgroundColor(Color.WHITE);
+            }
+
+            setButtonsVisible(View.GONE);
+        }
+
+        private void styleByNotificationType(Notification notification) {
             switch (notification.getType()) {
                 case MATCH_INVITE_USER:
-                    Log.i("NOTIFICATION TYPE", NotificationType.toString(MATCH_INVITE_USER));
+                    // buttons style
+                    setButtonsVisible(View.VISIBLE);
 
+                    left_button.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_event_available_black_24dp, 0, 0, 0);
+                    right_button.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_event_busy_black_24dp, 0, 0, 0);
+
+                    left_button.setText("Partecipa");
+                    right_button.setText("Rifiuta");
+
+                    setButtonsListenersMatchInviteUser(notification);
+                    break;
+                case FRIENDSHIP_REQUEST:
+                    // buttons style
+                    setButtonsVisible(View.VISIBLE);
+
+                    left_button.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_done_black_24dp, 0, 0, 0);
+                    right_button.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_close_black_24dp, 0, 0, 0);
+
+                    left_button.setText("Accetta");
+                    right_button.setText("Elimina");
+
+                    setButtonsListenersFriendshipRequest(notification);
+                    break;
+                case FRIENDSHIP_ACCEPTED:
+                    break;
+            }
+        }
+
+        private void setButtonsListenersMatchInviteUser(final Notification notification) {
+            item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     mDialog.show();
 
                     MatchRepository.getInstance().fetchMatchById(notification.getIdMatch(),
@@ -144,10 +201,60 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                                     } else {
                                         Toast.makeText(context, "C'è stato un problema",
-                                                Toast.LENGTH_SHORT);
+                                                Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
+                }
+            });
+
+            left_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "Click " + left_button.getText(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            right_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "Click " + right_button.getText(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        public void setButtonsListenersFriendshipRequest(final Notification notification) {
+            item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+
+            left_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+
+            right_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
+
+        private void executeNotificationAction(final Notification notification) {
+
+            switch (notification.getType()) {
+                case MATCH_INVITE_USER:
+                    Log.i("NOTIFICATION TYPE", NotificationType.toString(MATCH_INVITE_USER));
+
+
                     break;
                 case FRIENDSHIP_REQUEST:
                     Log.i("NOTIFICATION TYPE", NotificationType.toString(FRIENDSHIP_REQUEST));
@@ -157,6 +264,23 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     break;
                 case FRIENDSHIP_ACCEPTED:
                     Log.i("NOTIFICATION TYPE", NotificationType.toString(FRIENDSHIP_ACCEPTED));
+                    break;
+            }
+        }
+
+        private void setButtonsVisible(int visible) {
+            left_button.setVisibility(visible);
+            right_button.setVisibility(visible);
+
+            final int PADDING = StyleUtils.getDpByPixels(context, 16);
+
+            switch (visible) {
+                case View.GONE:
+                    layout.setPadding(PADDING, PADDING, PADDING, PADDING);
+                    break;
+                case View.VISIBLE:
+                    final int PADDING_BOTTOM = StyleUtils.getDpByPixels(context, 4);
+                    layout.setPadding(PADDING, PADDING, PADDING, PADDING_BOTTOM);
                     break;
             }
         }
