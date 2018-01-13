@@ -63,7 +63,7 @@ public class CreateEventActivity extends AppCompatActivity {
         event_orario_textview = findViewById(R.id.textTime);
         event_data_textview = findViewById(R.id.textDate);
 
-        location_edittext = findViewById(R.id.luogo);
+        //location_edittext = findViewById(R.id.luogo);
         sport_selector = findViewById(R.id.sport_spinner);
         fine_creazione = findViewById(R.id.buttonfine);
         match_calendar_time = Calendar.getInstance();
