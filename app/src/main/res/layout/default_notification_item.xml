@@ -13,9 +13,8 @@
         android:background="@color/notificationBackground"
         android:minHeight="72dp"
         android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingVertical="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp">
 
         <ImageView
             android:id="@+id/notification_icon"
@@ -25,7 +24,7 @@
             android:tint="@color/colorAccent" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginStart="16dp">
@@ -53,6 +52,36 @@
                 android:textSize="16sp"
                 android:layout_marginTop="4dp"
                 tools:text="in data x" />
+
+            <LinearLayout
+                android:id="@+id/notification_match_invitation_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <Button
+                    android:id="@+id/notification_left_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:paddingHorizontal="16dp"
+                    android:drawableStart="@drawable/ic_done_black_24dp"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:drawableLeft="@drawable/ic_done_black_24dp"
+                    android:text="partecipa"/>
+
+                <Button
+                    android:id="@+id/notification_right_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:paddingHorizontal="16dp"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:drawableLeft="@drawable/ic_close_black_24dp"
+                    android:text="rifiuta"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

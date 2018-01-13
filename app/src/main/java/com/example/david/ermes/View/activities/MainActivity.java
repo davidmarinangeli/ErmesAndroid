@@ -20,8 +20,11 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Location;
+import com.example.david.ermes.Model.models.Notification;
+import com.example.david.ermes.Model.models.NotificationType;
 import com.example.david.ermes.Model.repository.FriendshipRepository;
 import com.example.david.ermes.Model.repository.LocationRepository;
+import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.View.ViewPagerAdapter;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.customviews.CoolViewPager;
@@ -81,6 +84,12 @@ public class MainActivity extends AppCompatActivity{
                 startActivityForResult(i,1);
             }
         });
+
+//        new Notification("BiXtngiz4uWMCxNJ3VuOulKpaUJ2", "BiXtngiz4uWMCxNJ3VuOulKpaUJ2",
+//                "", "Richiesta di amicizia", "Nicola Schiavon ha accettato la tua" +
+//                " richiesta di amicizia, visita il suo profilo!", NotificationType.FRIENDSHIP_ACCEPTED,
+//                false, TimeUtils.fromIntToMillis(2018, 1, 12, 0,0)
+//        ).save();
 
         initBottomNavigationView();
     }
