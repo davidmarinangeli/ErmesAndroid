@@ -109,8 +109,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 }
             });
 
-            date.setTypeface(null, Typeface.ITALIC);
-
             mDialog = new ProgressDialog(context);
             mDialog.setMessage("Attendi...");
             mDialog.setCancelable(false);
