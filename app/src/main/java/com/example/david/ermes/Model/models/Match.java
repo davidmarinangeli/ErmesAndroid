@@ -8,6 +8,7 @@ import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.repository.MatchRepository;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -72,9 +73,16 @@ public class Match implements Parcelable {
         idSport = in.readString();
         maxPlayers = in.readInt();
         numGuests = in.readInt();
+        id = in.readString();
+        idLocation = in.readString();
 
-        // TODO questo serve?
-        // missingStuff = in.createStringArrayList();
+        idsPartecipants = new ArrayList<>();
+        pending = new ArrayList<>();
+        missingStuff = new ArrayList<>();
+
+        in.readStringList(idsPartecipants);
+        in.readStringList(pending);
+        in.readTypedList(missingStuff, MissingStuffElement.CREATOR);
     }
 
     public static final Creator<Match> CREATOR = new Creator<Match>() {
@@ -224,8 +232,10 @@ public class Match implements Parcelable {
         parcel.writeString(idSport);
         parcel.writeInt(maxPlayers);
         parcel.writeInt(numGuests);
-
-        // TODO questo serve?
-        // parcel.writeStringList(missingStuff);
+        parcel.writeString(id);
+        parcel.writeString(idLocation);
+        parcel.writeStringList(idsPartecipants);
+        parcel.writeStringList(pending);
+        parcel.writeTypedList(missingStuff);
     }
 }

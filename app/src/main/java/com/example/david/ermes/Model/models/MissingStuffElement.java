@@ -4,12 +4,32 @@ package com.example.david.ermes.Model.models;
  * Created by nicol on 08/01/2018.
  */
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.david.ermes.Model.db.DbModels._MissingStuffElement;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MissingStuffElement {
+public class MissingStuffElement implements Parcelable {
+    public static final Creator<MissingStuffElement> CREATOR = new Creator<MissingStuffElement>() {
+        @Override
+        public MissingStuffElement createFromParcel(Parcel in) {
+            return new MissingStuffElement(in);
+        }
+
+        @Override
+        public MissingStuffElement[] newArray(int size) {
+            return new MissingStuffElement[size];
+        }
+    };
+
+    protected MissingStuffElement(Parcel in) {
+        name = in.readString();
+        checked = in.readByte() != 0;
+    }
+
     private String name;
     private boolean checked;
 
@@ -58,5 +78,16 @@ public class MissingStuffElement {
 
     public void setChecked(boolean checked) {
         this.checked = checked;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeByte((byte) (checked ? 1 : 0));
     }
 }

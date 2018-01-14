@@ -71,6 +71,7 @@ public class EventFragment extends Fragment {
         usercreator = view.findViewById(R.id.userNameText);
         participant = view.findViewById(R.id.partecipantNumber);
         pending = view.findViewById(R.id.invitedNumber);
+        freeslots = view.findViewById(R.id.openSlotNumber);
 
         UserRepository.getInstance().fetchUserById(match.getIdOwner(), new FirebaseCallback() {
             @Override
@@ -111,9 +112,9 @@ public class EventFragment extends Fragment {
         // lo so che pare un macello sta stringa, giuro che correggerò le API
         dateofevent.setText(c.get(Calendar.DAY_OF_MONTH) +" "+ TimeUtils.fromNumericMonthToString(c.get(Calendar.MONTH)) );
         hourofevent.setText(TimeUtils.getFormattedHourMinute(c));
-        participant.setText(match.getPartecipants().size());
-        pending.setText(match.getPending().size());
-        freeslots.setText(match.getMaxPlayers()-match.getPartecipants().size());
+        participant.setText(String.valueOf(match.getPartecipants().size()));
+        pending.setText(String.valueOf(match.getPending().size()));
+        freeslots.setText(String.valueOf(match.getMaxPlayers()-match.getPartecipants().size()));
     }
 
 

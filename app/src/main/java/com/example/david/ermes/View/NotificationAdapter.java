@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,15 +12,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.NotificationType;
+import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.MatchRepository;
+import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.StyleUtils;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.AccountActivity;
@@ -30,6 +33,7 @@ import com.example.david.ermes.Presenter.utils.TimeUtils;
 
 import static com.example.david.ermes.Model.models.NotificationType.*;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -77,6 +81,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         View item;
 
+        ImageView icon;
         TextView title;
         TextView text;
         TextView date;
@@ -89,6 +94,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public NotificationViewHolder(View itemView) {
             super(itemView);
 
+            icon = itemView.findViewById(R.id.notification_icon);
             title = itemView.findViewById(R.id.notification_title);
             text = itemView.findViewById(R.id.notification_text);
             date = itemView.findViewById(R.id.notification_date);
@@ -117,7 +123,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 Notification n = notifications.get(position);
 
                 styleDefault(n);
-
                 styleByNotificationType(n);
             }
         }
@@ -125,15 +130,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         private void styleDefault(Notification notification) {
             // set default style
 
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(notification.getDate());
+
             title.setText(notification.getTitle());
             text.setText(notification.getText());
-            date.setText(TimeUtils.fromMillistoYearMonthDay(notification.getDate()));
+            date.setText(TimeUtils.fromMillistoYearMonthDay(notification.getDate()) + " alle " +
+                    TimeUtils.getFormattedHourMinute(c));
 
             if (notification.isRead()) {
                 layout.setBackgroundColor(Color.WHITE);
+//                setButtonsVisible(View.GONE);
             }
-
-            setButtonsVisible(View.GONE);
         }
 
         private void styleByNotificationType(Notification notification) {
@@ -150,6 +158,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     left_button.setText("Partecipa");
                     right_button.setText("Rifiuta");
 
+                    icon.setImageResource(R.drawable.ic_insert_invitation_black_40dp);
+
+                    if (notification.isRead()) {
+                        date.append("\n\nHai già risposto a questo invito.");
+                    }
+
                     setButtonsListenersMatchInviteUser(notification);
                     break;
                 case FRIENDSHIP_REQUEST:
@@ -164,10 +178,23 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     left_button.setText("Accetta");
                     right_button.setText("Elimina");
 
+                    icon.setImageResource(R.drawable.ic_person_add_black_40dp);
+
+                    if (notification.isRead()) {
+                        date.append("\n\nHai già risposto a questa richiesta.");
+                    }
+
                     setButtonsListenersFriendshipRequest(notification);
                     break;
                 case FRIENDSHIP_ACCEPTED:
+                    icon.setImageResource(R.drawable.ic_group_black_40dp);
+
+                    setButtonsVisible(View.GONE);
                     break;
+            }
+
+            if (notification.isRead()) {
+                setButtonsVisible(View.GONE);
             }
         }
 
@@ -184,20 +211,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     mDialog.dismiss();
 
                                     if (object != null) {
-                                        notification.setRead(true);
-
                                         Intent i = new Intent(context, EventActivity.class);
                                         Bundle bundle = new Bundle();
                                         bundle.putParcelable("event", (Match) object);
                                         i.putExtras(bundle);
                                         context.startActivity(i);
-
-                                        notification.save(new FirebaseCallback() {
-                                            @Override
-                                            public void callback(Object object) {
-                                                notifyDataSetChanged();
-                                            }
-                                        });
 
                                     } else {
                                         Toast.makeText(context, "C'è stato un problema",
@@ -229,21 +247,52 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    // TODO link alla pagina profilo (notification.idCreator)
                 }
             });
 
             left_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    // save friendship
+                    UserRepository.getInstance().getUser(new FirebaseCallback() {
+                        @Override
+                        public void callback(Object object) {
+                            if (object != null) {
+                                final User currentUser = (User) object;
 
+                                new Friendship(notification.getIdCreator(), currentUser.getUID(),
+                                        System.currentTimeMillis()).save(new FirebaseCallback() {
+                                    @Override
+                                    public void callback(Object object) {
+                                        notification.setRead(true);
+                                        notification.save(new FirebaseCallback() {
+                                            @Override
+                                            public void callback(Object object) {
+                                                Notification.createFriendshipAccepted(
+                                                        notification.getIdCreator()).save();
+
+                                                notifyDataSetChanged();
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             });
 
             right_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    notification.setRead(true);
+                    notification.save(new FirebaseCallback() {
+                        @Override
+                        public void callback(Object object) {
+                            notifyDataSetChanged();
+                        }
+                    });
                 }
             });
         }

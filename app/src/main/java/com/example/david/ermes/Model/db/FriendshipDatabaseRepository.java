@@ -1,7 +1,11 @@
 package com.example.david.ermes.Model.db;
 
+import android.support.annotation.NonNull;
+
 import com.example.david.ermes.Model.db.DbModels._Friendship;
 import com.example.david.ermes.Model.models.Friendship;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,8 +58,17 @@ public class FriendshipDatabaseRepository {
         resetResults();
     }
 
-    public void push(_Friendship friendship) {
-        this.ref.child(friendship.getId()).setValue(friendship);
+    public void push(_Friendship friendship, final FirebaseCallback firebaseCallback) {
+        this.ref.child(friendship.getId()).setValue(friendship).addOnCompleteListener(
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(null);
+                        }
+                    }
+                }
+        );
     }
 
     private void dispatchResults(DataSnapshot dataSnapshot, FirebaseCallback firebaseCallback) {

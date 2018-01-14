@@ -17,8 +17,9 @@ public class FriendshipRepository {
 
     public FriendshipRepository() {}
 
-    public void saveFriendship(Friendship friendship) {
-        FriendshipDatabaseRepository.getInstance().push(friendship.convertTo_Friendship());
+    public void saveFriendship(Friendship friendship, FirebaseCallback firebaseCallback) {
+        FriendshipDatabaseRepository.getInstance().push(friendship.convertTo_Friendship(),
+                firebaseCallback);
     }
 
     public void fetchFriendshipsByUserId(String id, final FirebaseCallback firebaseCallback) {
