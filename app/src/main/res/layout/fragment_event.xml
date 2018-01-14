@@ -8,19 +8,10 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="parent">
-
-
-        <LinearLayout
-            android:id="@+id/linearParent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintParent"
@@ -419,58 +410,18 @@
                     app:layout_constraintStart_toEndOf="@+id/buttonPartecipa"
                     app:layout_constraintTop_toBottomOf="@+id/eventUsersCard" />
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/extraCard"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/missing_stuff_button"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:clickable="true"
-                    app:cardCornerRadius="2dp"
-                    app:cardElevation="2dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/constraintParent"
-                    app:layout_constraintStart_toStartOf="@+id/constraintParent"
-                    app:layout_constraintTop_toBottomOf="@+id/buttonInvita">
-
-
-                    <android.support.constraint.ConstraintLayout
-                        android:layout_width="368dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorPrimary"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView7"
-                        tools:layout_editor_absoluteX="8dp"
-                        tools:layout_editor_absoluteY="575dp">
-
-
-                        <TextView
-                            android:id="@+id/materialText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:textColor="@color/white"
-                            android:textSize="22sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:text="Materiali" />
-
-                    </android.support.constraint.ConstraintLayout>
-
-                </android.support.v7.widget.CardView>
+                    android:text="Visualizza oggetti mancanti"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonInvita" />
 
             </android.support.constraint.ConstraintLayout>
 
-        </LinearLayout>
     </ScrollView>
 
 
