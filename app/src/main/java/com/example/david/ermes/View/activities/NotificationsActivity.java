@@ -7,6 +7,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Notification;
@@ -25,6 +27,7 @@ public class NotificationsActivity extends AppCompatActivity {
     private NotificationAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    private TextView no_notifications;
 
     private User currentUser;
 
@@ -35,6 +38,7 @@ public class NotificationsActivity extends AppCompatActivity {
 
         adapter = new NotificationAdapter(this);
         layoutManager = new LinearLayoutManager(this);
+        no_notifications = findViewById(R.id.no_notifications_label);
 
         recyclerView = findViewById(R.id.notifications_recycler_view);
         recyclerView.setAdapter(adapter);
@@ -77,6 +81,13 @@ public class NotificationsActivity extends AppCompatActivity {
                         public void callback(Object object) {
                             if (object != null) {
                                 adapter.refreshList((List<Notification>) object);
+                                
+                                if (adapter.getItemCount() <= 0) {
+                                    no_notifications.setText("Nessuna notifica");
+                                    no_notifications.setVisibility(View.VISIBLE);
+                                } else {
+                                    no_notifications.setVisibility(View.GONE);
+                                }
                             }
                         }
                     });
