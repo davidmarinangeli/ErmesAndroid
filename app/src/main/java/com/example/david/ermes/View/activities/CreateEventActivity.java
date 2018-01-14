@@ -151,11 +151,11 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onClick(final View v) {
                 ArrayList<MissingStuffElement> chips_title_list = new ArrayList<>();
                 for (Chip chip : missing_chips.getSelectedChips()) {
-                    chips_title_list.add(new MissingStuffElement(chip.getTitle(),false));
+                    chips_title_list.add(new MissingStuffElement(chip.getTitle(), false, ""));
                 }
 
                 if (selected_sport_string != null && selected_location != null) {
-                    createEventPresenter.saveMatch(match_calendar_time.getTimeInMillis(), selected_sport_string, selected_location, chips_title_list,ispublic_switch.isChecked());
+                    createEventPresenter.saveMatch(match_calendar_time.getTimeInMillis(), selected_sport_string, selected_location, chips_title_list, ispublic_switch.isChecked());
                 }
             }
         });

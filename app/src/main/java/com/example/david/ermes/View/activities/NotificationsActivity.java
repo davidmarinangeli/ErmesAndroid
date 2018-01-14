@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Notification;
@@ -92,7 +93,8 @@ public class NotificationsActivity extends AppCompatActivity {
                         }
                     });
         } else {
-            // TODO textView "Devi loggarti, stronzo"
+            Toast.makeText(getApplicationContext(), "Devi effettuare il login!",
+                    Toast.LENGTH_LONG).show();
         }
     }
 }
