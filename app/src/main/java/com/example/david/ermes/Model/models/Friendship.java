@@ -1,6 +1,8 @@
 package com.example.david.ermes.Model.models;
 
 import com.example.david.ermes.Model.db.DbModels._Friendship;
+import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.repository.FriendshipRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +80,18 @@ public class Friendship {
 
     public String getId() {
         return id;
+    }
+
+    public void save() {
+        saveInstance(null);
+    }
+
+    public void save(FirebaseCallback firebaseCallback) {
+        saveInstance(firebaseCallback);
+    }
+
+    private void saveInstance(FirebaseCallback firebaseCallback) {
+        FriendshipRepository.getInstance().saveFriendship(this, firebaseCallback);
     }
 
     public _Friendship convertTo_Friendship() {

@@ -7,6 +7,9 @@ package com.example.david.ermes.Model.models;
 import com.example.david.ermes.Model.db.DbModels._Notification;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.repository.NotificationRepository;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,8 @@ public class Notification {
     private boolean read;
     private long date;
 
-    public Notification() {}
+    public Notification() {
+    }
 
     public Notification(String id, String idCreator, String idOwner, String idMatch, String title,
                         String text, NotificationType type, boolean read, long date) {
@@ -75,6 +79,46 @@ public class Notification {
                 this.read,
                 this.date
         );
+    }
+
+    public static Notification createMatchInvitation(String idGuestUser, String idMatch) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (idGuestUser != null && !idGuestUser.isEmpty() &&
+                idMatch != null && !idMatch.isEmpty() && user != null) {
+
+            return new Notification(user.getUid(), idGuestUser, idMatch, "Nuovo invito",
+                    user.getDisplayName() + " ti ha invitato ad una nuova partita!",
+                    NotificationType.MATCH_INVITE_USER, false, System.currentTimeMillis());
+        }
+
+        return null;
+    }
+
+    public static Notification createFriendshipRequest(String idUser) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (idUser != null && !idUser.isEmpty() && user != null) {
+            return new Notification(user.getUid(), idUser, "", "Nuova richiesta di amicizia",
+                    user.getDisplayName() + " ti ha inviato una richiesta di amicizia.\n" +
+                            "Rispondi subito o visita il suo profilo!",
+                    NotificationType.FRIENDSHIP_REQUEST, false, System.currentTimeMillis());
+        }
+
+        return null;
+    }
+
+    public static Notification createFriendshipAccepted(String idUser) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (idUser != null && !idUser.isEmpty() && user != null) {
+            return new Notification(user.getUid(), idUser, "", "Richiesta di amicizia",
+                    user.getDisplayName() + " ha accettato la tua richiesta di amicizia, visita" +
+                            " il suo profilo!", NotificationType.FRIENDSHIP_ACCEPTED, false,
+                    System.currentTimeMillis());
+        }
+
+        return null;
     }
 
     public static List<_Notification> convertTo_NotificationList(List<Notification> list) {
