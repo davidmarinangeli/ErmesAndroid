@@ -106,21 +106,25 @@ public class DbModels {
     public static class _MissingStuffElement {
         public String name;
         public boolean checked;
+        public String idUser;
 
         public _MissingStuffElement() {
             this.name = "";
             this.checked = false;
+            this.idUser = "";
         }
 
-        public _MissingStuffElement(String name, boolean checked) {
+        public _MissingStuffElement(String name, boolean checked, String idUser) {
             this.name = name;
             this.checked = checked;
+            this.idUser = idUser;
         }
 
         public MissingStuffElement convertToMissingStuffElement() {
             return new MissingStuffElement(
                     this.name,
-                    this.checked
+                    this.checked,
+                    this.idUser
             );
         }
 

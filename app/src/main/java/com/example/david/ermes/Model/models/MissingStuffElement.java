@@ -28,25 +28,30 @@ public class MissingStuffElement implements Parcelable {
     protected MissingStuffElement(Parcel in) {
         name = in.readString();
         checked = in.readByte() != 0;
+        idUser = in.readString();
     }
 
     private String name;
     private boolean checked;
+    private String idUser;
 
     public MissingStuffElement() {
         this.name = "";
         this.checked = false;
+        this.idUser = "";
     }
 
-    public MissingStuffElement(String name, boolean checked) {
+    public MissingStuffElement(String name, boolean checked, String idUser) {
         this.name = name;
         this.checked = checked;
+        this.idUser = idUser;
     }
 
     public _MissingStuffElement convertTo_MissingStuffElement() {
         return new _MissingStuffElement(
                 this.name,
-                this.checked
+                this.checked,
+                this.idUser
         );
     }
 
@@ -80,6 +85,14 @@ public class MissingStuffElement implements Parcelable {
         this.checked = checked;
     }
 
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -89,5 +102,6 @@ public class MissingStuffElement implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
         parcel.writeByte((byte) (checked ? 1 : 0));
+        parcel.writeString(idUser);
     }
 }
