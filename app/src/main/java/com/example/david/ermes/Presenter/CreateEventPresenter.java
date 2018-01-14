@@ -25,7 +25,11 @@ public class CreateEventPresenter {
         this.createEventActivity = createEventActivity;
     }
 
-    public void saveMatch(final long timeInMillis, final String sport, final Location selected_location, final ArrayList<MissingStuffElement> chips_title_list) {
+    public void saveMatch(final long timeInMillis,
+                          final String sport,
+                          final Location selected_location,
+                          final ArrayList<MissingStuffElement> chips_title_list,
+                          final boolean checked) {
 
         UserRepository.getInstance().getUser(new FirebaseCallback() {
             @Override
@@ -44,7 +48,7 @@ public class CreateEventPresenter {
                                         current_user.getUID(),
                                         selected_location.getId(),
                                         com.example.david.ermes.Presenter.utils.TimeUtils.fromMillisToDate(timeInMillis),
-                                        true,
+                                        checked,
                                         found_sport.getID(),
                                         found_sport.getNumPlayers(),
                                         2,

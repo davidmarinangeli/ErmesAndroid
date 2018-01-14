@@ -33,10 +33,6 @@ import com.example.david.ermes.View.fragments.HomeFragment;
 import com.example.david.ermes.View.fragments.MapsFragment;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
-
-import java.util.List;
-
 
 public class MainActivity extends AppCompatActivity{
 
