@@ -52,8 +52,8 @@ public class NotificationDatabaseRepository {
                             final long date1 = t1.date;
                             final long date2 = t2.date;
 
-                            return date1 > date2 ? 1
-                                    : date1 < date2 ? -1
+                            return date1 > date2 ? -1
+                                    : date1 < date2 ? 1
                                     : 0;
                         }
                     });
