@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -22,8 +23,11 @@ import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.NotificationType;
+import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.FriendshipRepository;
 import com.example.david.ermes.Model.repository.LocationRepository;
+import com.example.david.ermes.Model.repository.NotificationRepository;
+import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.View.ViewPagerAdapter;
 import com.example.david.ermes.R;
@@ -43,6 +47,7 @@ public class MainActivity extends AppCompatActivity{
     private AHBottomNavigation bottomNavigation;
     private FloatingActionButton defaulteventfab;
     private FloatingActionButton addPlace;
+    private ImageButton notificationsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +86,30 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-//        new Notification("BiXtngiz4uWMCxNJ3VuOulKpaUJ2", "BiXtngiz4uWMCxNJ3VuOulKpaUJ2",
-//                "", "Richiesta di amicizia", "Nicola Schiavon ha accettato la tua" +
-//                " richiesta di amicizia, visita il suo profilo!", NotificationType.FRIENDSHIP_ACCEPTED,
-//                false, TimeUtils.fromIntToMillis(2018, 1, 12, 0,0)
-//        ).save();
+        // notification button
+        notificationsButton = findViewById(R.id.toolbar_notifications_button);
+        if (User.getCurrentUserId() != null && !User.getCurrentUserId().isEmpty()) {
+            notificationsButton.setVisibility(View.VISIBLE);
+            notificationsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final Intent notificationActivity = new Intent(MainActivity.this,
+                            NotificationsActivity.class);
+                    startActivity(notificationActivity);
+                }
+            });
+
+            NotificationRepository.getInstance().fetchNotificationsByIdOwner(User.getCurrentUserId(),
+                    new FirebaseCallback() {
+                        @Override
+                        public void callback(Object object) {
+                            // TODO lasciamo il fetch delle notifiche nella main activity per mettere il numeretto in rosso?
+                        }
+                    });
+        } else {
+            notificationsButton.setVisibility(View.GONE);
+        }
+        //
 
         initBottomNavigationView();
     }
