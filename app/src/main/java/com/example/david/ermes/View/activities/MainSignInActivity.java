@@ -52,11 +52,6 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "SignInActivity";
 
-
-    private Button notifications_button;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,20 +96,6 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-
-
-
-
-
-        final Intent notificationActivity = new Intent(this,
-                NotificationsActivity.class);
-        notifications_button = findViewById(R.id.notifications_button);
-        notifications_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(notificationActivity);
-            }
-        });
     }
 
     @Override
