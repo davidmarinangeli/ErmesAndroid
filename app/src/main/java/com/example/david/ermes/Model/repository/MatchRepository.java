@@ -66,4 +66,8 @@ public class MatchRepository {
     public void saveMatch(Match match, FirebaseCallback firebaseCallback) {
         MatchesDatabaseRepository.getInstance().push(match.convertTo_Match(), firebaseCallback);
     }
+
+    public void deleteMatchById(String id, FirebaseCallback firebaseCallback) {
+        MatchesDatabaseRepository.getInstance().deleteById(id, firebaseCallback);
+    }
 }
