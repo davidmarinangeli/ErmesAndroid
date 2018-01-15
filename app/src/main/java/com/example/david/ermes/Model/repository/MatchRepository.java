@@ -63,7 +63,7 @@ public class MatchRepository {
         });
     }
 
-    public void saveMatch(Match match) {
-        MatchesDatabaseRepository.getInstance().push(match.convertTo_Match());
+    public void saveMatch(Match match, FirebaseCallback firebaseCallback) {
+        MatchesDatabaseRepository.getInstance().push(match.convertTo_Match(), firebaseCallback);
     }
 }

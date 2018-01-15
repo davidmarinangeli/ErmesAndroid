@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.example.david.ermes.Model.db.DbModels;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.repository.MatchRepository;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ public class Match implements Parcelable {
     private List<MissingStuffElement> missingStuff;
 
     public Match() {
+        pending = new ArrayList<>();
+        idsPartecipants = new ArrayList<>();
+        missingStuff = new ArrayList<>();
     }
 
     public Match(String id, String idOwner, String idLocation, Date date, boolean isPublic,
@@ -46,9 +50,9 @@ public class Match implements Parcelable {
         this.idSport = idSport;
         this.maxPlayers = maxPlayers;
         this.numGuests = numGuests;
-        this.missingStuff = missingStuff;
-        this.idsPartecipants = idsPartecipants;
-        this.pending = pending;
+        this.missingStuff = missingStuff != null ? missingStuff : new ArrayList<>();
+        this.idsPartecipants = idsPartecipants != null ? idsPartecipants : new ArrayList<>();
+        this.pending = pending != null ? pending : new ArrayList<>();
     }
 
     public Match(String idOwner, String idLocation, Date date, boolean isPublic,
@@ -61,9 +65,9 @@ public class Match implements Parcelable {
         this.idSport = idSport;
         this.maxPlayers = maxPlayers;
         this.numGuests = numGuests;
-        this.missingStuff = missingStuff;
-        this.idsPartecipants = idsPartecipants;
-        this.pending = pending;
+        this.missingStuff = missingStuff != null ? missingStuff : new ArrayList<>();
+        this.idsPartecipants = idsPartecipants != null ? idsPartecipants : new ArrayList<>();
+        this.pending = pending != null ? pending : new ArrayList<>();
     }
 
     protected Match(Parcel in) {
@@ -200,7 +204,7 @@ public class Match implements Parcelable {
     // il repository deve essere un singleton (una sola istanza)
 
     public DbModels._Match convertTo_Match() {
-        return new DbModels._Match(
+        DbModels._Match match = new DbModels._Match(
                 this.idOwner,
                 this.date.getTime(),
                 this.idLocation,
@@ -212,10 +216,21 @@ public class Match implements Parcelable {
                 this.idsPartecipants,
                 this.pending
         );
+
+        match.setID(this.id);
+        return match;
     }
 
     public void save() {
-        MatchRepository.getInstance().saveMatch(this);
+        saveInstance(null);
+    }
+
+    public void save(FirebaseCallback firebaseCallback) {
+        saveInstance(firebaseCallback);
+    }
+
+    private void saveInstance(FirebaseCallback firebaseCallback) {
+        MatchRepository.getInstance().saveMatch(this, firebaseCallback);
     }
 
 
