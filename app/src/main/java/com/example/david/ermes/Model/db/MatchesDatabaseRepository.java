@@ -1,10 +1,13 @@
 package com.example.david.ermes.Model.db;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.david.ermes.Model.db.DbModels._Match;
 import com.example.david.ermes.Model.db.DatabaseManager.OnDataChangedListener;
 import com.example.david.ermes.Model.models.Match;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -72,11 +75,24 @@ public class MatchesDatabaseRepository {
         });
     }
 
-    public void push(_Match match) {
-        if (match.getID() != null && !match.getID().isEmpty()) {
-            this.matchesRef.child(match.getID()).setValue(match);
-        } else {
-            this.matchesRef.push().setValue(match);
+    public void push(_Match match, FirebaseCallback firebaseCallback) {
+        DatabaseReference query;
+
+        if (match != null) {
+            if (match.getID() != null && !match.getID().isEmpty()) {
+                query = this.matchesRef.child(match.getID());
+            } else {
+                query = this.matchesRef.push();
+            }
+
+            query.setValue(match).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(null);
+                    }
+                }
+            });
         }
     }
 

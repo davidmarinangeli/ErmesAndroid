@@ -70,7 +70,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return notifications != null ? notifications.size() : 0;
     }
 
-    public void refreshList(List<Notification> notifications){
+    public void refreshList(List<Notification> notifications) {
         this.notifications = notifications;
 
         notifyDataSetChanged();
@@ -102,13 +102,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             left_button = itemView.findViewById(R.id.notification_left_button);
             right_button = itemView.findViewById(R.id.notification_right_button);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    executeNotificationAction(notifications.get(getAdapterPosition()));
-                }
-            });
-
             mDialog = new ProgressDialog(context);
             mDialog.setMessage("Attendi...");
             mDialog.setCancelable(false);
@@ -121,7 +114,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 Notification n = notifications.get(position);
 
                 styleDefault(n);
-                styleByNotificationType(n);
+                styleByNotification(n);
             }
         }
 
@@ -142,7 +135,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }
         }
 
-        private void styleByNotificationType(Notification notification) {
+        private void styleByNotification(Notification notification) {
             switch (notification.getType()) {
                 case MATCH_INVITE_USER:
                     // buttons style
@@ -216,7 +209,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                         context.startActivity(i);
 
                                     } else {
-                                        Toast.makeText(context, "C'è stato un problema",
+                                        Toast.makeText(context, "Qualcosa è andato storto",
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -227,16 +220,107 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             left_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "Click " + left_button.getText(),
-                            Toast.LENGTH_SHORT).show();
+                    mDialog.show();
+
+                    MatchRepository.getInstance().fetchMatchById(notification.getIdMatch(),
+                            new FirebaseCallback() {
+                                @Override
+                                public void callback(Object object) {
+                                    resetMatchInviteUserToken();
+                                    Match match = (Match) object;
+
+                                    if (match != null && User.getCurrentUserId() != null) {
+
+                                        if (match.getPending().contains(User.getCurrentUserId())) {
+                                            match.addPartecipant(User.getCurrentUserId());
+                                            match.save(new FirebaseCallback() {
+                                                @Override
+                                                public void callback(Object object) {
+                                                    incrementMatchInviteUserToken();
+
+                                                    if (getMatchInviteUserToken() == MAX_TOKEN) {
+                                                        mDialog.dismiss();
+                                                        notifyDataSetChanged();
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            incrementMatchInviteUserToken();
+
+                                            Toast.makeText(context, "Non sei più invitato a " +
+                                                            "questa partita!",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        notification.setRead(true);
+                                        notification.save(new FirebaseCallback() {
+                                            @Override
+                                            public void callback(Object object) {
+                                                incrementMatchInviteUserToken();
+
+                                                if (getMatchInviteUserToken() == MAX_TOKEN) {
+                                                    mDialog.dismiss();
+                                                    notifyDataSetChanged();
+                                                }
+                                            }
+                                        });
+
+                                    } else {
+                                        Toast.makeText(context, "Qualcosa è andato storto",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                 }
             });
 
             right_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "Click " + right_button.getText(),
-                            Toast.LENGTH_SHORT).show();
+                    // TODO rifiuto dell'invito
+                    mDialog.show();
+
+                    MatchRepository.getInstance().fetchMatchById(notification.getIdMatch(),
+                            new FirebaseCallback() {
+                                @Override
+                                public void callback(Object object) {
+                                    resetMatchInviteUserToken();
+
+                                    if (object != null && User.getCurrentUserId() != null) {
+                                        Match match = (Match) object;
+                                        match.removePending(User.getCurrentUserId());
+
+                                        match.save(new FirebaseCallback() {
+                                            @Override
+                                            public void callback(Object object) {
+                                                incrementMatchInviteUserToken();
+
+                                                if (getMatchInviteUserToken() == MAX_TOKEN) {
+                                                    mDialog.dismiss();
+                                                    notifyDataSetChanged();
+                                                }
+                                            }
+                                        });
+
+                                        notification.setRead(true);
+                                        notification.save(new FirebaseCallback() {
+                                            @Override
+                                            public void callback(Object object) {
+                                                incrementMatchInviteUserToken();
+
+                                                if (getMatchInviteUserToken() == MAX_TOKEN) {
+                                                    mDialog.dismiss();
+                                                    notifyDataSetChanged();
+                                                }
+                                            }
+                                        });
+
+                                    } else {
+                                        Toast.makeText(context, "Qualcosa è andato storto",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                 }
             });
         }
@@ -295,26 +379,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             });
         }
 
-        private void executeNotificationAction(final Notification notification) {
-
-            switch (notification.getType()) {
-                case MATCH_INVITE_USER:
-                    Log.i("NOTIFICATION TYPE", NotificationType.toString(MATCH_INVITE_USER));
-
-
-                    break;
-                case FRIENDSHIP_REQUEST:
-                    Log.i("NOTIFICATION TYPE", NotificationType.toString(FRIENDSHIP_REQUEST));
-
-                    Intent i = new Intent(context, AccountActivity.class);
-                    context.startActivity(i);
-                    break;
-                case FRIENDSHIP_ACCEPTED:
-                    Log.i("NOTIFICATION TYPE", NotificationType.toString(FRIENDSHIP_ACCEPTED));
-                    break;
-            }
-        }
-
         private void setButtonsVisible(int visible) {
             left_button.setVisibility(visible);
             right_button.setVisibility(visible);
@@ -330,6 +394,21 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     layout.setPadding(PADDING, PADDING, PADDING, PADDING_BOTTOM);
                     break;
             }
+        }
+
+        private int matchInviteUserToken;
+        private final int MAX_TOKEN = 2;
+
+        private void resetMatchInviteUserToken() {
+            matchInviteUserToken = 0;
+        }
+
+        private void incrementMatchInviteUserToken() {
+            matchInviteUserToken += 1;
+        }
+
+        private int getMatchInviteUserToken() {
+            return matchInviteUserToken;
         }
     }
 }

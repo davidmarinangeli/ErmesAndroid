@@ -4,12 +4,16 @@ import com.example.david.ermes.Model.db.DbModels;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Created by David on 21/07/2017.
  */
 
 public class User {
+    private static FirebaseUser currentUser;
+
     private String name;
     private String email;
     private String UID;
@@ -83,5 +87,14 @@ public class User {
                 this.city,
                 this.birthDate
         );
+    }
+
+    public static String getCurrentUserId() {
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            return currentUser.getUid();
+        }
+
+        return null;
     }
 }
