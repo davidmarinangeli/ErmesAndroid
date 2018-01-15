@@ -103,8 +103,7 @@ public class MatchesDatabaseRepository {
             queryRef = this.matchesRef.orderByKey();
         } else if (param == "key") {
             queryRef = this.matchesRef.child(value);
-        }
-        else {
+        } else {
             queryRef = this.matchesRef.orderByChild(param).equalTo(value);
         }
 
@@ -115,7 +114,7 @@ public class MatchesDatabaseRepository {
                 // whenever data at this location is updated.
                 // DbModels._User value = dataSnapshot.getValue(DbModels._User.class);
                 List<_Match> matches_list = null;
-                if (dataSnapshot != null ) {
+                if (dataSnapshot != null) {
                     matches_list = new ArrayList<>();
 
                     if (param == "key") {
@@ -144,31 +143,44 @@ public class MatchesDatabaseRepository {
         });
     }
 
-    public void orderMatchesByDate(Long date, final FirebaseCallback firebaseCallback){
-        if (date != null){
-            this.matchesRef.orderByChild("date").startAt(date).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    List<_Match> matches = null;
-                    if (dataSnapshot != null) {
-                        matches = new ArrayList<>();
-                        for (DataSnapshot d : dataSnapshot.getChildren()) {
-                            _Match match = d.getValue(_Match.class);
-                            match.setID(dataSnapshot.getKey());
-                            if (match.isPublic)
-                                matches.add(match);
+    public void orderMatchesByDate(Long date, final FirebaseCallback firebaseCallback) {
+        if (date != null) {
+            this.matchesRef.orderByChild("date").startAt(date).addValueEventListener(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            List<_Match> matches = null;
+                            if (dataSnapshot != null) {
+                                matches = new ArrayList<>();
+                                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                                    _Match match = d.getValue(_Match.class);
+                                    match.setID(dataSnapshot.getKey());
+                                    if (match.isPublic)
+                                        matches.add(match);
 
+                                }
+                            }
+                            firebaseCallback.callback(matches);
                         }
-                    }
-                    firebaseCallback.callback(matches);
-                }
 
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            firebaseCallback.callback(null);
+                        }
+                    });
+        }
+    }
+
+    public void deleteById(String id, FirebaseCallback firebaseCallback) {
+        if (id != null && !id.isEmpty()) {
+            this.matchesRef.child(id).removeValue(new DatabaseReference.CompletionListener() {
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    firebaseCallback.callback(null);
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(null);
+                    }
                 }
             });
         }
-
     }
 }
