@@ -1,5 +1,8 @@
 package com.example.david.ermes.Model.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.david.ermes.Model.db.DbModels;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.repository.SportRepository;
@@ -11,7 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
  * Created by David on 21/07/2017.
  */
 
-public class User {
+public class User implements Parcelable {
     private static FirebaseUser currentUser;
 
     private String name;
@@ -34,6 +37,27 @@ public class User {
         this.idFavSport = idFavSport;
         this.birthDate = birthDate;
     }
+
+    protected User(Parcel in) {
+        name = in.readString();
+        email = in.readString();
+        UID = in.readString();
+        city = in.readString();
+        idFavSport = in.readString();
+        birthDate = in.readLong();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public void setName(String name) {
         this.name = name;
@@ -90,11 +114,29 @@ public class User {
     }
 
     public static String getCurrentUserId() {
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        }
+
         if (currentUser != null) {
             return currentUser.getUid();
         }
 
         return null;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(email);
+        parcel.writeString(UID);
+        parcel.writeString(city);
+        parcel.writeString(idFavSport);
+        parcel.writeLong(birthDate);
     }
 }
