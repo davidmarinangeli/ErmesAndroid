@@ -52,7 +52,7 @@
         <activity
             android:name=".View.activities.CreateEventActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".View.activities.EventActivity" />
         <activity android:name=".View.activities.AccountActivity" />
         <activity
@@ -64,12 +64,16 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".View.activities.NotificationsActivity" />
 
+        <activity android:name=".View.activities.MyMatchesActivity" />
+        <activity android:name=".View.activities.FriendsActivity" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCUFlWr5eEaU7NR4F38DvT7enmTMf_oeqk" />
 
         <activity android:name=".View.activities.PickPlaceActivity" />
-        <activity android:name=".View.activities.SignUpActivity"></activity>
+        <activity android:name=".View.activities.SignUpActivity" />
+        <activity android:name=".View.activities.PickFriendsActivity"></activity>
     </application>
 
 </manifest>

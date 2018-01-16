@@ -73,6 +73,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private TextView city_button;
     private Place place_selected;
 
+    private String photoURL = "";
+
     private final int PLACE_AUTOCOMPLETE_CODE = 1;
 
     @Override
@@ -181,6 +183,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
             password_editText.setVisibility(View.GONE);
             password_editText.setHelperText("Utilizzeremo la password di Google");
+
+            photoURL = result_intent.getStringExtra("photoURL");
         }
 
     }
@@ -241,11 +245,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                                 task.getResult().getUser().getUid(),
                                                 city,
                                                 found_sport.getID(),
+                                                photoURL,
                                                 // TODO inserire la data di nascita
                                                 0
-                                        ).save();
-
-                                        finish();
+                                        ).save(new FirebaseCallback() {
+                                            @Override
+                                            public void callback(Object object) {
+                                                finish();
+                                            }
+                                        });
                                     } else {
                                         Snackbar.make(getWindow().getDecorView(), "Errore nella ricerca dello sport", Snackbar.LENGTH_LONG)
                                                 .setAction(":(", null);
@@ -301,11 +309,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                     result_intent.getStringExtra("uid"),
                                     place_selected.getName().toString(),
                                     found_sport.getID(),
+                                    photoURL,
                                     // TODO inserire la data di nascita
                                     0
-                            ).save();
-
-                            finish();
+                            ).save(new FirebaseCallback() {
+                                @Override
+                                public void callback(Object object) {
+                                    finish();
+                                }
+                            });
                         }
                     });
                 } else {

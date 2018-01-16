@@ -15,6 +15,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MatchesDatabaseRepository {
@@ -85,12 +86,9 @@ public class MatchesDatabaseRepository {
                 query = this.matchesRef.push();
             }
 
-            query.setValue(match).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (firebaseCallback != null) {
-                        firebaseCallback.callback(null);
-                    }
+            query.setValue(match).addOnCompleteListener(task -> {
+                if (firebaseCallback != null) {
+                    firebaseCallback.callback(null);
                 }
             });
         }
@@ -154,7 +152,7 @@ public class MatchesDatabaseRepository {
                                 matches = new ArrayList<>();
                                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                                     _Match match = d.getValue(_Match.class);
-                                    match.setID(dataSnapshot.getKey());
+                                    match.setID(d.getKey());
                                     if (match.isPublic)
                                         matches.add(match);
 
@@ -168,6 +166,47 @@ public class MatchesDatabaseRepository {
                             firebaseCallback.callback(null);
                         }
                     });
+        } else if (firebaseCallback != null) {
+            firebaseCallback.callback(null);
+        }
+    }
+
+    public void fetchFinishedJoinedMatches(String idUser, FirebaseCallback firebaseCallback) {
+        if (idUser != null) {
+            Long now = System.currentTimeMillis();
+
+            this.matchesRef.orderByChild("date").endAt(now).addValueEventListener(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            List<_Match> list = null;
+
+                            for (DataSnapshot d : dataSnapshot.getChildren()) {
+                                _Match match = d.getValue(_Match.class);
+                                match.setID(d.getKey());
+
+                                if (match.idOwner == idUser ||
+                                        (match.partecipants != null &&
+                                                match.partecipants.contains(idUser))) {
+                                    if (list == null) {
+                                        list = new ArrayList<>();
+                                    }
+
+                                    list.add(match);
+                                }
+                            }
+
+                            firebaseCallback.callback(list);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            firebaseCallback.callback(null);
+                        }
+                    }
+            );
+        } else if (firebaseCallback != null) {
+            firebaseCallback.callback(null);
         }
     }
 

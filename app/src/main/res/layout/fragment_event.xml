@@ -389,12 +389,12 @@
                     app:layout_constraintTop_toBottomOf="@+id/eventUsersCard" />
 
                 <Button
-                    android:id="@+id/buttonConcludiEvento"
+                    android:id="@+id/elimina_evento"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Concludi"
+                    android:text="@string/elimina_evento"
                     app:layout_constraintEnd_toEndOf="@+id/constraintParent"
                     app:layout_constraintTop_toBottomOf="@+id/eventUsersCard" />
 
@@ -405,8 +405,8 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Invita"
-                    app:layout_constraintEnd_toStartOf="@+id/buttonConcludiEvento"
+                    android:text="@string/invita"
+                    app:layout_constraintEnd_toStartOf="@+id/elimina_evento"
                     app:layout_constraintStart_toEndOf="@+id/buttonPartecipa"
                     app:layout_constraintTop_toBottomOf="@+id/eventUsersCard" />
 
@@ -416,7 +416,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="Visualizza oggetti mancanti"
+                    android:text="@string/visualizza_oggetti_mancanti"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/buttonInvita" />
 

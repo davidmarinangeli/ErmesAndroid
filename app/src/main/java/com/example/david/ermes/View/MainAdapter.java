@@ -75,17 +75,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             place_of_event = itemView.findViewById(R.id.place_of_event);
 
             //settare l'onclicklistener qui :)
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(context, EventActivity.class);
+            itemView.setOnClickListener(view -> {
+                Intent i = new Intent(context, EventActivity.class);
 
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("event", matchList.get(getAdapterPosition()));
-                    i.putExtras(bundle);
-                    context.startActivity(i);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("event", matchList.get(getAdapterPosition()));
+                i.putExtras(bundle);
+                context.startActivity(i);
 
-                }
             });
         }
 

@@ -109,21 +109,14 @@ public class CreateEventActivity extends AppCompatActivity {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        event_data_textview.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(onDateSetListener);
-                datePickerDialog.show(getFragmentManager(), "datepickerdialog");
-            }
+        event_data_textview.setOnClickListener(v -> {
+            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(onDateSetListener);
+            datePickerDialog.show(getFragmentManager(), "datepickerdialog");
         });
 
-        event_orario_textview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(onTimeSetListener, true);
-                timePickerDialog.show(getFragmentManager(), "timepickerdialog");
-            }
+        event_orario_textview.setOnClickListener(view -> {
+            TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(onTimeSetListener, true);
+            timePickerDialog.show(getFragmentManager(), "timepickerdialog");
         });
 
         // imposto i listener per entrambi
@@ -139,17 +132,14 @@ public class CreateEventActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED) {
 
             mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
+                    .addOnSuccessListener(this, location -> {
 
-                            // se mi ha garantito l'accesso ed ho l'ultima location creo lo spinner
-                            if (location != null) {
-                                user_location = location;
-                                createLocationSpinner();
-                            } else {
-                                // altrimenti lo creo con altri parametri ì
-                            }
+                        // se mi ha garantito l'accesso ed ho l'ultima location creo lo spinner
+                        if (location != null) {
+                            user_location = location;
+                            createLocationSpinner();
+                        } else {
+                            // altrimenti lo creo con altri parametri ì
                         }
                     });
         }
@@ -163,9 +153,14 @@ public class CreateEventActivity extends AppCompatActivity {
                     chips_title_list.add(new MissingStuffElement(chip.getTitle(), false, ""));
                 }
 
-                if (selected_sport_string != null && selected_location != null) {
-                    createEventPresenter.saveMatch(match_calendar_time.getTimeInMillis(), selected_sport_string, selected_location, chips_title_list, ispublic_switch.isChecked());
-                }
+        fine_creazione.setOnClickListener(v -> {
+            ArrayList<MissingStuffElement> chips_title_list = new ArrayList<>();
+            for (Chip chip : missing_chips.getSelectedChips()) {
+                chips_title_list.add(new MissingStuffElement(chip.getTitle(), false, ""));
+            }
+
+            if (selected_sport_string != null && selected_location != null) {
+                createEventPresenter.saveMatch(match_calendar_time.getTimeInMillis(), selected_sport_string, selected_location, chips_title_list, ispublic_switch.isChecked());
             }
         });
 
