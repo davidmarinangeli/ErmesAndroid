@@ -1,11 +1,14 @@
 package com.example.david.ermes.Model.db;
 
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.david.ermes.Model.db.DatabaseManager.OnDataChangedListener;
 import com.example.david.ermes.Model.db.DbModels._User;
 import com.example.david.ermes.Model.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -74,8 +77,17 @@ public class UserDatabaseRepository {
         });
     }
 
-    public void save(String id, _User user) {
-        this.usersRef.child(id).setValue(user);
+    public void save(String id, _User user, FirebaseCallback firebaseCallback) {
+        this.usersRef.child(id).setValue(user).addOnCompleteListener(
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(null);
+                        }
+                    }
+                }
+        );
     }
 
     public void fetchUserById(final String id, final FirebaseCallback fc) {

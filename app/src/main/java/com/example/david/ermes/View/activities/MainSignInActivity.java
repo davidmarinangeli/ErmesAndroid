@@ -219,6 +219,7 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                                         extras.putString("mail", user.getEmail());
                                         extras.putString("uid", user.getUid());
                                         extras.putString("name", user.getDisplayName());
+                                        extras.putString("photoURL", user.getPhotoUrl().toString());
 
                                         signupactivity.putExtras(extras);
                                         startActivity(signupactivity);

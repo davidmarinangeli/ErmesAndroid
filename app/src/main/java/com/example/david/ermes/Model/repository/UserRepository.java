@@ -32,8 +32,9 @@ public class UserRepository {
         UserDatabaseRepository.getInstance().getCurrentUser(firebaseCallback);
     }
 
-    public void saveUser(User user) {
-        UserDatabaseRepository.getInstance().save(user.getUID(), user.convertTo_User());
+    public void saveUser(User user, FirebaseCallback firebaseCallback) {
+        UserDatabaseRepository.getInstance().save(user.getUID(), user.convertTo_User(),
+                firebaseCallback);
     }
 
     public void fetchUserById(String id, final FirebaseCallback firebaseCallback) {

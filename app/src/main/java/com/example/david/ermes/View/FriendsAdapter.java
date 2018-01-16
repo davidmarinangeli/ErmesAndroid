@@ -1,6 +1,8 @@
 package com.example.david.ermes.View;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +16,11 @@ import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
+import com.example.david.ermes.View.activities.AccountActivity;
+import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -88,6 +91,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         TextView friendName;
         TextView friendInfo;
         TextView friendshipDate;
+        CircularImageView friendImage;
 
         View itemView;
 
@@ -97,6 +101,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             friendName = itemView.findViewById(R.id.friend_name);
             friendInfo = itemView.findViewById(R.id.friend_info);
             friendshipDate = itemView.findViewById(R.id.friendship_date);
+            friendImage = itemView.findViewById(R.id.friend_image);
 
             this.itemView = itemView;
         }
@@ -105,6 +110,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             User friend = friendsList.get(position);
             Long date = datesList.get(position);
             String sport = sportsList.get(position);
+
+            if (friend.getPhotoURL() != null && !friend.getPhotoURL().isEmpty()) {
+                Picasso.with(context).load(friend.getPhotoURL()).into(friendImage);
+            } else {
+                Picasso.with(context).load(R.drawable.user_placeholder).into(friendImage);
+            }
 
             int age = TimeUtils.getAgeFromBirth(friend.getBirthDate());
 
@@ -116,7 +127,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             this.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO navigazione alla pagina utente
+                    Intent accountActivity = new Intent(context, AccountActivity.class);
+
+                    Bundle extras = new Bundle();
+                    extras.putParcelable("user", friend);
+
+                    accountActivity.putExtras(extras);
+                    context.startActivity(accountActivity);
                 }
             });
         }
