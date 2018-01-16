@@ -63,6 +63,22 @@ public class MatchRepository {
         });
     }
 
+    public void fetchFinishedJoinedMatchesByUserId(String idUser, FirebaseCallback firebaseCallback) {
+        MatchesDatabaseRepository.getInstance().fetchFinishedJoinedMatches(idUser,
+                new FirebaseCallback() {
+                    @Override
+                    public void callback(Object object) {
+                        List<DbModels._Match> list = (List<DbModels._Match>) object;
+
+                        if (list != null && firebaseCallback != null) {
+                            firebaseCallback.callback(DbModels._Match.convertToMatchList(list));
+                        } else if (firebaseCallback != null) {
+                            firebaseCallback.callback(null);
+                        }
+                    }
+                });
+    }
+
     public void saveMatch(Match match, FirebaseCallback firebaseCallback) {
         MatchesDatabaseRepository.getInstance().push(match.convertTo_Match(), firebaseCallback);
     }

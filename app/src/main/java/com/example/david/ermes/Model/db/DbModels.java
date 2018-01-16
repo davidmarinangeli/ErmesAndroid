@@ -23,6 +23,7 @@ public class DbModels {
         public String city;
         public String name;
         public String email;
+        public String photoURL;
         public long birthDate;
 
         private String UID;
@@ -30,7 +31,8 @@ public class DbModels {
         public _User() {
         }
 
-        public _User(String name, String email, String idFavSport, String city, long birthDate) {
+        public _User(String name, String email, String idFavSport, String city, String photoURL,
+                     long birthDate) {
             this.name = name;
             this.email = email;
             this.idFavSport = idFavSport;
@@ -45,6 +47,7 @@ public class DbModels {
                     this.UID,
                     this.city,
                     this.idFavSport,
+                    this.photoURL,
                     this.birthDate
             );
         }
