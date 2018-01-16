@@ -41,7 +41,6 @@ public class EventFragment extends Fragment {
     private TextView pending;
     private TextView freeslots;
     private TextView usercreator;
-    private TextView tools;
 
     private Match match;
 
