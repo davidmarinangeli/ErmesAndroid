@@ -68,11 +68,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void initList() {
-        MatchRepository.getInstance().fetchOrderedMatchesByDate(Calendar.getInstance().getTimeInMillis(), new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                adapter.refreshList((List<Match>) object);
-            }
-        });
+        MatchRepository.getInstance().fetchOrderedMatchesByDate(Calendar.getInstance().getTimeInMillis(), object ->
+                adapter.refreshList((List<Match>) object));
     }
 }
