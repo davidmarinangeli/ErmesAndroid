@@ -279,7 +279,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/line_left_invited"
                             app:layout_constraintStart_toStartOf="parent"
-                            tools:text="Invitati" />
+                            android:text="Invitati" />
 
 
                         <View
@@ -341,7 +341,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/line_right_invited"
                             app:layout_constraintStart_toEndOf="@+id/line_left_invited"
-                            tools:text="Partecipanti" />
+                            android:text="Partecipanti" />
 
                         <TextView
                             android:id="@+id/openSlotNumber"
@@ -371,7 +371,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.45"
                             app:layout_constraintStart_toEndOf="@+id/line_right_invited"
-                            tools:text="Posti liberi" />
+                            android:text="Posti liberi" />
 
 
                     </android.support.constraint.ConstraintLayout>
