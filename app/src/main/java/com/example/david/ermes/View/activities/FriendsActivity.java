@@ -61,6 +61,7 @@ public class FriendsActivity extends AppCompatActivity {
         adapter = new FriendsAdapter(this);
         layoutManager = new LinearLayoutManager(this);
         no_friends_label = findViewById(R.id.no_friends_label);
+        no_friends_label.setVisibility(View.GONE);
 
         recyclerView = findViewById(R.id.friends_recycler_view);
         recyclerView.setAdapter(adapter);
@@ -81,8 +82,8 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
 
         if (currentUser != null) {
             toolbar.setSubtitle(currentUser.getName());
