@@ -18,6 +18,7 @@ import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.FriendsActivity;
 import com.example.david.ermes.View.activities.MainSignInActivity;
+import com.example.david.ermes.View.activities.MyMatchesActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +28,7 @@ public class AccountFragment extends Fragment {
     Button loginbutton;
     Button logoutbutton;
 
+    private CardView myMatchesCard;
     private CardView friendsCard;
 
     private User currentUser;
@@ -71,6 +73,25 @@ public class AccountFragment extends Fragment {
             }
         });
 
+        myMatchesCard = view.findViewById(R.id.myMatchesCard);
+        myMatchesCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentUser != null) {
+                    Bundle extras = new Bundle();
+                    extras.putParcelable("user", currentUser);
+
+                    Intent myMatchesActivity = new Intent(view.getContext(), MyMatchesActivity.class);
+                    myMatchesActivity.putExtras(extras);
+                    startActivity(myMatchesActivity);
+                } else if (User.getCurrentUserId() != null) {
+                    Toast.makeText(view.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(view.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         friendsCard = view.findViewById(R.id.cardViewFriends);
         friendsCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,8 +103,10 @@ public class AccountFragment extends Fragment {
                     Intent friendsActivity = new Intent(view.getContext(), FriendsActivity.class);
                     friendsActivity.putExtras(extras);
                     startActivity(friendsActivity);
-                } else {
+                } else if (User.getCurrentUserId() != null) {
                     Toast.makeText(view.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(view.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
                 }
             }
         });

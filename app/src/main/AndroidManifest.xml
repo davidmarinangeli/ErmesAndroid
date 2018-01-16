@@ -64,6 +64,7 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".View.activities.NotificationsActivity" />
 
+        <activity android:name=".View.activities.MyMatchesActivity" />
         <activity android:name=".View.activities.FriendsActivity" />
 
         <meta-data
