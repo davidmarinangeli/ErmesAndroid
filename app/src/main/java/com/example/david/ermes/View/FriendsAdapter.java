@@ -73,13 +73,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
                                         friendsList.add(entry.getValue());
                                         datesList.add(entry.getKey().getDate());
                                         sportsList.add(((Sport) object).getName());
+
+                                        notifyDataSetChanged();
                                     }
                                 }
                             });
                 }
             }
-
-            notifyDataSetChanged();
         }
     }
 
@@ -89,12 +89,16 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         TextView friendInfo;
         TextView friendshipDate;
 
+        View itemView;
+
         public FriendViewHolder(View itemView) {
             super(itemView);
 
             friendName = itemView.findViewById(R.id.friend_name);
             friendInfo = itemView.findViewById(R.id.friend_info);
             friendshipDate = itemView.findViewById(R.id.friendship_date);
+
+            this.itemView = itemView;
         }
 
         public void bind(int position) {
@@ -119,6 +123,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             friendInfo.setText(String.valueOf(age) + " anni | " +
                     sport);
             friendshipDate.setText("Amici dal " + TimeUtils.fromMillistoYearMonthDay(date));
+
+            this.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // TODO navigazione alla pagina utente
+                }
+            });
         }
     }
 }
