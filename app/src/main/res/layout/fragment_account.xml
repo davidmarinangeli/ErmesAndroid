@@ -54,7 +54,7 @@
 
 
                 <com.mikhaellopez.circularimageview.CircularImageView
-                    android:id="@+id/circular_user_image"
+                    android:id="@+id/image_account"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_marginBottom="32dp"
@@ -74,7 +74,7 @@
 
 
                 <TextView
-                    android:id="@+id/nome_text"
+                    android:id="@+id/name_account"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
                     android:layout_marginEnd="8dp"
@@ -86,7 +86,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.501"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/circular_user_image" />
+                    app:layout_constraintTop_toBottomOf="@+id/image_account" />
 
                 <View
                     android:id="@+id/line_date"
@@ -94,12 +94,12 @@
                     android:layout_height="14dp"
                     android:layout_marginTop="4dp"
                     android:background="@android:color/white"
-                    app:layout_constraintEnd_toEndOf="@+id/nome_text"
-                    app:layout_constraintStart_toStartOf="@+id/nome_text"
-                    app:layout_constraintTop_toBottomOf="@+id/nome_text" />
+                    app:layout_constraintEnd_toEndOf="@+id/name_account"
+                    app:layout_constraintStart_toStartOf="@+id/name_account"
+                    app:layout_constraintTop_toBottomOf="@+id/name_account" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/age_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="1dp"
                     android:layout_marginEnd="8dp"
-                    android:text="Anni"
+                    android:text="anni"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/line_date"
                     app:layout_constraintEnd_toStartOf="@+id/line_date"
@@ -347,7 +347,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/cardViewFriends" />
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/sport_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="1dp"

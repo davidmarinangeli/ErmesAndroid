@@ -60,20 +60,22 @@ public class TimeUtils {
         return df.format(c.getTime());
     }
 
-    public static int getAgeFromBirth(long birthDate) {
-        Calendar now = Calendar.getInstance();
-        Calendar birth = Calendar.getInstance();
-        birth.setTimeInMillis(birthDate);
+    public static int getAgeFromBirth(Long birthDate) {
+        if (birthDate != null) {
+            Calendar now = Calendar.getInstance();
+            Calendar birth = Calendar.getInstance();
+            birth.setTimeInMillis(birthDate);
 
-        int year_now = now.get(Calendar.YEAR), year_birth = birth.get(Calendar.YEAR);
-        int month_now = now.get(Calendar.MONTH), month_birth = birth.get(Calendar.MONTH);
-        int day_now = now.get(Calendar.DAY_OF_MONTH), day_birth = birth.get(Calendar.DAY_OF_MONTH);
+            int year_now = now.get(Calendar.YEAR), year_birth = birth.get(Calendar.YEAR);
+            int month_now = now.get(Calendar.MONTH), month_birth = birth.get(Calendar.MONTH);
+            int day_now = now.get(Calendar.DAY_OF_MONTH), day_birth = birth.get(Calendar.DAY_OF_MONTH);
 
-        int age = year_now - year_birth;
-        if (month_now < month_birth || (month_now == month_birth && day_now < day_birth)) {
-            age--;
-        }
+            int age = year_now - year_birth;
+            if (month_now < month_birth || (month_now == month_birth && day_now < day_birth)) {
+                age--;
+            }
 
-        return age;
+            return age;
+        } else return 0;
     }
 }

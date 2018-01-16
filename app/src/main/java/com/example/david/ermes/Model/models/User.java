@@ -22,6 +22,7 @@ public class User implements Parcelable {
     private String UID;
     private String city;
     private String idFavSport;
+    private String photoURL;
     private long birthDate;
 
     public User() {
@@ -29,12 +30,13 @@ public class User implements Parcelable {
     }
 
     public User(String name, String email, String UID, String city, String idFavSport,
-                long birthDate) {
+                String photoURL, long birthDate) {
         this.name = name;
         this.email = email;
         this.UID = UID;
         this.city = city;
         this.idFavSport = idFavSport;
+        this.photoURL = photoURL;
         this.birthDate = birthDate;
     }
 
@@ -44,6 +46,7 @@ public class User implements Parcelable {
         UID = in.readString();
         city = in.readString();
         idFavSport = in.readString();
+        photoURL = in.readString();
         birthDate = in.readLong();
     }
 
@@ -99,8 +102,24 @@ public class User implements Parcelable {
         this.birthDate = birthDate;
     }
 
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
     public void save() {
-        UserRepository.getInstance().saveUser(this);
+        saveInstance(null);
+    }
+
+    public void save(FirebaseCallback firebaseCallback) {
+        saveInstance(firebaseCallback);
+    }
+
+    private void saveInstance(FirebaseCallback firebaseCallback) {
+        UserRepository.getInstance().saveUser(this, firebaseCallback);
     }
 
     public DbModels._User convertTo_User() {
@@ -109,6 +128,7 @@ public class User implements Parcelable {
                 this.email,
                 this.idFavSport,
                 this.city,
+                this.photoURL,
                 this.birthDate
         );
     }
@@ -137,6 +157,7 @@ public class User implements Parcelable {
         parcel.writeString(UID);
         parcel.writeString(city);
         parcel.writeString(idFavSport);
+        parcel.writeString(photoURL);
         parcel.writeLong(birthDate);
     }
 }
