@@ -60,6 +60,9 @@
     <string name="nome_luogo">Nome luogo</string>
     <string name="che_sport_si_giocano_qui">Che sport si giocano qui?</string>
     <string name="evento_pubblico">Evento pubblico?</string>
+    <string name="elimina_evento">Elimina Evento</string>
+    <string name="invita">Invita</string>
+    <string name="visualizza_oggetti_mancanti">Visualizza oggetti mancanti</string>
 
 
     <!-- buro gaio -->

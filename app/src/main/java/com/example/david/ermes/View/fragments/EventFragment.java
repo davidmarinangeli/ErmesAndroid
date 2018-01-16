@@ -2,17 +2,13 @@ package com.example.david.ermes.View.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.david.ermes.Model.db.FirebaseCallback;
@@ -28,7 +24,6 @@ import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -52,7 +47,7 @@ public class EventFragment extends Fragment {
 
     private Button invite;
     private Button join;
-    private Button concludi_wtf;
+    private Button delete_match;
 
     private Button missing_stuff_button;
 
@@ -92,33 +87,31 @@ public class EventFragment extends Fragment {
         missing_stuff_button = view.findViewById(R.id.missing_stuff_button);
         join = view.findViewById(R.id.buttonPartecipa);
         invite = view.findViewById(R.id.buttonInvita);
-        concludi_wtf = view.findViewById(R.id.buttonConcludiEvento);
+        delete_match = view.findViewById(R.id.elimina_evento);
 
-        UserRepository.getInstance().fetchUserById(match.getIdOwner(), new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null) {
-                    User user = (User) object;
-                    usercreator.setText(user.getName());
-                } else {
+        // scarico lo user name in base all'id che mi ha dato il match
+        UserRepository.getInstance().fetchUserById(match.getIdOwner(), object -> {
+            if (object != null) {
+                User user = (User) object;
+                usercreator.setText(user.getName());
+            } else {
 
-                }
             }
         });
 
-        SportRepository.getInstance().fetchSportById(match.getIdSport(), new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null) {
-                    Sport match_sport = (Sport) object;
-                    sportname.setText(match_sport.getName());
-                }
+
+        // scarico lo sport...
+        SportRepository.getInstance().fetchSportById(match.getIdSport(), object -> {
+            if (object != null) {
+                Sport match_sport = (Sport) object;
+                sportname.setText(match_sport.getName());
             }
         });
         Calendar c = Calendar.getInstance();
         c.setTime(match.getDate());
 
-/*
+
+        // ...scarico la posizione
         LocationRepository.getInstance().fetchLocationById(match.getIdLocation(), object -> {
             if (object != null) {
                 Location match_location = (Location) object;
@@ -126,36 +119,66 @@ public class EventFragment extends Fragment {
             }
         });
 
-*/
-        UserRepository.getInstance().getUser(object -> {
-            if (object != null) {
-                User currentUser = (User) object;
-                if (currentUser.getUID().equals(match.getIdOwner())) {
-                    join.setVisibility(View.GONE);
+
+        // ** GESTIONE VISBILITA' OGGETTI IN BASE ALL'ACCOUNT LOGGATO **
+        if (User.getCurrentUserId() != null) {
+            if (User.getCurrentUserId().equals(match.getIdOwner())) {
+                join.setVisibility(View.GONE);
+            } else {
+                delete_match.setVisibility(View.GONE);
+            }
+        }
+
+
+        if (!areAllMissingItemsChecked()) {
+            ArrayList<String> missing_items_instring = new ArrayList<>();
+            for (MissingStuffElement missing_item : match.getMissingStuff()) {
+                if (!missing_item.isChecked()) {
+                    missing_items_instring.add(missing_item.getName());
                 }
             }
-        });
-
-        if (match.getMissingStuff() != null) {
-            missing_stuff_button.setOnClickListener(view1 -> showMultiChoice(new ArrayList<>()));
+            missing_stuff_button.setOnClickListener(view1 -> showMultiChoice(new ArrayList<>(), missing_items_instring));
         } else {
             missing_stuff_button.setEnabled(false);
         }
 
+        delete_match.setOnClickListener(view1 -> new MaterialDialog.Builder(this.getContext())
+                .title("Sei sicuro di voler eliminare l'evento?")
+                .negativeText("No")
+                .negativeColor(getResources().getColor(R.color.red))
+                .onNegative((dialog, which) -> dialog.dismiss())
+                .positiveText("Si")
+                .onPositive((dialog, which) -> {
+                    MatchRepository.getInstance().deleteMatchById(match.getId(), null);
+                    getActivity().finish();
+                })
+                .show());
+
         // lo so che pare un macello sta stringa, giuro che correggerò le API
         dateofevent.setText(c.get(Calendar.DAY_OF_MONTH) + " " + TimeUtils.fromNumericMonthToString(c.get(Calendar.MONTH)));
         hourofevent.setText(TimeUtils.getFormattedHourMinute(c));
-//        participant.setText(String.valueOf(match.getPartecipants().size()));
-//        pending.setText(String.valueOf(match.getPending().size()));
-//        freeslots.setText(String.valueOf(match.getMaxPlayers()-match.getPartecipants().size()));
+        participant.setText(String.valueOf(match.getPartecipants().size()));
+        pending.setText(String.valueOf(match.getPending().size()));
+        freeslots.setText(String.valueOf(match.getMaxPlayers() - match.getPartecipants().size()));
     }
 
-    public void showMultiChoice(final ArrayList<String> got_missing_item_list) {
+    private boolean areAllMissingItemsChecked() {
+        boolean ischecked = true;
+        for (MissingStuffElement element : match.getMissingStuff()) {
+            if (!element.isChecked()) {
+                ischecked = false;
+            }
+
+        }
+        return ischecked;
+    }
+
+    public void showMultiChoice(final ArrayList<String> got_missing_item_list, ArrayList<String> missing_items_instring) {
         new MaterialDialog.Builder(this.getContext()).title("Se hai qualche materiale mancante e puoi portarlo, spunta le caselle!")
-                .items(match.getMissingStuff())
+                .items(missing_items_instring)
                 .itemsCallbackMultiChoice(new Integer[]{}, (dialog, which, text) -> {
                     boolean allowSelection = which.length >= 0;
-                    for (Integer i : which) {
+                    for (int i = 0; i < which.length; i++) {
                         got_missing_item_list.add((String) text[i]);
                     }
                     return allowSelection;
@@ -168,10 +191,14 @@ public class EventFragment extends Fragment {
                 .neutralText("Annulla")
                 .onPositive(((dialog, which) -> {
                     for (MissingStuffElement missing_item : match.getMissingStuff()) {
-                        for (String got_item : got_missing_item_list)
-                            if (missing_item.getName().equals(got_item)) {
-                                match.getMissingStuff().remove(missing_item);
-                            }
+                        if (!missing_item.isChecked()) {
+                            for (String got_item : got_missing_item_list)
+                                if (missing_item.getName().equals(got_item)) {
+                                    missing_item.setChecked(true);
+                                    match.save();
+                                    onViewCreated(getView(), null);
+                                }
+                        }
                     }
                 }))
                 .show();
