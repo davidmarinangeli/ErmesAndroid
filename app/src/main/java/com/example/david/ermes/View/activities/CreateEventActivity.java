@@ -1,11 +1,15 @@
 package com.example.david.ermes.View.activities;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
@@ -17,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
@@ -39,6 +44,8 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import biz.kasual.materialnumberpicker.MaterialNumberPicker;
+
 public class CreateEventActivity extends AppCompatActivity {
 
     TextView event_orario_textview;
@@ -48,6 +55,7 @@ public class CreateEventActivity extends AppCompatActivity {
     Spinner location_selector;
 
     Button fine_creazione;
+    Button num_players_button;
 
     ChipsInputLayout missing_chips;
 
@@ -90,6 +98,7 @@ public class CreateEventActivity extends AppCompatActivity {
         missing_chips = findViewById(R.id.chips_input);
 
         fine_creazione = findViewById(R.id.buttonfine);
+        num_players_button = findViewById(R.id.choose_players_number);
 
         ispublic_switch = findViewById(R.id.ispublic_switch);
 
@@ -145,7 +154,7 @@ public class CreateEventActivity extends AppCompatActivity {
                     });
         }
 
-
+        num_players_button.setOnClickListener(v -> showNumDialog());
         fine_creazione.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -170,37 +179,55 @@ public class CreateEventActivity extends AppCompatActivity {
 
         LocationRepository.getInstance().fetchLocationsByProximity(
                 LocationUtils.fromAndroidLocationtoErmesLocation(user_location),
-                new FirebaseCallback() {
-                    @Override
-                    public void callback(Object object) {
-                        for (com.example.david.ermes.Model.models.Location l : (ArrayList<com.example.david.ermes.Model.models.Location>) object) {
-                            locationSpinner.add(l.getName());
-                            downloaded_locations.add(l);
-                        }
-                        locationadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, locationSpinner);
-                        location_selector.setAdapter(locationadapter);
-
-
+                object -> {
+                    for (com.example.david.ermes.Model.models.Location l : (ArrayList<com.example.david.ermes.Model.models.Location>) object) {
+                        locationSpinner.add(l.getName());
+                        downloaded_locations.add(l);
                     }
+                    locationadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, locationSpinner);
+                    location_selector.setAdapter(locationadapter);
+
+
                 });
         return downloaded_locations;
     }
 
+    private MaterialNumberPicker createDialog(){
+        MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(this)
+                .minValue(1)
+                .maxValue(10)
+                .defaultValue(1)
+                .backgroundColor(Color.WHITE)
+                .separatorColor(Color.TRANSPARENT)
+                .textColor(Color.BLACK)
+                .textSize(20)
+                .enableFocusability(false)
+                .wrapSelectorWheel(true)
+                .build();
+        return numberPicker;
+
+    }
+    private void showNumDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle("Numero giocatori")
+                .setView(createDialog())
+                .setPositiveButton(getString(android.R.string.ok), (dialog, which) ->
+
+                        Toast.makeText(this,"Yay",Toast.LENGTH_SHORT).show())
+                .show();
+    }
     private void createSportSpinner() {
 
         final ArrayList<String> arraySpinner = new ArrayList<>();
 
-        SportRepository.getInstance().fetchAll(new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                for (Sport s : (ArrayList<Sport>) object) {
-                    arraySpinner.add(s.getName());
-                }
-                sportadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
-                sport_selector.setAdapter(sportadapter);
-
-
+        SportRepository.getInstance().fetchAll(object -> {
+            for (Sport s : (ArrayList<Sport>) object) {
+                arraySpinner.add(s.getName());
             }
+            sportadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
+            sport_selector.setAdapter(sportadapter);
+
+
         });
     }
 
