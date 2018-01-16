@@ -85,12 +85,9 @@ public class MatchesDatabaseRepository {
                 query = this.matchesRef.push();
             }
 
-            query.setValue(match).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (firebaseCallback != null) {
-                        firebaseCallback.callback(null);
-                    }
+            query.setValue(match).addOnCompleteListener(task -> {
+                if (firebaseCallback != null) {
+                    firebaseCallback.callback(null);
                 }
             });
         }
@@ -154,7 +151,7 @@ public class MatchesDatabaseRepository {
                                 matches = new ArrayList<>();
                                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                                     _Match match = d.getValue(_Match.class);
-                                    match.setID(dataSnapshot.getKey());
+                                    match.setID(d.getKey());
                                     if (match.isPublic)
                                         matches.add(match);
 

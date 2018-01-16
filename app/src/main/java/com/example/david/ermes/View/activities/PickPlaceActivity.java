@@ -80,117 +80,88 @@ public class PickPlaceActivity extends AppCompatActivity {
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
                 location_create = new Location();
-                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                googleMap.setOnMapClickListener(point -> UserRepository.getInstance().getUser(object -> {
+                    if (object != null) {
+                        marker[0] = new MarkerOptions()
+                                //.title(String.valueOf(place_name.getText()))
+                                .position(new LatLng(point.latitude, point.longitude));
+                        googleMap.clear();
+                        googleMap.addMarker(marker[0]);
 
-                    @Override
-                    public void onMapClick(final LatLng point) {
-                        UserRepository.getInstance().getUser(new FirebaseCallback() {
-                            @Override
-                            public void callback(Object object) {
-                                if (object != null) {
-                                    marker[0] = new MarkerOptions()
-                                            //.title(String.valueOf(place_name.getText()))
-                                            .position(new LatLng(point.latitude, point.longitude));
-                                    googleMap.clear();
-                                    googleMap.addMarker(marker[0]);
+                        location_create.setLatitude(marker[0].getPosition().latitude);
+                        location_create.setLongitude(marker[0].getPosition().longitude);
+                        location_create.setIdUserCreator(((User) object).getUID());
 
-                                    location_create.setLatitude(marker[0].getPosition().latitude);
-                                    location_create.setLongitude(marker[0].getPosition().longitude);
-                                    location_create.setName(place_name.getText().toString());
-                                    location_create.setIdUserCreator(((User) object).getUID());
-
-                                }
-                            }
-                        });
                     }
-                });
+                }));
             }
         });
 
+        dismiss.setOnClickListener(view -> {finish(); hideKeyboard();});
 
-        fine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if ((location_create != null)) {
+        fine.setOnClickListener(view -> {
+            if ((location_create != null)) {
+                if ((place_name.getText() != null) && (location_create.getLatitude() != 0)) {
+                    final List<SportChip> sport_chips_list = (List<SportChip>) sport_chips.getSelectedChips();
+                    final List<String> sport_id_list = new ArrayList<>();
 
-                    if ((location_create.getName() != null) && (location_create.getLatitude() != 0)) {
-                        final List<SportChip> sport_chips_list = (List<SportChip>) sport_chips.getSelectedChips();
-                        final List<String> sport_id_list = new ArrayList<>();
+                    SportRepository.getInstance().fetchAll(object -> {
+                        if (object != null) {
+                            List<Sport> sport = (List<Sport>) object;
 
-                        SportRepository.getInstance().fetchAll(new FirebaseCallback() {
-                            @Override
-                            public void callback(Object object) {
-                                if (object != null) {
-                                    List<Sport> sport = (List<Sport>) object;
+                            for (Sport s : sport) {
+                                for (SportChip sportChip_name : sport_chips_list)
+                                    if (sportChip_name.getTitle().equals(s.getName())) {
+                                        sport_id_list.add(s.getID());
 
-                                    for (Sport s : sport) {
-                                        for (SportChip sportChip_name : sport_chips_list)
-                                            if (sportChip_name.getTitle().equals(s.getName())) {
-                                                sport_id_list.add(s.getID());
-
-                                            }
                                     }
-                                    location_create.setSportIds(sport_id_list);
-                                    location_create.save();
-                                    setResult(Activity.RESULT_OK);
-                                    finish();
-                                }
                             }
-                        });
-                    } else {
-                        if (location_create.getName() == null) {
-                            place_name.setError("Inserisci un nome");
-                        } else if (location_create.getLatitude() == 0) {
-                            Toast.makeText(getBaseContext(), "Clicca sulla mappa per inserire il luogo", Toast.LENGTH_LONG).show();
+                            location_create.setName(place_name.getText().toString());
+                            location_create.setSportIds(sport_id_list);
+                            location_create.save();
+                            setResult(Activity.RESULT_OK);
+                            finish();
                         }
-                    }
-
+                    });
                 } else {
-                    Toast.makeText(getBaseContext(), "Impossibile creare luogo al momento", Toast.LENGTH_LONG).show();
+                    if (place_name.getText() == null) {
+                        place_name.setError("Inserisci un nome");
+                    } else if (location_create.getLatitude() == 0) {
+                        Toast.makeText(getBaseContext(), "Clicca sulla mappa per inserire il luogo", Toast.LENGTH_LONG).show();
+                    }
                 }
 
-                view = getCurrentFocus();
-                if (view != null) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
+            } else {
+                Toast.makeText(getBaseContext(), "Impossibile creare luogo al momento", Toast.LENGTH_LONG).show();
             }
+
+            hideKeyboard();
         });
     }
 
-    private List<String> getChipsAndPutInsideADamnList() {
-        List<SportChip> sport_chips_list = (List<SportChip>) sport_chips.getSelectedChips();
-        final List<String> sport_id_list = new ArrayList<>();
-
-        for (SportChip sportChip : sport_chips_list) {
-            SportRepository.getInstance().fetchSportByName(sportChip.getTitle(), new FirebaseCallback() {
-                @Override
-                public void callback(Object object) {
-                    if (object != null) {
-                        Sport found_sport = (Sport) object;
-                        sport_id_list.add(found_sport.getID());
-                    }
-                }
-            });
+    private void hideKeyboard() {
+        View view;
+        view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
         }
-        return sport_id_list;
     }
 
     private void createSportSpinner() {
 
         final ArrayList<String> arraySpinner = new ArrayList<>();
 
-        SportRepository.getInstance().fetchAll(new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                for (Sport s : (ArrayList<Sport>) object) {
-                    arraySpinner.add(s.getName());
-                }
-                sportadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
-                sport_spinner.setAdapter(sportadapter);
-
-
+        SportRepository.getInstance().fetchAll(object -> {
+            for (Sport s : (ArrayList<Sport>) object) {
+                arraySpinner.add(s.getName());
             }
+            sportadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
+            sport_spinner.setAdapter(sportadapter);
+
+
         });
     }
 
