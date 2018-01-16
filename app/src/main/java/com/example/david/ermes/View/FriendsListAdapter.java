@@ -28,14 +28,14 @@ import java.util.Map;
  * Created by nicol on 15/01/2018.
  */
 
-public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendViewHolder> {
+public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.FriendViewHolder> {
 
     private List<User> friendsList;
     private List<Long> datesList;
     private List<String> sportsList;
     private Context context;
 
-    public FriendsAdapter(Context context) {
+    public FriendsListAdapter(Context context) {
         this.context = context;
     }
 
@@ -47,7 +47,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
                 false
         );
 
-        return new FriendsAdapter.FriendViewHolder(itemView);
+        return new FriendsListAdapter.FriendViewHolder(itemView);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         public FriendViewHolder(View itemView) {
             super(itemView);
 
-            friendName = itemView.findViewById(R.id.friend_name);
+            friendName = itemView.findViewById(R.id.friend_name_invitation);
             friendInfo = itemView.findViewById(R.id.friend_info);
             friendshipDate = itemView.findViewById(R.id.friendship_date);
             friendImage = itemView.findViewById(R.id.friend_image);
@@ -124,17 +124,14 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
                     sport);
             friendshipDate.setText("Amici dal " + TimeUtils.fromMillistoYearMonthDay(date));
 
-            this.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent accountActivity = new Intent(context, AccountActivity.class);
+            this.itemView.setOnClickListener(view -> {
+                Intent accountActivity = new Intent(context, AccountActivity.class);
 
-                    Bundle extras = new Bundle();
-                    extras.putParcelable("user", friend);
+                Bundle extras = new Bundle();
+                extras.putParcelable("user", friend);
 
-                    accountActivity.putExtras(extras);
-                    context.startActivity(accountActivity);
-                }
+                accountActivity.putExtras(extras);
+                context.startActivity(accountActivity);
             });
         }
     }
