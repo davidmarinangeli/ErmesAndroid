@@ -64,6 +64,9 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".View.activities.NotificationsActivity" />
 
+        <activity android:name=".View.activities.MyMatchesActivity" />
+        <activity android:name=".View.activities.FriendsActivity" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCUFlWr5eEaU7NR4F38DvT7enmTMf_oeqk" />

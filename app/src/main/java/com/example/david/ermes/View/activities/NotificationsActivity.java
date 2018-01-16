@@ -88,6 +88,16 @@ public class NotificationsActivity extends AppCompatActivity {
                                     no_notifications.setVisibility(View.VISIBLE);
                                 } else {
                                     no_notifications.setVisibility(View.GONE);
+
+                                    List<Notification> list = (List<Notification>) object;
+                                    int unreadCount = Notification.getUnreadNotificationsFromList(list)
+                                                    .size();
+
+                                    String toolbar_title = unreadCount > 0 ?
+                                            "Notifiche (" + String.valueOf(unreadCount) + ")"
+                                            : "Notifiche";
+
+                                    toolbar.setTitle(toolbar_title);
                                 }
                             }
                         }
