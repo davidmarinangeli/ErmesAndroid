@@ -106,18 +106,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             Long date = datesList.get(position);
             String sport = sportsList.get(position);
 
-            Calendar now = Calendar.getInstance();
-            Calendar birth = Calendar.getInstance();
-            birth.setTimeInMillis(friend.getBirthDate());
-
-            int year_now = now.get(Calendar.YEAR), year_birth = birth.get(Calendar.YEAR);
-            int month_now = now.get(Calendar.MONTH), month_birth = birth.get(Calendar.MONTH);
-            int day_now = now.get(Calendar.DAY_OF_MONTH), day_birth = birth.get(Calendar.DAY_OF_MONTH);
-
-            int age = year_now - year_birth;
-            if (month_now < month_birth || (month_now == month_birth && day_now < day_birth)) {
-                age--;
-            }
+            int age = TimeUtils.getAgeFromBirth(friend.getBirthDate());
 
             friendName.setText(friend.getName());
             friendInfo.setText(String.valueOf(age) + " anni | " +
