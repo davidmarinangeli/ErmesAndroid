@@ -27,6 +27,7 @@ import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -54,7 +55,9 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     LocationRequest mLocationRequest;
     private GoogleMap googleMap;
     List<Match> match_list = new ArrayList<>();
-    GoogleApiClient mGoogleApiClient;
+
+    private GoogleApiClient mGoogleApiClient;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -71,76 +75,79 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
             e.printStackTrace();
         }
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-
-                //Initialize Google Play Services
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ContextCompat.checkSelfPermission(getContext(),
-                            android.Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        //Location Permission already granted
-                        buildGoogleApiClient();
-                        googleMap.setMyLocationEnabled(true);
-                    } else {
-                        //Request Location Permission
-                        checkLocationPermission();
-                    }
-                } else {
+        mMapView.getMapAsync(mMap -> {
+            googleMap = mMap;
+            //Initialize Google Play Services
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        android.Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    //Location Permission already granted
                     buildGoogleApiClient();
                     googleMap.setMyLocationEnabled(true);
+                } else {
+                    //Request Location Permission
+                    checkLocationPermission();
                 }
+            } else {
+                buildGoogleApiClient();
+                googleMap.setMyLocationEnabled(true);
+            }
 
-                LocationRepository.getInstance().fetchAllLocations(new FirebaseCallback() {
-                    @Override
-                    public void callback(Object object) {
-                        if (object != null) {
-                            for (final Location loc : (List<Location>) object) {
+            LocationRepository.getInstance().fetchAllLocations(object -> {
+                if (object != null) {
+                    for (final Location loc : (List<Location>) object) {
+                        final LatLng location_latlng = new LatLng(
+                                loc.getLatitude(),
+                                loc.getLongitude()
+                        );
 
-                                final LatLng location_latlng = new LatLng(
-                                        loc.getLatitude(),
-                                        loc.getLongitude()
-                                );
+                        final List<String> sportids = new ArrayList<>();
+                        final MarkerOptions marker = new MarkerOptions();
 
+                        SportRepository.getInstance().fetchAll(object1 -> {
+                            if (object1 != null) {
+                                List<Sport> sport = (List<Sport>) object1;
 
-                                // TODO: controllare correttezza algoritmo
-                                final List<String> sportids = new ArrayList<>();
-                                final MarkerOptions marker = new MarkerOptions();
-
-                                SportRepository.getInstance().fetchAll(new FirebaseCallback() {
-                                    @Override
-                                    public void callback(Object object) {
-                                        if (object != null) {
-                                            List<Sport> sport = (List<Sport>) object;
-
-                                            for (Sport s : sport) {
-                                                for (String loc_id : loc.getSportIds())
-                                                    if (s.getID().equals(loc_id)) {
-                                                        sportids.add(s.getName());
-                                                    }
-                                            }
-
-                                            googleMap.addMarker(marker
-                                                    .position(location_latlng)
-                                                    .title(loc.getName()).snippet(String.valueOf(sportids)));
+                                for (Sport s : sport) {
+                                    for (String loc_id : loc.getSportIds())
+                                        if (s.getID().equals(loc_id)) {
+                                            sportids.add(s.getName());
                                         }
-                                    }
-                                });
+                                }
 
-
-                                // For zooming automatically to the location of the marker
-                                CameraPosition cameraPosition = new CameraPosition.Builder().zoom(12).target(location_latlng
-                                ).build();
-                                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                                googleMap.addMarker(marker
+                                        .position(location_latlng)
+                                        .title(loc.getName()).snippet(String.valueOf(sportids)));
                             }
+                        });
+
+                        final LatLng[] user_lng = new LatLng[1];
+                        final CameraPosition[] cameraPosition = new CameraPosition[1];
+                        if (googleMap.isMyLocationEnabled()) {
+                            mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), location -> {
+
+                                // se mi ha garantito l'accesso ed ho l'ultima location creo lo spinner
+                                if (location != null) {
+                                    user_lng[0] = new LatLng(location.getLatitude(),location.getLongitude());
+                                    cameraPosition[0] = new CameraPosition.Builder().zoom(12).target(user_lng[0]
+                                    ).build();
+
+                                } else {
+                                    // altrimenti lo creo con altri parametri
+                                    cameraPosition[0] = new CameraPosition.Builder().zoom(12).target(location_latlng
+                                    ).build();
+                                }
+
+                                // zoomo sul marker selezionato
+                                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition[0]));
+                            });
                         }
                     }
-                });
+                }
+            });
 
-                // For dropping a marker at a point on the Map
-            }
+            // For dropping a marker at a point on the Map
         });
 
         return rootView;

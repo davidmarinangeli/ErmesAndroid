@@ -4,6 +4,9 @@ package com.example.david.ermes.Model.models;
  * Created by nicol on 08/01/2018.
  */
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.david.ermes.Model.db.DbModels._Notification;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.repository.NotificationRepository;
@@ -14,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Notification {
+public class Notification implements Parcelable {
 
     private String id = null;
     private String idCreator;
@@ -53,6 +56,30 @@ public class Notification {
         this.read = read;
         this.date = date;
     }
+
+    protected Notification(Parcel in) {
+        id = in.readString();
+        idCreator = in.readString();
+        idOwner = in.readString();
+        idMatch = in.readString();
+        title = in.readString();
+        text = in.readString();
+        type = NotificationType.getNotificationTypeFromString(in.readString());
+        read = in.readByte() != 0;
+        date = in.readLong();
+    }
+
+    public static final Creator<Notification> CREATOR = new Creator<Notification>() {
+        @Override
+        public Notification createFromParcel(Parcel in) {
+            return new Notification(in);
+        }
+
+        @Override
+        public Notification[] newArray(int size) {
+            return new Notification[size];
+        }
+    };
 
     public void save() {
         saveInstance(null);
@@ -221,5 +248,23 @@ public class Notification {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(idCreator);
+        parcel.writeString(idOwner);
+        parcel.writeString(idMatch);
+        parcel.writeString(title);
+        parcel.writeString(text);
+        parcel.writeString(type.toString());
+        parcel.writeByte((byte) (read ? 1 : 0));
+        parcel.writeLong(date);
     }
 }

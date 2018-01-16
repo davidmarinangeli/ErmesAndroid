@@ -155,7 +155,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         date.append("\n\nHai già risposto a questo invito.");
                     }
 
-                    setButtonsListenersMatchInviteUser(notification);
+
+                    setButtonsListenersMatchInviteUser(notification, null);
+                    MatchRepository.getInstance().fetchMatchById(notification.getIdMatch(),
+                            new FirebaseCallback() {
+                                @Override
+                                public void callback(Object object) {
+                                    mDialog.dismiss();
+
+                                    setButtonsListenersMatchInviteUser(notification, (Match) object);
+                                }
+                            });
                     break;
                 case FRIENDSHIP_REQUEST:
                     // buttons style
@@ -175,10 +185,26 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         date.append("\n\nHai già risposto a questa richiesta.");
                     }
 
-                    setButtonsListenersFriendshipRequest(notification);
+                    setButtonsListenersFriendshipRequest(notification, null);
+                    UserRepository.getInstance().fetchUserById(notification.getIdCreator(),
+                            new FirebaseCallback() {
+                                @Override
+                                public void callback(Object object) {
+                                    setButtonsListenersFriendshipRequest(notification, (User) object);
+                                }
+                            });
                     break;
                 case FRIENDSHIP_ACCEPTED:
                     icon.setImageResource(R.drawable.ic_group_black_40dp);
+
+                    setItemListenerFriendshipAccepted(notification, null);
+                    UserRepository.getInstance().fetchUserById(notification.getIdCreator(),
+                            new FirebaseCallback() {
+                                @Override
+                                public void callback(Object object) {
+                                    setItemListenerFriendshipAccepted(notification, (User) object);
+                                }
+                            });
 
                     setButtonsVisible(View.GONE);
                     break;
@@ -189,147 +215,143 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }
         }
 
-        private void setButtonsListenersMatchInviteUser(final Notification notification) {
+        private void setButtonsListenersMatchInviteUser(Notification notification, Match match) {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mDialog.show();
 
-                    MatchRepository.getInstance().fetchMatchById(notification.getIdMatch(),
-                            new FirebaseCallback() {
-                                @Override
-                                public void callback(Object object) {
-                                    mDialog.dismiss();
+                    if (match != null) {
+                        Intent i = new Intent(context, EventActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("event", match);
+                        i.putExtras(bundle);
+                        context.startActivity(i);
 
-                                    if (object != null) {
-                                        Intent i = new Intent(context, EventActivity.class);
-                                        Bundle bundle = new Bundle();
-                                        bundle.putParcelable("event", (Match) object);
-                                        i.putExtras(bundle);
-                                        context.startActivity(i);
-
-                                    } else {
-                                        Toast.makeText(context, "Qualcosa è andato storto",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
+                    } else {
+                        Toast.makeText(context, "Attendi...",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
             left_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    itemView.setActivated(false);
+
                     mDialog.show();
 
-                    MatchRepository.getInstance().fetchMatchById(notification.getIdMatch(),
-                            new FirebaseCallback() {
+                    resetMatchInviteUserToken();
+
+                    if (match != null && User.getCurrentUserId() != null) {
+
+                        if (match.getPending().contains(User.getCurrentUserId())) {
+                            match.addPartecipant(User.getCurrentUserId());
+                            match.save(new FirebaseCallback() {
                                 @Override
                                 public void callback(Object object) {
-                                    resetMatchInviteUserToken();
-                                    Match match = (Match) object;
+                                    incrementMatchInviteUserToken();
 
-                                    if (match != null && User.getCurrentUserId() != null) {
-
-                                        if (match.getPending().contains(User.getCurrentUserId())) {
-                                            match.addPartecipant(User.getCurrentUserId());
-                                            match.save(new FirebaseCallback() {
-                                                @Override
-                                                public void callback(Object object) {
-                                                    incrementMatchInviteUserToken();
-
-                                                    if (getMatchInviteUserToken() == MAX_TOKEN) {
-                                                        mDialog.dismiss();
-                                                        notifyDataSetChanged();
-                                                    }
-                                                }
-                                            });
-                                        } else {
-                                            incrementMatchInviteUserToken();
-
-                                            Toast.makeText(context, "Non sei più invitato a " +
-                                                            "questa partita!",
-                                                    Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        notification.setRead(true);
-                                        notification.save(new FirebaseCallback() {
-                                            @Override
-                                            public void callback(Object object) {
-                                                incrementMatchInviteUserToken();
-
-                                                if (getMatchInviteUserToken() == MAX_TOKEN) {
-                                                    mDialog.dismiss();
-                                                    notifyDataSetChanged();
-                                                }
-                                            }
-                                        });
-
-                                    } else {
-                                        Toast.makeText(context, "Qualcosa è andato storto",
-                                                Toast.LENGTH_SHORT).show();
+                                    if (getMatchInviteUserToken() == MAX_TOKEN) {
+                                        itemView.setActivated(true);
+                                        mDialog.dismiss();
+                                        notifyDataSetChanged();
                                     }
                                 }
                             });
+                        } else {
+                            incrementMatchInviteUserToken();
+
+                            Toast.makeText(context, "Non sei più invitato a " +
+                                            "questa partita!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                        notification.setRead(true);
+                        notification.save(new FirebaseCallback() {
+                            @Override
+                            public void callback(Object object) {
+                                incrementMatchInviteUserToken();
+
+                                if (getMatchInviteUserToken() == MAX_TOKEN) {
+                                    itemView.setActivated(true);
+                                    mDialog.dismiss();
+                                    notifyDataSetChanged();
+                                }
+                            }
+                        });
+
+                    } else {
+                        Toast.makeText(context, "Qualcosa è andato storto",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
             right_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO rifiuto dell'invito
+                    itemView.setActivated(false);
+
                     mDialog.show();
 
-                    MatchRepository.getInstance().fetchMatchById(notification.getIdMatch(),
-                            new FirebaseCallback() {
-                                @Override
-                                public void callback(Object object) {
-                                    resetMatchInviteUserToken();
+                    resetMatchInviteUserToken();
 
-                                    if (object != null && User.getCurrentUserId() != null) {
-                                        Match match = (Match) object;
-                                        match.removePending(User.getCurrentUserId());
+                    if (match != null && User.getCurrentUserId() != null) {
+                        match.removePending(User.getCurrentUserId());
 
-                                        match.save(new FirebaseCallback() {
-                                            @Override
-                                            public void callback(Object object) {
-                                                incrementMatchInviteUserToken();
+                        match.save(new FirebaseCallback() {
+                            @Override
+                            public void callback(Object object) {
+                                incrementMatchInviteUserToken();
 
-                                                if (getMatchInviteUserToken() == MAX_TOKEN) {
-                                                    mDialog.dismiss();
-                                                    notifyDataSetChanged();
-                                                }
-                                            }
-                                        });
-
-                                        notification.setRead(true);
-                                        notification.save(new FirebaseCallback() {
-                                            @Override
-                                            public void callback(Object object) {
-                                                incrementMatchInviteUserToken();
-
-                                                if (getMatchInviteUserToken() == MAX_TOKEN) {
-                                                    mDialog.dismiss();
-                                                    notifyDataSetChanged();
-                                                }
-                                            }
-                                        });
-
-                                    } else {
-                                        Toast.makeText(context, "Qualcosa è andato storto",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
+                                if (getMatchInviteUserToken() == MAX_TOKEN) {
+                                    itemView.setActivated(true);
+                                    mDialog.dismiss();
+                                    notifyDataSetChanged();
                                 }
-                            });
+                            }
+                        });
+
+                        notification.setRead(true);
+                        notification.save(new FirebaseCallback() {
+                            @Override
+                            public void callback(Object object) {
+                                incrementMatchInviteUserToken();
+
+                                if (getMatchInviteUserToken() == MAX_TOKEN) {
+                                    itemView.setActivated(true);
+                                    mDialog.dismiss();
+                                    notifyDataSetChanged();
+                                }
+                            }
+                        });
+
+                    } else {
+                        Toast.makeText(context, "Qualcosa è andato storto",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
 
-        public void setButtonsListenersFriendshipRequest(final Notification notification) {
-            item.setOnClickListener(new View.OnClickListener() {
+        private void setButtonsListenersFriendshipRequest(Notification notification, User user) {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO link alla pagina profilo (notification.idCreator)
+                    if (user != null) {
+                        Intent accountActivity = new Intent(context, AccountActivity.class);
+
+                        Bundle extras = new Bundle();
+                        extras.putParcelable("user", user);
+
+                        accountActivity.putExtras(extras);
+                        context.startActivity(accountActivity);
+                    } else {
+                        Toast.makeText(context, "Attendi...",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -337,29 +359,28 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 @Override
                 public void onClick(View view) {
                     // save friendship
-                    UserRepository.getInstance().getUser(new FirebaseCallback() {
+                    itemView.setActivated(false);
+
+                    new Friendship(notification.getIdCreator(), notification.getIdOwner(),
+                            System.currentTimeMillis()).save(new FirebaseCallback() {
                         @Override
                         public void callback(Object object) {
-                            if (object != null) {
-                                final User currentUser = (User) object;
-
-                                new Friendship(notification.getIdCreator(), currentUser.getUID(),
-                                        System.currentTimeMillis()).save(new FirebaseCallback() {
-                                    @Override
-                                    public void callback(Object object) {
-                                        notification.setRead(true);
-                                        notification.save(new FirebaseCallback() {
-                                            @Override
-                                            public void callback(Object object) {
-                                                Notification.createFriendshipAccepted(
-                                                        notification.getIdCreator()).save();
-
-                                                notifyDataSetChanged();
+                            notification.setRead(true);
+                            notification.save(new FirebaseCallback() {
+                                @Override
+                                public void callback(Object object) {
+                                    Notification.createFriendshipAccepted(
+                                            notification.getIdCreator()).save(
+                                            new FirebaseCallback() {
+                                                @Override
+                                                public void callback(Object object) {
+                                                    itemView.setActivated(true);
+                                                    notifyDataSetChanged();
+                                                }
                                             }
-                                        });
-                                    }
-                                });
-                            }
+                                    );
+                                }
+                            });
                         }
                     });
                 }
@@ -368,13 +389,44 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             right_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    itemView.setActivated(false);
+
                     notification.setRead(true);
                     notification.save(new FirebaseCallback() {
                         @Override
                         public void callback(Object object) {
+                            itemView.setActivated(true);
                             notifyDataSetChanged();
                         }
                     });
+                }
+            });
+        }
+
+        private void setItemListenerFriendshipAccepted(Notification notification, User user) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (user != null) {
+                        notification.setRead(true);
+                        notification.save(new FirebaseCallback() {
+                            @Override
+                            public void callback(Object object) {
+                                notifyDataSetChanged();
+
+                                Intent accountActivity = new Intent(context, AccountActivity.class);
+
+                                Bundle extras = new Bundle();
+                                extras.putParcelable("user", user);
+
+                                accountActivity.putExtras(extras);
+                                context.startActivity(accountActivity);
+                            }
+                        });
+                    } else {
+                        Toast.makeText(context, "Attendi...",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -387,11 +439,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             switch (visible) {
                 case View.GONE:
-                    layout.setPadding(PADDING, PADDING, PADDING, PADDING);
+                    layout.setPadding(PADDING, PADDING / 2, PADDING, PADDING / 2);
                     break;
                 case View.VISIBLE:
                     final int PADDING_BOTTOM = StyleUtils.getDpByPixels(context, 4);
-                    layout.setPadding(PADDING, PADDING, PADDING, PADDING_BOTTOM);
+                    layout.setPadding(PADDING, PADDING / 2, PADDING, PADDING_BOTTOM);
                     break;
             }
         }

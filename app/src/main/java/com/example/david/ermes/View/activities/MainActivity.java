@@ -1,7 +1,14 @@
 package com.example.david.ermes.View.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -38,6 +45,12 @@ import com.example.david.ermes.View.fragments.MapsFragment;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.animation.ValueAnimator.INFINITE;
+import static android.animation.ValueAnimator.REVERSE;
+
 public class MainActivity extends AppCompatActivity{
 
     private Toolbar toolbar;
@@ -48,6 +61,9 @@ public class MainActivity extends AppCompatActivity{
     private FloatingActionButton defaulteventfab;
     private FloatingActionButton addPlace;
     private ImageButton notificationsButton;
+
+    private ValueAnimator notification_anim;
+    private int num_notifications;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,32 +102,98 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        // notification button
         notificationsButton = findViewById(R.id.toolbar_notifications_button);
+        notification_anim = new ValueAnimator();
+        num_notifications = 0;
+
+        initBottomNavigationView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         if (User.getCurrentUserId() != null && !User.getCurrentUserId().isEmpty()) {
             notificationsButton.setVisibility(View.VISIBLE);
-            notificationsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final Intent notificationActivity = new Intent(MainActivity.this,
-                            NotificationsActivity.class);
-                    startActivity(notificationActivity);
-                }
-            });
 
             NotificationRepository.getInstance().fetchNotificationsByIdOwner(User.getCurrentUserId(),
                     new FirebaseCallback() {
                         @Override
                         public void callback(Object object) {
                             // TODO lasciamo il fetch delle notifiche nella main activity per mettere il numeretto in rosso?
+
+                            List<Notification> list = (List<Notification>) object;
+
+                            if (list == null) {
+                                list = new ArrayList<>();
+                            } else if (Notification.getUnreadNotificationsFromList(list).size() > 0) {
+
+                                if (notification_anim != null) {
+                                    if (notification_anim.isPaused()) {
+                                        notification_anim.resume();
+                                    } else {
+//                                        notification_anim.setIntValues(Color.WHITE, R.color.colorAccent,
+//                                                R.color.colorAccent, Color.WHITE);
+                                        notification_anim.setIntValues(
+                                                Color.argb(255,255,255,255),
+                                                Color.argb(255, 68, 138, 255),
+                                                Color.argb(255, 68, 138, 255),
+                                                Color.argb(255,255,255,255)
+                                        );
+                                        notification_anim.setEvaluator(new ArgbEvaluator());
+
+                                        notification_anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                            @Override
+                                            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                                notificationsButton.setColorFilter(
+                                                        (Integer) valueAnimator.getAnimatedValue(),
+                                                        PorterDuff.Mode.SRC_ATOP);
+                                            }
+                                        });
+
+                                        notification_anim.setRepeatCount(INFINITE);
+                                        notification_anim.setDuration(4000);
+                                        notification_anim.start();
+                                    }
+                                }
+                            } else {
+                                notificationsButton.setColorFilter(Color.argb(255,255,255,255));
+                            }
+
+                            List<Notification> finalList = list;
+                            notificationsButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent notificationActivity = new Intent(MainActivity.this,
+                                            NotificationsActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putParcelableArrayList("notifications", (ArrayList<Notification>) finalList);
+                                    notificationActivity.putExtras(bundle);
+
+                                    startActivity(notificationActivity);
+                                }
+                            });
                         }
                     });
-        } else {
-            notificationsButton.setVisibility(View.GONE);
-        }
-        //
+        } else notificationsButton.setVisibility(View.GONE);
+    }
 
-        initBottomNavigationView();
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (notification_anim != null) {
+            notification_anim.pause();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (notification_anim != null) {
+            notification_anim.pause();
+        }
     }
 
     private void initBottomNavigationView() {
