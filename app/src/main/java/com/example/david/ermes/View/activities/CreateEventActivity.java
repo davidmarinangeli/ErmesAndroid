@@ -145,13 +145,6 @@ public class CreateEventActivity extends AppCompatActivity {
         }
 
         num_players_button.setOnClickListener(v -> showNumDialog());
-        fine_creazione.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                ArrayList<MissingStuffElement> chips_title_list = new ArrayList<>();
-                for (Chip chip : missing_chips.getSelectedChips()) {
-                    chips_title_list.add(new MissingStuffElement(chip.getTitle(), false, ""));
-                }
 
         fine_creazione.setOnClickListener(v -> {
             ArrayList<MissingStuffElement> chips_title_list = new ArrayList<>();
@@ -165,6 +158,7 @@ public class CreateEventActivity extends AppCompatActivity {
         });
 
         createEventPresenter = new CreateEventPresenter(this);
+
     }
 
     private ArrayList<com.example.david.ermes.Model.models.Location> createLocationSpinner() {
@@ -187,7 +181,8 @@ public class CreateEventActivity extends AppCompatActivity {
         return downloaded_locations;
     }
 
-    private MaterialNumberPicker createDialog(){
+
+    private MaterialNumberPicker createDialog() {
         MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(this)
                 .minValue(1)
                 .maxValue(10)
@@ -202,15 +197,17 @@ public class CreateEventActivity extends AppCompatActivity {
         return numberPicker;
 
     }
-    private void showNumDialog(){
+
+    private void showNumDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Numero giocatori")
                 .setView(createDialog())
                 .setPositiveButton(getString(android.R.string.ok), (dialog, which) ->
 
-                        Toast.makeText(this,"Yay",Toast.LENGTH_SHORT).show())
+                        Toast.makeText(this, "Yay", Toast.LENGTH_SHORT).show())
                 .show();
     }
+
     private void createSportSpinner() {
 
         final ArrayList<String> arraySpinner = new ArrayList<>();
@@ -293,4 +290,5 @@ public class CreateEventActivity extends AppCompatActivity {
             event_orario_textview.setText(hour_minute);
         }
     };
+
 }
