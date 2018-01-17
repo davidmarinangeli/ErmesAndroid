@@ -75,6 +75,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
             //settare l'onclicklistener qui :)
             itemView.setOnClickListener(view -> {
+                itemView.setActivated(false);
+                
                 Intent i = new Intent(context, EventActivity.class);
 
                 Bundle bundle = new Bundle();
@@ -82,6 +84,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
                 i.putExtras(bundle);
                 context.startActivity(i);
 
+                itemView.setActivated(true);
             });
         }
 
