@@ -72,13 +72,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
                             new FirebaseCallback() {
                                 @Override
                                 public void callback(Object object) {
-                                    if (object != null) {
-                                        friendsList.add(entry.getValue());
-                                        datesList.add(entry.getKey().getDate());
-                                        sportsList.add(((Sport) object).getName());
+                                    friendsList.add(entry.getValue());
+                                    datesList.add(entry.getKey().getDate());
+                                    sportsList.add(((Sport) object).getName());
 
-                                        notifyDataSetChanged();
-                                    }
+                                    notifyDataSetChanged();
                                 }
                             });
                 }
@@ -104,6 +102,18 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             friendImage = itemView.findViewById(R.id.friend_image);
 
             this.itemView = itemView;
+            this.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent accountActivity = new Intent(context, AccountActivity.class);
+
+                    Bundle extras = new Bundle();
+                    extras.putParcelable("user", friendsList.get(getAdapterPosition()));
+
+                    accountActivity.putExtras(extras);
+                    context.startActivity(accountActivity);
+                }
+            });
         }
 
         public void bind(int position) {
@@ -123,19 +133,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             friendInfo.setText(String.valueOf(age) + " anni | " +
                     sport);
             friendshipDate.setText("Amici dal " + TimeUtils.fromMillistoYearMonthDay(date));
-
-            this.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent accountActivity = new Intent(context, AccountActivity.class);
-
-                    Bundle extras = new Bundle();
-                    extras.putParcelable("user", friend);
-
-                    accountActivity.putExtras(extras);
-                    context.startActivity(accountActivity);
-                }
-            });
         }
     }
 }
