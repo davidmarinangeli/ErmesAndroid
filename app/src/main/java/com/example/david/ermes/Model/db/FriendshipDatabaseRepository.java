@@ -94,6 +94,9 @@ public class FriendshipDatabaseRepository {
                     firebaseCallback.callback(null);
                 }
             }
+
+            resetResults();
+            resetFetchCallbackCount();
         }
     }
 

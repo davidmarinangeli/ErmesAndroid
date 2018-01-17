@@ -17,6 +17,7 @@ import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.FriendsListAdapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,7 @@ public class FriendsActivity extends AppCompatActivity {
     private TextView no_friends_label;
 
     private User currentUser;
-    private List<User> friends;
-    private List<Long> dates;
+    private Map<Friendship, User> collection;
 
     private static int fetch_friends_count = 0;
 
@@ -86,45 +86,48 @@ public class FriendsActivity extends AppCompatActivity {
         if (currentUser != null) {
             toolbar.setSubtitle(currentUser.getName());
 
-            FriendshipRepository.getInstance().fetchFriendshipsByUserId(currentUser.getUID(),
-                    new FirebaseCallback() {
-                        @Override
-                        public void callback(Object object) {
-                            List<Friendship> list = (List<Friendship>) object;
+            if (collection == null) {
+                FriendshipRepository.getInstance().fetchFriendshipsByUserId(currentUser.getUID(),
+                        new FirebaseCallback() {
+                            @Override
+                            public void callback(Object object) {
+                                List<Friendship> list = (List<Friendship>) object;
 
-                            if (list == null || list.isEmpty()) {
-                                adapter.refreshList(null);
+                                if (list == null || list.isEmpty()) {
+                                    adapter.refreshList(null);
 
-                                no_friends_label.setText("Nessun amico");
-                                no_friends_label.setVisibility(View.VISIBLE);
-                            } else {
-                                toolbar.setTitle("Amici (" + list.size() + ")");
-                                no_friends_label.setVisibility(View.GONE);
+                                    no_friends_label.setText("Nessun amico");
+                                    no_friends_label.setVisibility(View.VISIBLE);
+                                } else {
+                                    toolbar.setTitle("Amici (" + list.size() + ")");
+                                    no_friends_label.setVisibility(View.GONE);
 
-                                Map<Friendship, User> collection = new HashMap<>();
-                                resetFetchFriendsCount();
+                                    collection = new HashMap<>();
+                                    resetFetchFriendsCount();
 
-                                for (Friendship f : list) {
-                                    String id = f.getId1() == currentUser.getUID() ?
-                                            f.getId2() : f.getId1();
+                                    for (Friendship f : list) {
+                                        String id = f.getId1() == currentUser.getUID() ?
+                                                f.getId2() : f.getId1();
 
-                                    UserRepository.getInstance().fetchUserById(id,
-                                            new FirebaseCallback() {
-                                                @Override
-                                                public void callback(Object object) {
-                                                    collection.put(f, (User) object);
-                                                    adapter.refreshList(collection);
+                                        UserRepository.getInstance().fetchUserById(id,
+                                                new FirebaseCallback() {
+                                                    @Override
+                                                    public void callback(Object object) {
+                                                        collection.put(f, (User) object);
 
-                                                    incrementFetchFriendsCount();
-                                                    if (getFetchFriendsCount() == list.size()) {
-                                                        // TODO fine fetch amici
+                                                        incrementFetchFriendsCount();
+                                                        if (getFetchFriendsCount() == list.size()) {
+                                                            adapter.refreshList(collection);
+                                                        }
                                                     }
-                                                }
-                                            });
+                                                });
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+            } else {
+                adapter.refreshList(collection);
+            }
         } else {
             no_friends_label.setText("Nessun utente loggato");
             no_friends_label.setVisibility(View.VISIBLE);
