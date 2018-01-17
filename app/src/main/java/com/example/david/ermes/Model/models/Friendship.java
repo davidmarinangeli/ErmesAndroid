@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 public class Friendship {
     public static final String SEPARATOR = "*?*";
+    public static final String END = "\uf8ff";
 
     public static String getFriendshipIdFromIds(String id1, String id2) {
         return id1 + SEPARATOR + id2;

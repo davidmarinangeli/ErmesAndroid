@@ -99,6 +99,7 @@ dependencies {
     compile 'com.github.clans:fab:1.6.4'
     compile 'com.wdullaer:materialdatetimepicker:3.2.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'biz.kasual:materialnumberpicker:1.2.1'
     testCompile 'junit:junit:4.12'
 }
 

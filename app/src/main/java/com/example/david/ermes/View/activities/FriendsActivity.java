@@ -17,6 +17,7 @@ import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.FriendsListAdapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,7 @@ public class FriendsActivity extends AppCompatActivity {
     private TextView no_friends_label;
 
     private User currentUser;
-    private List<User> friends;
-    private List<Long> dates;
+    private Map<Friendship, User> collection;
 
     private static int fetch_friends_count = 0;
 
@@ -59,7 +59,6 @@ public class FriendsActivity extends AppCompatActivity {
         adapter = new FriendsListAdapter(this);
         layoutManager = new LinearLayoutManager(this);
         no_friends_label = findViewById(R.id.no_friends_label);
-        no_friends_label.setVisibility(View.GONE);
 
         recyclerView = findViewById(R.id.friends_recycler_view);
         recyclerView.setAdapter(adapter);
@@ -85,44 +84,48 @@ public class FriendsActivity extends AppCompatActivity {
 
         if (currentUser != null) {
             toolbar.setSubtitle(currentUser.getName());
+            no_friends_label.setVisibility(View.GONE);
 
-            FriendshipRepository.getInstance().fetchFriendshipsByUserId(currentUser.getUID(),
-                    object -> {
-                        List<Friendship> list = (List<Friendship>) object;
-
-                        if (list == null || list.isEmpty()) {
-                            adapter.refreshList(null);
-
-                            no_friends_label.setText(R.string.no_friends);
-                            no_friends_label.setVisibility(View.VISIBLE);
-                        } else {
-                            toolbar.setTitle("Amici (" + list.size() + ")");
-                            no_friends_label.setVisibility(View.GONE);
-
-                            Map<Friendship, User> collection = new HashMap<>();
-                            resetFetchFriendsCount();
-
-                            for (Friendship f : list) {
-                                String id = f.getId1().equals(currentUser.getUID()) ?
-                                        f.getId2() : f.getId1();
-
-                                UserRepository.getInstance().fetchUserById(id,
-                                        object1 -> {
-                                            collection.put(f, (User) object1);
-                                            adapter.refreshList(collection);
-
-                                            incrementFetchFriendsCount();
-                                            if (getFetchFriendsCount() == list.size()) {
-                                                // TODO fine fetch amici
-                                            }
-                                        });
-                            }
-                        }
-                    });
+            if (collection == null) {
+                refreshList();
+            }
         } else {
             no_friends_label.setText("Nessun utente loggato");
             no_friends_label.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void refreshList() {
+        FriendshipRepository.getInstance().fetchFriendshipsByUserId(currentUser.getUID(), object -> {
+            List<Friendship> list = (List<Friendship>) object;
+
+            if (list == null || list.isEmpty()) {
+                adapter.refreshList(null);
+
+                no_friends_label.setText("Nessun amico");
+                no_friends_label.setVisibility(View.VISIBLE);
+            } else {
+                toolbar.setTitle("Amici (" + list.size() + ")");
+                no_friends_label.setVisibility(View.GONE);
+
+                collection = new HashMap<>();
+                resetFetchFriendsCount();
+
+                for (Friendship f : list) {
+                    String id = f.getId1() == currentUser.getUID() ?
+                            f.getId2() : f.getId1();
+
+                    UserRepository.getInstance().fetchUserById(id, object1 -> {
+                        collection.put(f, (User) object1);
+
+                        incrementFetchFriendsCount();
+                        if (getFetchFriendsCount() == list.size()) {
+                            adapter.refreshList(collection);
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override
