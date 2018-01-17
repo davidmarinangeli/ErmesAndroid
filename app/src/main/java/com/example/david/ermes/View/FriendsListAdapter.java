@@ -104,6 +104,18 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             friendImage = itemView.findViewById(R.id.friend_image);
 
             this.itemView = itemView;
+            this.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent accountActivity = new Intent(context, AccountActivity.class);
+
+                    Bundle extras = new Bundle();
+                    extras.putParcelable("user", friendsList.get(getAdapterPosition()));
+
+                    accountActivity.putExtras(extras);
+                    context.startActivity(accountActivity);
+                }
+            });
         }
 
         public void bind(int position) {
@@ -123,16 +135,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             friendInfo.setText(String.valueOf(age) + " anni | " +
                     sport);
             friendshipDate.setText("Amici dal " + TimeUtils.fromMillistoYearMonthDay(date));
-
-            this.itemView.setOnClickListener(view -> {
-                Intent accountActivity = new Intent(context, AccountActivity.class);
-
-                Bundle extras = new Bundle();
-                extras.putParcelable("user", friend);
-
-                accountActivity.putExtras(extras);
-                context.startActivity(accountActivity);
-            });
         }
     }
 }
