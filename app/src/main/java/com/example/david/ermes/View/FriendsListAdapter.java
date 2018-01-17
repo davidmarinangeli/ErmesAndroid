@@ -104,17 +104,14 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             friendImage = itemView.findViewById(R.id.friend_image);
 
             this.itemView = itemView;
-            this.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent accountActivity = new Intent(context, AccountActivity.class);
+            this.itemView.setOnClickListener(view -> {
+                Intent accountActivity = new Intent(context, AccountActivity.class);
 
-                    Bundle extras = new Bundle();
-                    extras.putParcelable("user", friendsList.get(getAdapterPosition()));
+                Bundle extras = new Bundle();
+                extras.putParcelable("user", friendsList.get(getAdapterPosition()));
 
-                    accountActivity.putExtras(extras);
-                    context.startActivity(accountActivity);
-                }
+                accountActivity.putExtras(extras);
+                context.startActivity(accountActivity);
             });
         }
 
