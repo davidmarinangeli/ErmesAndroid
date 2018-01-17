@@ -2,6 +2,7 @@ package com.example.david.ermes.View.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -11,7 +12,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.MissingStuffElement;
@@ -32,6 +32,15 @@ import java.util.Calendar;
  */
 
 public class EventFragment extends Fragment {
+
+    private final String CREATOR = "CREATOR",
+        NOT_PARTECIPANT = "NOT_PARTECIPANT",
+        PUBLIC_PARTECIPANT = "PUBLIC_PARTECIPANT",
+        PRIVATE_PARTECIPANT = "PRIVATE_PARTECIPANT",
+        PUBLIC_GUEST = "PUBLIC_GUEST",
+        PRIVATE_GUEST = "PRIVATE_GUEST",
+        UNAVAILABLE = "UNAVAILABLE";
+    private String userCase;
 
     private TextView sportname;
     private TextView dateofevent;
@@ -60,6 +69,32 @@ public class EventFragment extends Fragment {
         Bundle args = getArguments();
         match = args.getParcelable("event");
 
+        manageUserCase();
+
+    }
+
+    private void manageUserCase() {
+        if (match.getIdOwner().equals(User.getCurrentUserId())) {
+            userCase = CREATOR;
+        } else if (!match.isPublic()) {
+            if (match.getPartecipants().contains(User.getCurrentUserId())) {
+                userCase = PRIVATE_PARTECIPANT;
+            } else if (match.getPending().contains(User.getCurrentUserId())) {
+                userCase = PRIVATE_GUEST;
+            } else {
+                userCase = UNAVAILABLE;
+            }
+        } else {
+            if (match.getPartecipants().contains(User.getCurrentUserId())) {
+                userCase = PUBLIC_PARTECIPANT;
+            } else if (match.getPending().contains(User.getCurrentUserId())) {
+                userCase = PUBLIC_GUEST;
+            } else if (User.getCurrentUserId() != null) {
+                userCase = NOT_PARTECIPANT;
+            } else {
+                userCase = UNAVAILABLE;
+            }
+        }
     }
 
     @Override
@@ -120,14 +155,7 @@ public class EventFragment extends Fragment {
 
 
         // ** GESTIONE VISBILITA' OGGETTI IN BASE ALL'ACCOUNT LOGGATO **
-        if (User.getCurrentUserId() != null) {
-            if (User.getCurrentUserId().equals(match.getIdOwner())) {
-                join.setVisibility(View.GONE);
-            } else {
-                delete_match.setVisibility(View.GONE);
-            }
-        }
-
+        manageItemsByUserCase();
 
         if (!areAllMissingItemsChecked()) {
             ArrayList<String> missing_items_instring = new ArrayList<>();
@@ -153,12 +181,93 @@ public class EventFragment extends Fragment {
                 })
                 .show());
 
+
+        join.setOnClickListener( view1 -> {
+            if (userCase.equals(PRIVATE_PARTECIPANT) ||
+                    userCase.equals(PUBLIC_PARTECIPANT)) {
+                new MaterialDialog.Builder(this.getContext())
+                        .title("Sei sicuro di voler abbandonare la partita?")
+                        .negativeText("No")
+                        .negativeColor(getResources().getColor(R.color.red))
+                        .onNegative((dialog, which) -> dialog.dismiss())
+                        .positiveText("Si")
+                        .onPositive((dialog, which) -> {
+                            match.removePartecipant(User.getCurrentUserId());
+                            match.save(object -> {
+                                updateUI();
+
+                                Snackbar.make(view, "Hai abbandonato questa partita.",
+                                        Snackbar.LENGTH_SHORT).show();
+                            });
+                        })
+                        .show();
+            } else {
+                match.addPartecipant(User.getCurrentUserId());
+                match.save(object -> {
+                    updateUI();
+
+                    Snackbar.make(view, "Buona partita!", Snackbar.LENGTH_SHORT).show();
+                });
+            }
+        });
+
         // lo so che pare un macello sta stringa, giuro che correggerò le API
         dateofevent.setText(c.get(Calendar.DAY_OF_MONTH) + " " + TimeUtils.fromNumericMonthToString(c.get(Calendar.MONTH)));
         hourofevent.setText(TimeUtils.getFormattedHourMinute(c));
         participant.setText(String.valueOf(match.getPartecipants().size()));
         pending.setText(String.valueOf(match.getPending().size()));
         freeslots.setText(String.valueOf(match.getMaxPlayers() - match.getPartecipants().size()));
+    }
+
+    private void updateLabels() {
+        participant.setText(String.valueOf(match.getPartecipants().size()));
+        freeslots.setText(String.valueOf(match.getMaxPlayers() - match.getPending().size()
+                - match.getPartecipants().size()));
+        pending.setText(String.valueOf(match.getPending().size()));
+    }
+
+    private void manageItemsByUserCase() {
+        switch(userCase) {
+            case CREATOR:
+                join.setVisibility(View.GONE);
+                invite.setVisibility(View.VISIBLE);
+                break;
+            case PRIVATE_PARTECIPANT:
+                join.setVisibility(View.VISIBLE);
+                join.setText(R.string.rimuovi);
+                invite.setVisibility(View.GONE);
+                break;
+            case PRIVATE_GUEST:
+                join.setVisibility(View.VISIBLE);
+                join.setText(R.string.partecipa);
+                invite.setVisibility(View.GONE);
+                break;
+            case PUBLIC_PARTECIPANT:
+                join.setVisibility(View.VISIBLE);
+                join.setText(R.string.rimuovi);
+                invite.setVisibility(View.VISIBLE);
+                break;
+            case PUBLIC_GUEST:
+                join.setVisibility(View.VISIBLE);
+                join.setText(R.string.partecipa);
+                invite.setVisibility(View.VISIBLE);
+                break;
+            case NOT_PARTECIPANT:
+                join.setVisibility(View.VISIBLE);
+                join.setText(R.string.partecipa);
+                invite.setVisibility(View.VISIBLE);
+                break;
+            case UNAVAILABLE:
+                join.setVisibility(View.GONE);
+                invite.setVisibility(View.GONE);
+                break;
+            default:
+                break;
+        }
+
+        if (!userCase.equals(CREATOR)) {
+            delete_match.setVisibility(View.GONE);
+        }
     }
 
     private boolean areAllMissingItemsChecked() {
@@ -170,6 +279,12 @@ public class EventFragment extends Fragment {
 
         }
         return ischecked;
+    }
+
+    private void updateUI() {
+        manageUserCase();
+        updateLabels();
+        manageItemsByUserCase();
     }
 
     public void showMultiChoice(final ArrayList<String> got_missing_item_list, ArrayList<String> missing_items_instring) {

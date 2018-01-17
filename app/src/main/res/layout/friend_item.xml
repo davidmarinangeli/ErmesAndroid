@@ -7,27 +7,27 @@
     android:layout_height="match_parent">
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/checkBox_friend"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/friend_name"
+        app:layout_constraintBottom_toBottomOf="@+id/friend_name_invitation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/friend_name" />
+        app:layout_constraintTop_toTopOf="@+id/friend_name_invitation" />
 
     <TextView
-        android:id="@+id/friend_name"
+        android:id="@+id/friend_name_invitation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
-        app:layout_constraintStart_toEndOf="@+id/circleImageView"
-        app:layout_constraintTop_toTopOf="@+id/circleImageView"
+        app:layout_constraintBottom_toBottomOf="@+id/friend_image_invitation"
+        app:layout_constraintStart_toEndOf="@+id/friend_image_invitation"
+        app:layout_constraintTop_toTopOf="@+id/friend_image_invitation"
         tools:text="Giovanni Mucciaccia" />
 
-    <android.support.v4.widget.CircleImageView
-        android:id="@+id/circleImageView"
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/friend_image_invitation"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"

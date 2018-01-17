@@ -70,7 +70,12 @@ public class MyMatchesActivity extends AppCompatActivity {
 
                             if (matches != null) {
                                 no_matches_label.setVisibility(View.GONE);
-                                toolbar.setTitle("Partite giocate (" + matches.size() + ")");
+
+                                if (matches.size() == 1) {
+                                    toolbar.setTitle(matches.size() + " partita giocata");
+                                } else {
+                                    toolbar.setTitle(matches.size() + " partite giocate");
+                                }
 
                                 adapter.refreshList(matches);
                             } else {

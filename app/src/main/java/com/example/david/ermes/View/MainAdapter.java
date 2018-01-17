@@ -66,7 +66,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         public MainViewHolder(final View itemView) {
             super(itemView);
 
-
             // qui setto il costruttore del viewholder
 
             date_of_event = itemView.findViewById(R.id.date_of_event);

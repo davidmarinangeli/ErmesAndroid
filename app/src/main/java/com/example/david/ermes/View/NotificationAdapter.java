@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +34,7 @@ import com.example.david.ermes.Presenter.utils.TimeUtils;
 
 import static com.example.david.ermes.Model.models.NotificationType.*;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -43,6 +45,8 @@ import java.util.List;
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder> {
 
     private List<Notification> notifications;
+    private List<Match> matches;
+    private List<User> users;
     private Context context;
 
     public NotificationAdapter(Context context) {
@@ -72,6 +76,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public void refreshList(List<Notification> notifications) {
         this.notifications = notifications;
+
+        this.matches = new ArrayList<>();
+        this.users = new ArrayList<>();
+        for (int i = 0; i < notifications.size(); i++) {
+            this.matches.add(null);
+            this.users.add(null);
+        }
 
         notifyDataSetChanged();
     }
@@ -107,6 +118,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             mDialog.setCancelable(false);
 
             item = itemView;
+
+            item.setOnClickListener(itemListener);
+            left_button.setOnClickListener(leftButtonListener);
+            right_button.setOnClickListener(rightButtonListener);
         }
 
         public void bind(int position) {
@@ -155,17 +170,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         date.append("\n\nHai già risposto a questo invito.");
                     }
 
-
-                    setButtonsListenersMatchInviteUser(notification, null);
-                    MatchRepository.getInstance().fetchMatchById(notification.getIdMatch(),
-                            new FirebaseCallback() {
-                                @Override
-                                public void callback(Object object) {
-                                    mDialog.dismiss();
-
-                                    setButtonsListenersMatchInviteUser(notification, (Match) object);
-                                }
-                            });
                     break;
                 case FRIENDSHIP_REQUEST:
                     // buttons style
@@ -185,26 +189,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         date.append("\n\nHai già risposto a questa richiesta.");
                     }
 
-                    setButtonsListenersFriendshipRequest(notification, null);
-                    UserRepository.getInstance().fetchUserById(notification.getIdCreator(),
-                            new FirebaseCallback() {
-                                @Override
-                                public void callback(Object object) {
-                                    setButtonsListenersFriendshipRequest(notification, (User) object);
-                                }
-                            });
                     break;
                 case FRIENDSHIP_ACCEPTED:
                     icon.setImageResource(R.drawable.ic_group_black_40dp);
-
-                    setItemListenerFriendshipAccepted(notification, null);
-                    UserRepository.getInstance().fetchUserById(notification.getIdCreator(),
-                            new FirebaseCallback() {
-                                @Override
-                                public void callback(Object object) {
-                                    setItemListenerFriendshipAccepted(notification, (User) object);
-                                }
-                            });
 
                     setButtonsVisible(View.GONE);
                     break;
@@ -215,219 +202,275 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }
         }
 
-        private void setButtonsListenersMatchInviteUser(Notification notification, Match match) {
-            item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        private View.OnClickListener itemListener = view -> {
+            int position = getAdapterPosition();
+
+            switch (notifications.get(position).getType()) {
+                case MATCH_INVITE_USER:
+                    item.setActivated(false);
                     mDialog.show();
+
+                    if (matches.get(position) != null) {
+                        startMatchActivity(position);
+                    } else {
+                        fetchMatch(notifications.get(position).getIdMatch(), position, object -> {
+                            mDialog.dismiss();
+                            item.setActivated(true);
+
+                            if (object != null) {
+                                startMatchActivity(position);
+                            } else {
+                                Snackbar.make(item, "Qualcosa è andato storto!",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    break;
+                case FRIENDSHIP_REQUEST:
+                    item.setActivated(false);
+                    mDialog.show();
+
+                    if (users.get(position) != null) {
+                        startUserActivity(position);
+                    } else {
+                        fetchUser(notifications.get(position).getIdCreator(), position, object -> {
+                            mDialog.dismiss();
+                            item.setActivated(true);
+
+                            if (object != null) {
+                                startUserActivity(position);
+                            } else {
+                                Snackbar.make(item, "Qualcosa è andato storto!",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    break;
+                case FRIENDSHIP_ACCEPTED:
+                    mDialog.show();
+                    item.setActivated(false);
+
+                    if (users.get(position) != null) {
+                        readFriendshipAccepted(position);
+                    } else {
+                        fetchUser(notifications.get(position).getIdCreator(), position, object -> {
+                            if (object != null) {
+                                readFriendshipAccepted(position);
+                            } else {
+                                Snackbar.make(item, "Qualcosa è andato storto!",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    break;
+            }
+        };
+
+        private View.OnClickListener leftButtonListener = view -> {
+            int position = getAdapterPosition();
+
+            switch (notifications.get(position).getType()) {
+                case MATCH_INVITE_USER:
+                    item.setActivated(false);
+                    Match match = matches.get(position);
 
                     if (match != null) {
-                        Intent i = new Intent(context, EventActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("event", match);
-                        i.putExtras(bundle);
-                        context.startActivity(i);
-
+                        acceptMatchInvitation(position);
                     } else {
-                        Toast.makeText(context, "Attendi...",
-                                Toast.LENGTH_SHORT).show();
+                        fetchMatch(notifications.get(position).getIdMatch(), position, object -> {
+                            item.setActivated(true);
+
+                            if (object != null) {
+                                acceptMatchInvitation(position);
+                            } else {
+                                Snackbar.make(item, "Qualcosa è andato storto!",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
-                }
-            });
+                    break;
+                case FRIENDSHIP_REQUEST:
+                    mDialog.show();
+                    item.setActivated(false);
 
-            left_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    itemView.setActivated(false);
+                    acceptFriendship(position);
+                    break;
+                default:
+                    break;
+            }
+        };
 
+        private View.OnClickListener rightButtonListener = view -> {
+            int position = getAdapterPosition();
+
+            switch (notifications.get(position).getType()) {
+                case MATCH_INVITE_USER:
+                    item.setActivated(false);
                     mDialog.show();
 
-                    resetMatchInviteUserToken();
+                    if (matches.get(position) != null && User.getCurrentUserId() != null) {
+                        declineMatchInvitation(position);
+                    } else {
+                        fetchMatch(notifications.get(position).getIdMatch(), position, object -> {
+                            item.setActivated(true);
 
-                    if (match != null && User.getCurrentUserId() != null) {
-
-                        if (match.getPending().contains(User.getCurrentUserId())) {
-                            match.addPartecipant(User.getCurrentUserId());
-                            match.save(new FirebaseCallback() {
-                                @Override
-                                public void callback(Object object) {
-                                    incrementMatchInviteUserToken();
-
-                                    if (getMatchInviteUserToken() == MAX_TOKEN) {
-                                        itemView.setActivated(true);
-                                        mDialog.dismiss();
-                                        notifyDataSetChanged();
-                                    }
-                                }
-                            });
-                        } else {
-                            incrementMatchInviteUserToken();
-
-                            Toast.makeText(context, "Non sei più invitato a " +
-                                            "questa partita!",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                        notification.setRead(true);
-                        notification.save(new FirebaseCallback() {
-                            @Override
-                            public void callback(Object object) {
-                                incrementMatchInviteUserToken();
-
-                                if (getMatchInviteUserToken() == MAX_TOKEN) {
-                                    itemView.setActivated(true);
-                                    mDialog.dismiss();
-                                    notifyDataSetChanged();
-                                }
+                            if (object != null) {
+                                declineMatchInvitation(position);
+                            } else {
+                                Snackbar.make(item, "Qualcosa è andato storto!",
+                                        Toast.LENGTH_SHORT).show();
                             }
                         });
-
-                    } else {
-                        Toast.makeText(context, "Qualcosa è andato storto",
-                                Toast.LENGTH_SHORT).show();
                     }
-                }
-            });
-
-            right_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    itemView.setActivated(false);
-
+                    break;
+                case FRIENDSHIP_REQUEST:
                     mDialog.show();
+                    item.setActivated(false);
 
-                    resetMatchInviteUserToken();
+                    declineFriendShip(position);
+                    break;
+                default:
+                    break;
+            }
+        };
 
-                    if (match != null && User.getCurrentUserId() != null) {
-                        match.removePending(User.getCurrentUserId());
+        private void fetchMatch(String id, int position, FirebaseCallback firebaseCallback) {
+            MatchRepository.getInstance().fetchMatchById(id, object -> {
+                matches.set(position, (Match) object);
 
-                        match.save(new FirebaseCallback() {
-                            @Override
-                            public void callback(Object object) {
-                                incrementMatchInviteUserToken();
-
-                                if (getMatchInviteUserToken() == MAX_TOKEN) {
-                                    itemView.setActivated(true);
-                                    mDialog.dismiss();
-                                    notifyDataSetChanged();
-                                }
-                            }
-                        });
-
-                        notification.setRead(true);
-                        notification.save(new FirebaseCallback() {
-                            @Override
-                            public void callback(Object object) {
-                                incrementMatchInviteUserToken();
-
-                                if (getMatchInviteUserToken() == MAX_TOKEN) {
-                                    itemView.setActivated(true);
-                                    mDialog.dismiss();
-                                    notifyDataSetChanged();
-                                }
-                            }
-                        });
-
-                    } else {
-                        Toast.makeText(context, "Qualcosa è andato storto",
-                                Toast.LENGTH_SHORT).show();
-                    }
+                if (firebaseCallback != null) {
+                    firebaseCallback.callback(object);
                 }
             });
         }
 
-        private void setButtonsListenersFriendshipRequest(Notification notification, User user) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (user != null) {
-                        Intent accountActivity = new Intent(context, AccountActivity.class);
+        private void startMatchActivity(int position) {
+            mDialog.dismiss();
+            item.setActivated(true);
+            Intent i = new Intent(context, EventActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("event", matches.get(position));
+            i.putExtras(bundle);
+            context.startActivity(i);
+        }
 
-                        Bundle extras = new Bundle();
-                        extras.putParcelable("user", user);
+        private void acceptMatchInvitation(int position) {
+            Match match = matches.get(position);
+            Notification notification = notifications.get(position);
+            resetMatchInviteUserToken();
 
-                        accountActivity.putExtras(extras);
-                        context.startActivity(accountActivity);
-                    } else {
-                        Toast.makeText(context, "Attendi...",
-                                Toast.LENGTH_SHORT).show();
-                    }
+            match.addPartecipant(User.getCurrentUserId());
+            match.save(object -> {
+                incrementMatchInviteUserToken();
+
+                if (getMatchInviteUserToken() == MAX_TOKEN) {
+                    itemView.setActivated(true);
+                    mDialog.dismiss();
+                    notifyDataSetChanged();
                 }
             });
 
-            left_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // save friendship
-                    itemView.setActivated(false);
+            notification.setRead(true);
+            notification.save(object -> {
+                incrementMatchInviteUserToken();
 
-                    new Friendship(notification.getIdCreator(), notification.getIdOwner(),
-                            System.currentTimeMillis()).save(new FirebaseCallback() {
-                        @Override
-                        public void callback(Object object) {
-                            notification.setRead(true);
-                            notification.save(new FirebaseCallback() {
-                                @Override
-                                public void callback(Object object) {
-                                    Notification.createFriendshipAccepted(
-                                            notification.getIdCreator()).save(
-                                            new FirebaseCallback() {
-                                                @Override
-                                                public void callback(Object object) {
-                                                    itemView.setActivated(true);
-                                                    notifyDataSetChanged();
-                                                }
-                                            }
-                                    );
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-
-            right_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    itemView.setActivated(false);
-
-                    notification.setRead(true);
-                    notification.save(new FirebaseCallback() {
-                        @Override
-                        public void callback(Object object) {
-                            itemView.setActivated(true);
-                            notifyDataSetChanged();
-                        }
-                    });
+                if (getMatchInviteUserToken() == MAX_TOKEN) {
+                    itemView.setActivated(true);
+                    mDialog.dismiss();
+                    notifyDataSetChanged();
                 }
             });
         }
 
-        private void setItemListenerFriendshipAccepted(Notification notification, User user) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (user != null) {
-                        notification.setRead(true);
-                        notification.save(new FirebaseCallback() {
-                            @Override
-                            public void callback(Object object) {
-                                notifyDataSetChanged();
+        private void declineMatchInvitation(int position) {
+            Match match = matches.get(position);
+            Notification notification = notifications.get(position);
 
-                                Intent accountActivity = new Intent(context, AccountActivity.class);
+            match.removePending(User.getCurrentUserId());
+            resetMatchInviteUserToken();
 
-                                Bundle extras = new Bundle();
-                                extras.putParcelable("user", user);
+            match.save(object -> {
+                incrementMatchInviteUserToken();
 
-                                accountActivity.putExtras(extras);
-                                context.startActivity(accountActivity);
-                            }
-                        });
-                    } else {
-                        Toast.makeText(context, "Attendi...",
-                                Toast.LENGTH_SHORT).show();
-                    }
+                if (getMatchInviteUserToken() == MAX_TOKEN) {
+                    itemView.setActivated(true);
+                    mDialog.dismiss();
+                    notifyDataSetChanged();
                 }
+            });
+
+            notification.setRead(true);
+            notification.save(object -> {
+                incrementMatchInviteUserToken();
+
+                if (getMatchInviteUserToken() == MAX_TOKEN) {
+                    itemView.setActivated(true);
+                    mDialog.dismiss();
+                    notifyDataSetChanged();
+                }
+            });
+        }
+
+        private void fetchUser(String id, int position, FirebaseCallback firebaseCallback) {
+            UserRepository.getInstance().fetchUserById(id, object -> {
+                users.set(position, (User) object);
+
+                if (firebaseCallback != null) {
+                    firebaseCallback.callback(object);
+                }
+            });
+        }
+
+        private void startUserActivity(int position) {
+            mDialog.dismiss();
+            item.setActivated(true);
+            Intent accountActivity = new Intent(context, AccountActivity.class);
+            Bundle extras = new Bundle();
+            extras.putParcelable("user", users.get(position));
+            accountActivity.putExtras(extras);
+            context.startActivity(accountActivity);
+        }
+
+        private void acceptFriendship(int position) {
+            Notification notification = notifications.get(position);
+
+            new Friendship(notification.getIdCreator(), notification.getIdOwner(),
+                    System.currentTimeMillis()).save(object -> {
+                        notification.setRead(true);
+                        notification.save(object1 -> Notification.createFriendshipAccepted(
+                                notification.getIdCreator()).save(
+                                object11 -> {
+                                    mDialog.dismiss();
+                                    item.setActivated(true);
+                                    notifyDataSetChanged();
+                                }
+                        ));
+                    });
+        }
+
+        private void declineFriendShip(int position) {
+            Notification notification = notifications.get(position);
+
+            notification.setRead(true);
+            notification.save(new FirebaseCallback() {
+                @Override
+                public void callback(Object object) {
+                    mDialog.dismiss();
+                    item.setActivated(true);
+
+                    notifyDataSetChanged();
+                }
+            });
+        }
+
+        private void readFriendshipAccepted(int position) {
+            notifications.get(position).setRead(true);
+            notifications.get(position).save(object -> {
+                mDialog.dismiss();
+                item.setActivated(true);
+                notifyDataSetChanged();
+
+                startUserActivity(position);
             });
         }
 

@@ -1,6 +1,5 @@
 package com.example.david.ermes.View.activities;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -16,9 +15,8 @@ import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.FriendshipRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
-import com.example.david.ermes.View.FriendsAdapter;
+import com.example.david.ermes.View.FriendsListAdapter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +28,7 @@ import java.util.Map;
 public class FriendsActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private FriendsAdapter adapter;
+    private FriendsListAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private TextView no_friends_label;
@@ -58,7 +56,7 @@ public class FriendsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
-        adapter = new FriendsAdapter(this);
+        adapter = new FriendsListAdapter(this);
         layoutManager = new LinearLayoutManager(this);
         no_friends_label = findViewById(R.id.no_friends_label);
         no_friends_label.setVisibility(View.GONE);
