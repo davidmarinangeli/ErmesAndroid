@@ -87,41 +87,35 @@ public class FriendsActivity extends AppCompatActivity {
             toolbar.setSubtitle(currentUser.getName());
 
             FriendshipRepository.getInstance().fetchFriendshipsByUserId(currentUser.getUID(),
-                    new FirebaseCallback() {
-                        @Override
-                        public void callback(Object object) {
-                            List<Friendship> list = (List<Friendship>) object;
+                    object -> {
+                        List<Friendship> list = (List<Friendship>) object;
 
-                            if (list == null || list.isEmpty()) {
-                                adapter.refreshList(null);
+                        if (list == null || list.isEmpty()) {
+                            adapter.refreshList(null);
 
-                                no_friends_label.setText("Nessun amico");
-                                no_friends_label.setVisibility(View.VISIBLE);
-                            } else {
-                                toolbar.setTitle("Amici (" + list.size() + ")");
-                                no_friends_label.setVisibility(View.GONE);
+                            no_friends_label.setText(R.string.no_friends);
+                            no_friends_label.setVisibility(View.VISIBLE);
+                        } else {
+                            toolbar.setTitle("Amici (" + list.size() + ")");
+                            no_friends_label.setVisibility(View.GONE);
 
-                                Map<Friendship, User> collection = new HashMap<>();
-                                resetFetchFriendsCount();
+                            Map<Friendship, User> collection = new HashMap<>();
+                            resetFetchFriendsCount();
 
-                                for (Friendship f : list) {
-                                    String id = f.getId1() == currentUser.getUID() ?
-                                            f.getId2() : f.getId1();
+                            for (Friendship f : list) {
+                                String id = f.getId1().equals(currentUser.getUID()) ?
+                                        f.getId2() : f.getId1();
 
-                                    UserRepository.getInstance().fetchUserById(id,
-                                            new FirebaseCallback() {
-                                                @Override
-                                                public void callback(Object object) {
-                                                    collection.put(f, (User) object);
-                                                    adapter.refreshList(collection);
+                                UserRepository.getInstance().fetchUserById(id,
+                                        object1 -> {
+                                            collection.put(f, (User) object1);
+                                            adapter.refreshList(collection);
 
-                                                    incrementFetchFriendsCount();
-                                                    if (getFetchFriendsCount() == list.size()) {
-                                                        // TODO fine fetch amici
-                                                    }
-                                                }
-                                            });
-                                }
+                                            incrementFetchFriendsCount();
+                                            if (getFetchFriendsCount() == list.size()) {
+                                                // TODO fine fetch amici
+                                            }
+                                        });
                             }
                         }
                     });

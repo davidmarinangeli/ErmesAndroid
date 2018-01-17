@@ -24,17 +24,14 @@ public class FriendshipRepository {
 
     public void fetchFriendshipsByUserId(String id, final FirebaseCallback firebaseCallback) {
         FriendshipDatabaseRepository.getInstance().fetchListById(id,
-                new FirebaseCallback() {
-                    @Override
-                    public void callback(Object object) {
-                        List<Friendship> list = null;
+                object -> {
+                    List<Friendship> list = null;
 
-                        if (object != null) {
-                            list = _Friendship.convertToFriendshipList((List<_Friendship>) object);
-                        }
-
-                        firebaseCallback.callback(list);
+                    if (object != null) {
+                        list = _Friendship.convertToFriendshipList((List<_Friendship>) object);
                     }
+
+                    firebaseCallback.callback(list);
                 });
     }
 }

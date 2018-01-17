@@ -49,29 +49,23 @@ public class MainAdapterViewHolder {
 
         hour_of_event.setText(TimeUtils.getFormattedHourMinute(c));
 
-        LocationRepository.getInstance().fetchLocationById(matchList.get(position).getIdLocation(), new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null) {
-                    Location loc = (Location) object;
+        LocationRepository.getInstance().fetchLocationById(matchList.get(position).getIdLocation(), object -> {
+            if (object != null) {
+                Location loc = (Location) object;
 
-                    place.setText(loc.getName());
-                }
+                place.setText(loc.getName());
             }
         });
 
         final String sport_id = matchList.get(position).getIdSport();
-        SportRepository.getInstance().fetchSportById(sport_id, new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                Sport found = (Sport) object;
-                if (found != null) {
-                    String sport_name = found.getName();
+        SportRepository.getInstance().fetchSportById(sport_id, object -> {
+            Sport found = (Sport) object;
+            if (found != null) {
+                String sport_name = found.getName();
 
-                    Picasso.with(cx)
-                            .load(FetchMatchUtils.setImageToMatch(cx, sport_name))
-                            .memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
-                }
+                Picasso.with(cx)
+                        .load(FetchMatchUtils.setImageToMatch(cx, sport_name))
+                        .memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
             }
         });
 

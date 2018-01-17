@@ -23,7 +23,7 @@ import java.util.List;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
 
-    public List<Match> matchList = new ArrayList<>();
+    private List<Match> matchList = new ArrayList<>();
     private Context context;
 
 

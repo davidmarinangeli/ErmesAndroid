@@ -1,5 +1,6 @@
 package com.example.david.ermes.View.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -23,6 +24,8 @@ import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
+import com.example.david.ermes.View.activities.PickFriendsActivity;
+import com.example.david.ermes.View.activities.PickPlaceActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -168,6 +171,12 @@ public class EventFragment extends Fragment {
         } else {
             missing_stuff_button.setEnabled(false);
         }
+
+        invite.setOnClickListener(view1 -> {
+            Intent invite_friends = new Intent(getContext(), PickFriendsActivity.class);
+            invite_friends.putExtra("maxplayers",match.getMaxPlayers());
+            getContext().startActivity(invite_friends);
+        });
 
         delete_match.setOnClickListener(view1 -> new MaterialDialog.Builder(this.getContext())
                 .title("Sei sicuro di voler eliminare l'evento?")
