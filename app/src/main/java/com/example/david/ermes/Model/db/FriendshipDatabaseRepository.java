@@ -25,11 +25,13 @@ public class FriendshipDatabaseRepository {
         return instance;
     }
 
+
     private static List<_Friendship> results;
 
     private void resetResults() {
         results = new ArrayList<>();
     }
+
 
     private static int fetch_callback_count = 0;
 
@@ -48,6 +50,7 @@ public class FriendshipDatabaseRepository {
     private void resetFetchCallbackCount() {
         fetch_callback_count = 0;
     }
+
 
     private DatabaseReference ref;
 
@@ -74,7 +77,7 @@ public class FriendshipDatabaseRepository {
     private void dispatchResults(DataSnapshot dataSnapshot, FirebaseCallback firebaseCallback) {
         incrementFetchCallbackCount();
 
-        if (dataSnapshot != null) {
+        if (dataSnapshot != null && dataSnapshot.getValue() != null) {
             for (DataSnapshot d : dataSnapshot.getChildren()) {
                 _Friendship f = d.getValue(_Friendship.class);
                 f.setId(d.getKey());
@@ -84,10 +87,12 @@ public class FriendshipDatabaseRepository {
         }
 
         if (getFetchCallbackCount() == 2) {
-            if (results.size() >= 0) {
-                firebaseCallback.callback(results);
-            } else {
-                firebaseCallback.callback(null);
+            if (firebaseCallback != null) {
+                if (results.size() >= 0) {
+                    firebaseCallback.callback(results);
+                } else {
+                    firebaseCallback.callback(null);
+                }
             }
         }
     }
@@ -96,32 +101,36 @@ public class FriendshipDatabaseRepository {
         resetFetchCallbackCount();
         resetResults();
 
-        this.ref.orderByKey().startAt(id + Friendship.SEPARATOR).addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        dispatchResults(dataSnapshot, firebaseCallback);
-                    }
+        this.ref.orderByChild("id1")
+                .equalTo(id)
+                .addValueEventListener(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dispatchResults(dataSnapshot, firebaseCallback);
+                            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        firebaseCallback.callback(null);
-                    }
-                }
-        );
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                dispatchResults(null, firebaseCallback);
+                            }
+                        }
+                );
 
-        this.ref.orderByKey().endAt(Friendship.SEPARATOR + id).addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        dispatchResults(dataSnapshot, firebaseCallback);
-                    }
+        this.ref.orderByChild("id2")
+                .equalTo(id)
+                .addValueEventListener(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                dispatchResults(dataSnapshot, firebaseCallback);
+                            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        firebaseCallback.callback(null);
-                    }
-                }
-        );
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                dispatchResults(null, firebaseCallback);
+                            }
+                        }
+                );
     }
 }
