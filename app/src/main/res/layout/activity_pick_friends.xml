@@ -17,7 +17,20 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <ImageButton
+                android:id="@+id/spunta_done"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                android:layout_margin="4dp"
+                android:background="@null"
+                android:padding="12dp"
+                android:src="@drawable/ic_done_black_24dp"
+                android:tint="@color/white" />
+        </android.support.v7.widget.Toolbar>
+
 
     </android.support.design.widget.AppBarLayout>
 
@@ -30,6 +43,16 @@
         android:text="@string/puoi_invitare_ancora"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+
+    <TextView
+        android:id="@+id/people_players"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/giocatori"
+        app:layout_constraintBottom_toBottomOf="@+id/remaining_invitation"
+        app:layout_constraintStart_toEndOf="@+id/remaining_invitation"
+        app:layout_constraintTop_toTopOf="@+id/remaining_invitation" />
 
 
     <TextView

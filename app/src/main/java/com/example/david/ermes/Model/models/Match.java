@@ -185,7 +185,9 @@ public class Match implements Parcelable {
     }
 
     public void removePartecipant(String id) {
-        this.idsPartecipants.remove(id);
+        if (this.getPartecipants().contains(id)) {
+            this.idsPartecipants.remove(id);
+        }
     }
 
     public void addPending(String id) {
@@ -197,7 +199,9 @@ public class Match implements Parcelable {
     }
 
     public void removePending(String id) {
-        this.pending.remove(id);
+        if (this.pending.contains(id)) {
+            this.pending.remove(id);
+        }
     }
 
     // repository -> in cui inserire i fetchmatch così come tutti i database manager
