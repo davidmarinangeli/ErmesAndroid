@@ -1,12 +1,13 @@
 package com.example.david.ermes.View.fragments;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.MissingStuffElement;
@@ -28,10 +30,13 @@ import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.EventActivity;
 import com.example.david.ermes.View.activities.PickFriendsActivity;
-import com.example.david.ermes.View.activities.PickPlaceActivity;
+import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import static com.example.david.ermes.View.activities.EventActivity.*;
 
 /**
  * Created by David on 16/07/2017.
@@ -56,9 +61,11 @@ public class EventFragment extends Fragment {
     private TextView pending;
     private TextView freeslots;
     private TextView usercreator;
+    private CircularImageView imageCreator;
 
     private Match match;
 
+    private Toolbar toolbar;
     private ImageButton invite;
     private Button join;
     private ImageButton delete_match;
@@ -114,15 +121,21 @@ public class EventFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        toolbar = view.findViewById(R.id.event_toolbar);
+        toolbar.setTitle("");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         sportname = view.findViewById(R.id.sport_name);
         dateofevent = view.findViewById(R.id.when_text_calendar);
         placeofevent = view.findViewById(R.id.where_text);
         hourofevent = view.findViewById(R.id.when_hour_text_hour);
         usercreator = view.findViewById(R.id.userNameText);
+        imageCreator = view.findViewById(R.id.small_circular_user_image);
+
         participant = view.findViewById(R.id.partecipantNumber);
         pending = view.findViewById(R.id.invitedNumber);
         freeslots = view.findViewById(R.id.openSlotNumber);
-
 
         missing_stuff_button = view.findViewById(R.id.missing_stuff_button);
         join = view.findViewById(R.id.buttonPartecipa);
@@ -134,6 +147,7 @@ public class EventFragment extends Fragment {
             if (object != null) {
                 User user = (User) object;
                 usercreator.setText(user.getName());
+                Picasso.with(getContext()).load(user.getPhotoURL()).into(imageCreator);
             } else {
 
             }
@@ -178,7 +192,7 @@ public class EventFragment extends Fragment {
         invite.setOnClickListener(view1 -> {
             Intent invite_friends = new Intent(getContext(), PickFriendsActivity.class);
             invite_friends.putExtra("match",match);
-            getActivity().startActivityForResult(invite_friends, EventActivity.INVITE_FRIEND_CODE);
+            getActivity().startActivityForResult(invite_friends, INVITE_FRIEND_CODE);
         });
 
         delete_match.setOnClickListener(view1 -> new MaterialDialog.Builder(this.getContext())
@@ -279,6 +293,8 @@ public class EventFragment extends Fragment {
 
         if (!userCase.equals(CREATOR)) {
             delete_match.setVisibility(View.GONE);
+        } else {
+            delete_match.setVisibility(View.VISIBLE);
         }
     }
 
