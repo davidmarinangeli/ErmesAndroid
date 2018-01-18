@@ -18,6 +18,12 @@
 
     </style>
 
+    <style name="MorphDialog.Custom.Light" parent="MorphDialog.Base.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="MenuButtonsSmall">
         <item name="fab_size">mini</item>
         <item name="fab_colorNormal">@color/colorPrimary</item>

@@ -102,25 +102,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         sportspinner.setOnItemSelectedListener(new itemSelectedListener());
 
         final ArrayList<String> arraySpinner = new ArrayList<>();
-        SportRepository.getInstance().fetchAll(new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                for (Sport s : (ArrayList<Sport>) object) {
-                    arraySpinner.add(s.getName());
-                }
-                adapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
-                sportspinner.setAdapter(adapter);
-
+        SportRepository.getInstance().fetchAll(object -> {
+            for (Sport s : (ArrayList<Sport>) object) {
+                arraySpinner.add(s.getName());
             }
+            adapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
+            sportspinner.setAdapter(adapter);
+
         });
 
         city_button = findViewById(R.id.textCity);
-        city_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                findPlace();
-            }
-        });
+        city_button.setOnClickListener(view -> findPlace());
 
 //        city_autocomplete.setThreshold(1);
 //        city_autocomplete.setAdapter(city_adapter);
