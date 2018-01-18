@@ -237,11 +237,13 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTabSelected(int position, boolean wasSelected) {
                 if (position == 0) {
                     viewPager.setCurrentItem(position);
+                    toolbar.setVisibility(View.VISIBLE);
                 } else if (position == 1) {
                     viewPager.setCurrentItem(position);
+                    toolbar.setVisibility(View.VISIBLE);
                 } else if (position == 2) {
                     viewPager.setCurrentItem(position);
-
+                    toolbar.setVisibility(View.GONE);
                 }
                 return true;
             }
