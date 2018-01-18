@@ -67,13 +67,16 @@ public class PickFriendsActivity extends AppCompatActivity {
         spunta_done.setOnClickListener(view -> pickFriendsAdapter.saveFriendsList(object -> {
             if (object != null){
                 List<User> invited_friends = (List<User>)object;
-                for (User user : invited_friends){
-                    result_match.addPending(user.getUID());
-                    Notification invitation = Notification.createMatchInvitation(user.getUID(),result_match.getId());
-                    if (invitation != null) {
-                        invitation.save();
-                    } else {
-                        Snackbar.make(view,"Impossibile inviare inviti per la partita",Snackbar.LENGTH_LONG);
+                for (User user : invited_friends) {
+                    if (!result_match.getPartecipants().contains(user.getUID()) &&
+                            !result_match.getPending().contains(user.getUID())) {
+                        result_match.addPending(user.getUID());
+                        Notification invitation = Notification.createMatchInvitation(user.getUID(), result_match.getId());
+                        if (invitation != null) {
+                            invitation.save();
+                        } else {
+                            Snackbar.make(view, "Impossibile inviare inviti per la partita", Snackbar.LENGTH_LONG);
+                        }
                     }
                 }
                 result_match.save(object1 -> {
