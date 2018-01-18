@@ -98,7 +98,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/mappa"
-            android:textColor="@color/button_gray"
+            android:textColor="@color/inactive"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/copertina_sport_image" />
 
