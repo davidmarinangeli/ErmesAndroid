@@ -4,8 +4,11 @@ package com.example.david.ermes.View.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,7 @@ import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
+import com.example.david.ermes.Presenter.utils.StyleUtils;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.FriendsActivity;
@@ -34,9 +38,12 @@ import com.squareup.picasso.Picasso;
  */
 public class AccountFragment extends Fragment {
 
+    private CoordinatorLayout accountLayout;
+
     Button loginbutton;
     Button logoutbutton;
 
+    private Toolbar toolbar;
     private TextView name;
     private TextView age;
     private TextView sport;
@@ -74,6 +81,20 @@ public class AccountFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+//        accountLayout = view.findViewById(R.id.account_main_layout);
+//
+//        CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
+//                CoordinatorLayout.LayoutParams.MATCH_PARENT,
+//                CoordinatorLayout.LayoutParams.MATCH_PARENT
+//        );
+//        params.setMarginStart(StyleUtils.getPixelsByDp(getContext(), -56));
+//        accountLayout.setLayoutParams(params);
+
+        toolbar = view.findViewById(R.id.account_toolbar);
+        toolbar.setTitle("");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         name = view.findViewById(R.id.name_account);
         age = view.findViewById(R.id.age_account);
