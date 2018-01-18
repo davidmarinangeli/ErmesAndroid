@@ -6,207 +6,245 @@
     android:layout_height="match_parent"
     tools:context="com.example.david.ermes.View.activities.EventActivity">
 
-    <ScrollView
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/constraintParent"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/event_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="?attr/colorPrimary"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:theme="@style/ToolBarStyle">
+
+            <ImageButton
+                android:id="@+id/elimina_evento"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="right"
+                android:layout_marginHorizontal="4dp"
+                android:background="@null"
+                android:padding="12dp"
+                android:src="@drawable/ic_delete_black_24dp"
+                android:tint="@color/white" />
+
+            <ImageButton
+                android:id="@+id/buttonInvita"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="right"
+                android:layout_marginHorizontal="4dp"
+                android:background="@null"
+                android:padding="12dp"
+                android:src="@drawable/ic_person_add_black_24dp"
+                android:tint="@color/white" /> 
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintParent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageViewFavSport"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="180dp"
+                android:background="#000000"
+                android:padding="1dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="@+id/constraintParent"
+                app:layout_constraintRight_toRightOf="@+id/constraintParent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/basketball_field" />
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/event_toolbar"
+            <android.support.v7.widget.CardView
+                android:id="@+id/profileCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="2dp"
+                app:layout_constraintEnd_toEndOf="@+id/constraintParent"
+                app:layout_constraintStart_toStartOf="@+id/constraintParent"
+                app:layout_constraintTop_toBottomOf="@+id/imageViewFavSport">
+
+
+                <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="?attr/colorPrimary"
+                    android:layout_height="match_parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"
-                    app:theme="@style/ToolBarStyle" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageView7">
 
-                <ImageView
-                    android:id="@+id/imageViewFavSport"
-                    android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:background="#000000"
-                    android:padding="1dp"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintLeft_toLeftOf="@+id/constraintParent"
-                    app:layout_constraintRight_toRightOf="@+id/constraintParent"
-                    app:layout_constraintTop_toBottomOf="@+id/event_toolbar"
-                    app:srcCompat="@drawable/basketball_field" />
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/profileCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:clickable="true"
-                    app:cardCornerRadius="2dp"
-                    app:cardElevation="2dp"
-                    app:layout_constraintEnd_toEndOf="@+id/constraintParent"
-                    app:layout_constraintStart_toStartOf="@+id/constraintParent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageViewFavSport">
-
-
-                    <android.support.constraint.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:layout_constraintHorizontal_bias="0.0"
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                        android:id="@+id/small_circular_user_image"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:elevation="4dp"
+                        android:src="@drawable/hipster_portait"
+                        app:civ_border_color="@color/colorPrimaryDark"
+                        app:civ_border_width="2dp"
+                        app:civ_shadow="true"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView7">
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                        <com.mikhaellopez.circularimageview.CircularImageView
-                            android:id="@+id/small_circular_user_image"
-                            android:layout_width="45dp"
-                            android:layout_height="45dp"
-                            android:elevation="4dp"
-                            android:src="@drawable/hipster_portait"
-                            app:civ_border_color="@color/colorPrimaryDark"
-                            app:civ_border_width="2dp"
-                            app:civ_shadow="true"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                        android:id="@+id/userNameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="39dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="David Marinangeli"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/small_circular_user_image"
+                        app:layout_constraintLeft_toRightOf="@+id/small_circular_user_image"
+                        app:layout_constraintTop_toTopOf="@+id/small_circular_user_image" />
 
-                        <TextView
-                            android:id="@+id/userNameText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="39dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginTop="8dp"
-                            android:text="David Marinangeli"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="@+id/small_circular_user_image"
-                            app:layout_constraintLeft_toRightOf="@+id/small_circular_user_image"
-                            app:layout_constraintTop_toTopOf="@+id/small_circular_user_image" />
+                </android.support.constraint.ConstraintLayout>
 
-                    </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
 
-                </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/eventDetailCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="2dp"
+                app:layout_constraintEnd_toEndOf="@+id/constraintParent"
+                app:layout_constraintStart_toStartOf="@+id/constraintParent"
+                app:layout_constraintTop_toBottomOf="@+id/profileCard">
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/eventDetailCard"
+                <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:clickable="true"
-                    app:cardCornerRadius="2dp"
-                    app:cardElevation="2dp"
-                    app:layout_constraintEnd_toEndOf="@+id/constraintParent"
-                    app:layout_constraintStart_toStartOf="@+id/constraintParent"
-                    app:layout_constraintTop_toBottomOf="@+id/profileCard">
+                    android:layout_height="wrap_content">
 
-                    <android.support.constraint.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/sport_icon_event"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:tint="@color/colorAccent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/basketball96" />
 
-                        <ImageView
-                            android:id="@+id/sport_icon_event"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:tint="@color/colorAccent"
-                            app:srcCompat="@drawable/basketball96" />
+                    <TextView
+                        android:id="@+id/sport_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/sport_icon_event"
+                        app:layout_constraintStart_toEndOf="@+id/sport_icon_event"
+                        app:layout_constraintTop_toTopOf="@+id/sport_icon_event"
+                        tools:text="Basket" />
 
-                        <TextView
-                            android:id="@+id/sport_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:textSize="18sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/sport_icon_event"
-                            app:layout_constraintStart_toEndOf="@+id/sport_icon_event"
-                            app:layout_constraintTop_toTopOf="@+id/sport_icon_event"
-                            tools:text="Basket" />
+                    <ImageView
+                        android:id="@+id/date_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/sport_icon_event"
+                        app:srcCompat="@drawable/ic_date_range_black_24dp" />
 
-                        <ImageView
-                            android:id="@+id/date_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/sport_icon_event"
-                            app:srcCompat="@drawable/ic_date_range_black_24dp" />
+                    <TextView
+                        android:id="@+id/when_text_calendar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Martedì 18 Giugno"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/date_icon"
+                        app:layout_constraintStart_toEndOf="@+id/date_icon"
+                        app:layout_constraintTop_toTopOf="@+id/date_icon"
+                        app:layout_constraintVertical_bias="1.0" />
 
-                        <TextView
-                            android:id="@+id/when_text_calendar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:text="Martedì 18 Giugno"
-                            android:textSize="18sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/date_icon"
-                            app:layout_constraintStart_toEndOf="@+id/date_icon"
-                            app:layout_constraintTop_toTopOf="@+id/date_icon"
-                            app:layout_constraintVertical_bias="1.0" />
+                    <View
+                        android:id="@+id/line_date"
+                        android:layout_width="1dp"
+                        android:layout_height="22dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@android:color/darker_gray"
+                        app:layout_constraintBottom_toBottomOf="@+id/when_text_calendar"
+                        app:layout_constraintStart_toEndOf="@+id/when_text_calendar"
+                        app:layout_constraintTop_toTopOf="@+id/when_text_calendar" />
 
-                        <View
-                            android:id="@+id/line_date"
-                            android:layout_width="1dp"
-                            android:layout_height="22dp"
-                            android:layout_marginStart="8dp"
-                            android:background="@android:color/darker_gray"
-                            app:layout_constraintBottom_toBottomOf="@+id/when_text_calendar"
-                            app:layout_constraintStart_toEndOf="@+id/when_text_calendar"
-                            app:layout_constraintTop_toTopOf="@+id/when_text_calendar" />
+                    <TextView
+                        android:id="@+id/when_hour_text_hour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/when_text_calendar"
+                        app:layout_constraintStart_toStartOf="@+id/line_date"
+                        app:layout_constraintTop_toTopOf="@+id/when_text_calendar"
+                        app:layout_constraintVertical_bias="0.0"
+                        tools:text="18:00" />
 
-                        <TextView
-                            android:id="@+id/when_hour_text_hour"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:textSize="18sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/when_text_calendar"
-                            app:layout_constraintStart_toStartOf="@+id/line_date"
-                            app:layout_constraintTop_toTopOf="@+id/when_text_calendar"
-                            app:layout_constraintVertical_bias="0.0"
-                            tools:text="18:00" />
+                    <ImageView
+                        android:id="@+id/place_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/date_icon"
+                        app:srcCompat="@drawable/ic_place_black_24dp" />
 
-                        <ImageView
-                            android:id="@+id/place_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/date_icon"
-                            app:srcCompat="@drawable/ic_place_black_24dp" />
+                    <TextView
+                        android:id="@+id/where_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/place_icon"
+                        app:layout_constraintStart_toEndOf="@+id/place_icon"
+                        app:layout_constraintTop_toTopOf="@+id/place_icon"
+                        app:layout_constraintVertical_bias="1.0"
+                        tools:text="Parco delle albere" />
 
-                        <TextView
-                            android:id="@+id/where_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:textSize="18sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/place_icon"
-                            app:layout_constraintStart_toEndOf="@+id/place_icon"
-                            app:layout_constraintTop_toTopOf="@+id/place_icon"
-                            app:layout_constraintVertical_bias="1.0"
-                            tools:text="Parco delle albere" />
-
-                      <!--  <ImageView
+                    <!--  <ImageView
                             android:id="@+id/money_icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -230,197 +268,177 @@
                             app:layout_constraintTop_toTopOf="@+id/money_icon"
                             app:layout_constraintVertical_bias="1.0" /> -->
 
-                    </android.support.constraint.ConstraintLayout>
+                </android.support.constraint.ConstraintLayout>
 
-                </android.support.v7.widget.CardView>
+            </android.support.v7.widget.CardView>
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/eventUsersCard"
+            <android.support.v7.widget.CardView
+                android:id="@+id/eventUsersCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="2dp"
+                app:layout_constraintEnd_toEndOf="@+id/constraintParent"
+                app:layout_constraintStart_toStartOf="@+id/constraintParent"
+                app:layout_constraintTop_toBottomOf="@+id/eventDetailCard">
+
+                <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:cardCornerRadius="2dp"
-                    app:cardElevation="2dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    app:layout_constraintEnd_toEndOf="@+id/constraintParent"
-                    app:layout_constraintStart_toStartOf="@+id/constraintParent"
-                    app:layout_constraintTop_toBottomOf="@+id/eventDetailCard">
-
-                    <android.support.constraint.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    android:layout_height="wrap_content">
 
 
-                        <TextView
-                            android:id="@+id/invitedNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:textColor="@android:color/darker_gray"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toTopOf="@+id/invited"
-                            app:layout_constraintEnd_toEndOf="@+id/invited"
-                            app:layout_constraintStart_toStartOf="@+id/invited"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:text="8" />
+                    <TextView
+                        android:id="@+id/invitedNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/invited"
+                        app:layout_constraintEnd_toEndOf="@+id/invited"
+                        app:layout_constraintStart_toStartOf="@+id/invited"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="8" />
 
-                        <TextView
-                            android:id="@+id/invited"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:textSize="16sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/line_left_invited"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:text="Invitati" />
-
-
-                        <View
-                            android:id="@+id/line_left_invited"
-                            android:layout_width="1dp"
-                            android:layout_height="0dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:background="@android:color/darker_gray"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/line_right_invited"
-                            app:layout_constraintHorizontal_bias="0.46"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0" />
-
-                        <View
-                            android:id="@+id/line_right_invited"
-                            android:layout_width="1dp"
-                            android:layout_height="0dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:background="@android:color/darker_gray"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.64"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0" />
-
-                        <TextView
-                            android:id="@+id/partecipantNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/colorPrimary"
-                            app:layout_constraintBottom_toTopOf="@+id/partecipant"
-                            app:layout_constraintEnd_toEndOf="@+id/partecipant"
-                            app:layout_constraintStart_toStartOf="@+id/partecipant"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:text="4" />
-
-                        <TextView
-                            android:id="@+id/partecipant"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:textSize="16sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/line_right_invited"
-                            app:layout_constraintStart_toEndOf="@+id/line_left_invited"
-                            android:text="Partecipanti" />
-
-                        <TextView
-                            android:id="@+id/openSlotNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:textColor="@color/black"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toTopOf="@+id/openSlot"
-                            app:layout_constraintEnd_toEndOf="@+id/openSlot"
-                            app:layout_constraintStart_toStartOf="@+id/openSlot"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:text="10" />
-
-                        <TextView
-                            android:id="@+id/openSlot"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:textSize="16sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.45"
-                            app:layout_constraintStart_toEndOf="@+id/line_right_invited"
-                            android:text="Posti liberi" />
+                    <TextView
+                        android:id="@+id/invited"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:text="Invitati"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/line_left_invited"
+                        app:layout_constraintStart_toStartOf="parent" />
 
 
-                    </android.support.constraint.ConstraintLayout>
+                    <View
+                        android:id="@+id/line_left_invited"
+                        android:layout_width="1dp"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@android:color/darker_gray"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/line_right_invited"
+                        app:layout_constraintHorizontal_bias="0.46"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
 
-                </android.support.v7.widget.CardView>
+                    <View
+                        android:id="@+id/line_right_invited"
+                        android:layout_width="1dp"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@android:color/darker_gray"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.64"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
 
-                <Button
-                    android:id="@+id/buttonPartecipa"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Partecipa"
-                    app:layout_constraintStart_toStartOf="@+id/constraintParent"
-                    app:layout_constraintTop_toBottomOf="@+id/eventUsersCard" />
+                    <TextView
+                        android:id="@+id/partecipantNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/partecipant"
+                        app:layout_constraintEnd_toEndOf="@+id/partecipant"
+                        app:layout_constraintStart_toStartOf="@+id/partecipant"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="4" />
 
-                <Button
-                    android:id="@+id/elimina_evento"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/elimina_evento"
-                    app:layout_constraintEnd_toEndOf="@+id/constraintParent"
-                    app:layout_constraintTop_toBottomOf="@+id/eventUsersCard" />
+                    <TextView
+                        android:id="@+id/partecipant"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:text="Partecipanti"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/line_right_invited"
+                        app:layout_constraintStart_toEndOf="@+id/line_left_invited" />
 
-                <Button
-                    android:id="@+id/buttonInvita"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/invita"
-                    app:layout_constraintEnd_toStartOf="@+id/elimina_evento"
-                    app:layout_constraintStart_toEndOf="@+id/buttonPartecipa"
-                    app:layout_constraintTop_toBottomOf="@+id/eventUsersCard" />
+                    <TextView
+                        android:id="@+id/openSlotNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/openSlot"
+                        app:layout_constraintEnd_toEndOf="@+id/openSlot"
+                        app:layout_constraintStart_toStartOf="@+id/openSlot"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="10" />
 
-                <Button
-                    android:id="@+id/missing_stuff_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/visualizza_oggetti_mancanti"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/buttonInvita" />
+                    <TextView
+                        android:id="@+id/openSlot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:text="Posti liberi"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.45"
+                        app:layout_constraintStart_toEndOf="@+id/line_right_invited" />
 
-            </android.support.constraint.ConstraintLayout>
+
+                </android.support.constraint.ConstraintLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <Button
+                android:id="@+id/buttonPartecipa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Partecipa"
+                app:layout_constraintStart_toStartOf="@+id/constraintParent"
+                app:layout_constraintTop_toBottomOf="@+id/eventUsersCard" />
+
+            <Button
+                android:id="@+id/missing_stuff_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/visualizza_oggetti_mancanti"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/buttonPartecipa"
+                app:layout_constraintTop_toBottomOf="@+id/eventUsersCard" />
+
+        </android.support.constraint.ConstraintLayout>
 
     </ScrollView>
 

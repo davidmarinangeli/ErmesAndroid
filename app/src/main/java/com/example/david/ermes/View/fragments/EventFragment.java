@@ -1,6 +1,7 @@
 package com.example.david.ermes.View.fragments;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -56,9 +58,9 @@ public class EventFragment extends Fragment {
 
     private Match match;
 
-    private Button invite;
+    private ImageButton invite;
     private Button join;
-    private Button delete_match;
+    private ImageButton delete_match;
 
     private Button missing_stuff_button;
 
