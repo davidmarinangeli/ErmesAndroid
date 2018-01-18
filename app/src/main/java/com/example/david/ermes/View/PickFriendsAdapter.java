@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.R;
 
@@ -22,6 +24,7 @@ import java.util.List;
 public class PickFriendsAdapter extends RecyclerView.Adapter<PickFriendsAdapter.PickFriendsViewHolder> {
 
     private List<User> friendship_list = new ArrayList<>();
+    private List<User> invited_friends = new ArrayList<>();
     private Context context;
 
     public PickFriendsAdapter(Context context) {
@@ -56,6 +59,10 @@ public class PickFriendsAdapter extends RecyclerView.Adapter<PickFriendsAdapter.
         return friendship_list.size();
     }
 
+    public void saveFriendsList(FirebaseCallback firebaseCallback) {
+        firebaseCallback.callback(invited_friends);
+    }
+
     public class PickFriendsViewHolder extends RecyclerView.ViewHolder {
 
         CheckBox invite_checkbox;
@@ -68,6 +75,15 @@ public class PickFriendsAdapter extends RecyclerView.Adapter<PickFriendsAdapter.
             friend_image = itemView.findViewById(R.id.friend_image_invitation);
             friend_name = itemView.findViewById(R.id.invite_friend_name);
             invite_checkbox = itemView.findViewById(R.id.checkBox_friend);
+
+            invite_checkbox.setOnClickListener(view -> {
+
+                if (!invite_checkbox.isChecked()){
+                    invited_friends.remove(friendship_list.get(getAdapterPosition()));
+                } else {
+                    invited_friends.add(friendship_list.get(getAdapterPosition()));
+                }
+            });
 
         }
 
