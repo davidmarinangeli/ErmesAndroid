@@ -23,6 +23,7 @@ import com.example.david.ermes.Model.repository.NotificationRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.PickFriendsAdapter;
+import com.example.david.ermes.View.fragments.EventFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,6 @@ public class PickFriendsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("Invita amici");
 
-
         Intent intent = getIntent();
         result_match = intent.getParcelableExtra("match");
 
@@ -63,7 +63,6 @@ public class PickFriendsActivity extends AppCompatActivity {
         friendsrecyclerview.setNestedScrollingEnabled(false);
         friendsrecyclerview.setLayoutManager(linearLayoutManager);
         initList();
-
 
         spunta_done.setOnClickListener(view -> pickFriendsAdapter.saveFriendsList(object -> {
             if (object != null){
@@ -77,9 +76,12 @@ public class PickFriendsActivity extends AppCompatActivity {
                         Snackbar.make(view,"Impossibile inviare inviti per la partita",Snackbar.LENGTH_LONG);
                     }
                 }
-                result_match.save(object1 -> finish());
-
-
+                result_match.save(object1 -> {
+                    Intent save_intent = new Intent();
+                    save_intent.putExtra("new_match", result_match);
+                    setResult(RESULT_OK, save_intent);
+                    finish();
+                });
             }
         }));
 
