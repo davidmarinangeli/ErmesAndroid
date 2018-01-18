@@ -8,21 +8,19 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.FriendshipRepository;
-import com.example.david.ermes.Model.repository.MatchRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.PickFriendsAdapter;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class PickFriendsActivity extends AppCompatActivity {
@@ -33,6 +31,8 @@ public class PickFriendsActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     private TextView no_friends;
     private TextView max_players;
+    private ImageButton spunta_done;
+    private Match result_match;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +42,15 @@ public class PickFriendsActivity extends AppCompatActivity {
         max_players = findViewById(R.id.remaining_invitation);
         no_friends = findViewById(R.id.no_friends);
         toolbar = findViewById(R.id.pick_people_toolbar);
+        spunta_done = findViewById(R.id.spunta_done);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("Invita amici");
 
 
         Intent intent = getIntent();
-
-        String maxplayers_allowed = intent.getExtras().getString("maxplayers");
-        max_players.setText(maxplayers_allowed);
+        result_match = intent.getParcelableExtra("match");
 
         linearLayoutManager = new LinearLayoutManager(this);
         pickFriendsAdapter = new PickFriendsAdapter(this);
@@ -60,6 +60,16 @@ public class PickFriendsActivity extends AppCompatActivity {
         friendsrecyclerview.setLayoutManager(linearLayoutManager);
         initList();
 
+
+        spunta_done.setOnClickListener(view -> pickFriendsAdapter.saveFriendsList(object -> {
+            if (object != null){
+                List<User> invited_friends = (List<User>)object;
+                for (User user : invited_friends){
+                    result_match.addPending(user.getUID());
+                }
+                result_match.save(object1 -> finish());
+            }
+        }));
 
     }
 
