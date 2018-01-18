@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -35,6 +37,7 @@ import com.example.david.ermes.Model.repository.FriendshipRepository;
 import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.NotificationRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
+import com.example.david.ermes.Presenter.utils.StyleUtils;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.View.ViewPagerAdapter;
 import com.example.david.ermes.R;
@@ -233,11 +236,13 @@ public class MainActivity extends AppCompatActivity{
             public boolean onTabSelected(int position, boolean wasSelected) {
                 if (position == 0) {
                     viewPager.setCurrentItem(position);
+                    toolbar.setVisibility(View.VISIBLE);
                 } else if (position == 1) {
                     viewPager.setCurrentItem(position);
+                    toolbar.setVisibility(View.VISIBLE);
                 } else if (position == 2) {
                     viewPager.setCurrentItem(position);
-
+                    toolbar.setVisibility(View.GONE);
                 }
                 return true;
             }

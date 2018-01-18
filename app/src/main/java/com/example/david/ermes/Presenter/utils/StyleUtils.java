@@ -11,4 +11,9 @@ public class StyleUtils {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pixels * scale + 0.5f);
     }
+
+    public static int getPixelsByDp(Context context, int dp) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) ((dp - 0.5f) / scale);
+    }
 }
