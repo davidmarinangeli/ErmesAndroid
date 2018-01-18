@@ -89,7 +89,7 @@ dependencies {
     // ** END FIREBASE **
 
     //custom libraries
-
+    implementation 'com.github.AdityaAnand1:Morphing-Material-Dialogs:0.0.1-alpha8'
     compile 'com.afollestad.material-dialogs:core:0.9.3.0'
     compile 'com.github.tylersuehr7:chips-input-layout:1.3'
     compile 'com.github.xmuSistone:VegaLayoutManager:master-SNAPSHOT'
@@ -101,6 +101,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'biz.kasual:materialnumberpicker:1.2.1'
     testCompile 'junit:junit:4.12'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 
@@ -108,3 +109,6 @@ dependencies {
 
 
 apply plugin: 'com.google.gms.google-services'
+repositories {
+    mavenCentral()
+}
