@@ -26,6 +26,7 @@ import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
+import com.example.david.ermes.View.activities.EventActivity;
 import com.example.david.ermes.View.activities.PickFriendsActivity;
 import com.example.david.ermes.View.activities.PickPlaceActivity;
 
@@ -75,7 +76,6 @@ public class EventFragment extends Fragment {
         match = args.getParcelable("event");
 
         manageUserCase();
-
     }
 
     private void manageUserCase() {
@@ -105,6 +105,7 @@ public class EventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_event, container, false);
     }
@@ -177,7 +178,7 @@ public class EventFragment extends Fragment {
         invite.setOnClickListener(view1 -> {
             Intent invite_friends = new Intent(getContext(), PickFriendsActivity.class);
             invite_friends.putExtra("match",match);
-            getContext().startActivity(invite_friends);
+            getActivity().startActivityForResult(invite_friends, EventActivity.INVITE_FRIEND_CODE);
         });
 
         delete_match.setOnClickListener(view1 -> new MaterialDialog.Builder(this.getContext())
@@ -296,6 +297,11 @@ public class EventFragment extends Fragment {
         manageUserCase();
         updateLabels();
         manageItemsByUserCase();
+    }
+
+    public void updateMatch(Match match) {
+        this.match = match;
+        updateUI();
     }
 
     public void showMultiChoice(final ArrayList<String> got_missing_item_list, ArrayList<String> missing_items_instring) {
