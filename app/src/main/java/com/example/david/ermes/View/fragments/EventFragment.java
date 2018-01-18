@@ -7,12 +7,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -28,6 +30,7 @@ import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
+import com.example.david.ermes.View.activities.AccountActivity;
 import com.example.david.ermes.View.activities.EventActivity;
 import com.example.david.ermes.View.activities.PickFriendsActivity;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -63,7 +66,10 @@ public class EventFragment extends Fragment {
     private TextView usercreator;
     private CircularImageView imageCreator;
 
+    private CardView profileCardView;
+
     private Match match;
+    private User matchCreator;
 
     private Toolbar toolbar;
     private ImageButton invite;
@@ -142,14 +148,24 @@ public class EventFragment extends Fragment {
         invite = view.findViewById(R.id.buttonInvita);
         delete_match = view.findViewById(R.id.elimina_evento);
 
+        profileCardView = view.findViewById(R.id.profileCard);
+
         // scarico lo user name in base all'id che mi ha dato il match
         UserRepository.getInstance().fetchUserById(match.getIdOwner(), object -> {
             if (object != null) {
-                User user = (User) object;
-                usercreator.setText(user.getName());
-                Picasso.with(getContext()).load(user.getPhotoURL()).into(imageCreator);
+                matchCreator = (User) object;
+                usercreator.setText(matchCreator.getName());
+                Picasso.with(getContext()).load(matchCreator.getPhotoURL()).into(imageCreator);
             } else {
 
+            }
+        });
+
+        profileCardView.setOnClickListener(view1 -> {
+            if (matchCreator != null) {
+                startAccountActivity(matchCreator);
+            } else {
+                Snackbar.make(view1, "Attendi...", Snackbar.LENGTH_SHORT).show();
             }
         });
 
@@ -349,6 +365,21 @@ public class EventFragment extends Fragment {
                     }
                 }))
                 .show();
+    }
+
+    private void startAccountActivity(User user) {
+        ProgressBar progressBar = new ProgressBar(getContext());
+        progressBar.setVisibility(View.VISIBLE);
+
+        Intent intent = new Intent(getContext(), AccountActivity.class);
+
+        Bundle extras = new Bundle();
+        extras.putParcelable("user", user);
+
+        intent.putExtras(extras);
+        startActivity(intent);
+
+        progressBar.setVisibility(View.GONE);
     }
 
 }
