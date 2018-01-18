@@ -176,7 +176,7 @@ public class EventFragment extends Fragment {
 
         invite.setOnClickListener(view1 -> {
             Intent invite_friends = new Intent(getContext(), PickFriendsActivity.class);
-            invite_friends.putExtra("maxplayers",match.getMaxPlayers());
+            invite_friends.putExtra("match",match);
             getContext().startActivity(invite_friends);
         });
 
