@@ -69,19 +69,39 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             for (Map.Entry<Friendship, User> entry : friends.entrySet()) {
                 if (entry.getKey() != null && entry.getValue() != null) {
                     SportRepository.getInstance().fetchSportById(entry.getValue().getIdFavSport(),
-                            new FirebaseCallback() {
-                                @Override
-                                public void callback(Object object) {
-                                    if (object != null) {
-                                        friendsList.add(entry.getValue());
-                                        datesList.add(entry.getKey().getDate());
-                                        sportsList.add(((Sport) object).getName());
+                            object -> {
+                                if (object != null) {
+                                    friendsList.add(entry.getValue());
+                                    datesList.add(entry.getKey().getDate());
+                                    sportsList.add(((Sport) object).getName());
 
-                                        notifyDataSetChanged();
-                                    }
+                                    notifyDataSetChanged();
                                 }
                             });
                 }
+            }
+        }
+    }
+
+    public void refreshList(List<User> userList) {
+        this.friendsList = new ArrayList<>();
+        this.datesList = new ArrayList<>();
+        this.sportsList = new ArrayList<>();
+
+        for (User u : userList) {
+            if (u != null) {
+                SportRepository.getInstance().fetchSportById(u.getIdFavSport(), object -> {
+                    if (object != null) {
+                        sportsList.add(((Sport) object).getName());
+                    } else {
+                        sportsList.add(null);
+                    }
+
+                    datesList.add(null);
+                    friendsList.add(u);
+
+                    notifyDataSetChanged();
+                });
             }
         }
     }
@@ -117,9 +137,16 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
         public void bind(int position) {
             User friend = friendsList.get(position);
-            Long date = datesList.get(position);
-            String sport = sportsList.get(position);
 
+            Long date = position < datesList.size() ?
+                    datesList.get(position)
+                    : null;
+
+            String sport = position < sportsList.size() ?
+                    sportsList.get(position)
+                    : null;
+
+            // age
             if (friend.getPhotoURL() != null && !friend.getPhotoURL().isEmpty()) {
                 Picasso.with(context).load(friend.getPhotoURL()).into(friendImage);
             } else {
@@ -127,11 +154,24 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             }
 
             int age = TimeUtils.getAgeFromBirth(friend.getBirthDate());
+            //
+
+            // info
+            String info = String.valueOf(age) + " anni";
+            if (sport != null) {
+                info += " | " + sport;
+            }
+            //
 
             friendName.setText(friend.getName());
-            friendInfo.setText(String.valueOf(age) + " anni | " +
-                    sport);
-            friendshipDate.setText("Amici dal " + TimeUtils.fromMillistoYearMonthDay(date));
+            friendInfo.setText(info);
+
+            if (date != null) {
+                friendshipDate.setText("Amici dal " + TimeUtils.fromMillistoYearMonthDay(date));
+                friendshipDate.setVisibility(View.VISIBLE);
+            } else {
+                friendshipDate.setVisibility(View.GONE);
+            }
         }
     }
 }
