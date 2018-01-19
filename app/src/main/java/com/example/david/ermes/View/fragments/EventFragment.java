@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -32,12 +33,14 @@ import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.AccountActivity;
 import com.example.david.ermes.View.activities.EventActivity;
+import com.example.david.ermes.View.activities.MatchUsersActivity;
 import com.example.david.ermes.View.activities.PickFriendsActivity;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import static com.example.david.ermes.View.activities.EventActivity.*;
 
@@ -65,6 +68,8 @@ public class EventFragment extends Fragment {
     private TextView freeslots;
     private TextView usercreator;
     private CircularImageView imageCreator;
+    private LinearLayout showInvited;
+    private LinearLayout showPartecipants;
 
     private CardView profileCardView;
 
@@ -142,6 +147,9 @@ public class EventFragment extends Fragment {
         participant = view.findViewById(R.id.partecipantNumber);
         pending = view.findViewById(R.id.invitedNumber);
         freeslots = view.findViewById(R.id.openSlotNumber);
+
+        showInvited = view.findViewById(R.id.invited_users_list);
+        showPartecipants = view.findViewById(R.id.partecipant_users_list);
 
         missing_stuff_button = view.findViewById(R.id.missing_stuff_button);
         join = view.findViewById(R.id.buttonPartecipa);
@@ -253,12 +261,40 @@ public class EventFragment extends Fragment {
             }
         });
 
+        // visualizzazione lista di partecipanti e invitati
+        showInvited.setOnClickListener(view1 -> {
+            if (match.getPending().size() > 0) {
+                startMatchUsersActivity("Invitati", match.getPending());
+            } else {
+                Snackbar.make(view, "Non ci sono invitati.", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+
+        showPartecipants.setOnClickListener(view1 -> {
+            if (match.getPartecipants().size() > 0) {
+                startMatchUsersActivity("Partecipanti", match.getPartecipants());
+            } else {
+                Snackbar.make(view, "Non ci sono partecipanti.", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+
         // lo so che pare un macello sta stringa, giuro che correggerò le API
         dateofevent.setText(c.get(Calendar.DAY_OF_MONTH) + " " + TimeUtils.fromNumericMonthToString(c.get(Calendar.MONTH)));
         hourofevent.setText(TimeUtils.getFormattedHourMinute(c));
         participant.setText(String.valueOf(match.getPartecipants().size()));
         pending.setText(String.valueOf(match.getPending().size()));
         freeslots.setText(String.valueOf(match.getMaxPlayers() - match.getPartecipants().size()));
+    }
+
+    private void startMatchUsersActivity(String title, List<String> list) {
+        Intent intent = new Intent(getContext(), MatchUsersActivity.class);
+
+        Bundle extras = new Bundle();
+        extras.putStringArrayList("users", (ArrayList<String>) list);
+        extras.putString("title", title);
+
+        intent.putExtras(extras);
+        startActivity(intent);
     }
 
     private void updateLabels() {
