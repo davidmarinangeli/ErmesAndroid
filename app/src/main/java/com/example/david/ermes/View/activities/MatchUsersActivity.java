@@ -9,17 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.User;
-import com.example.david.ermes.Model.repository.FriendshipRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
-import com.example.david.ermes.View.FriendsListAdapter;
+import com.example.david.ermes.View.UserListAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by nicol on 15/01/2018.
@@ -28,7 +24,7 @@ import java.util.Map;
 public class MatchUsersActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private FriendsListAdapter adapter;
+    private UserListAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private TextView no_users_label;
@@ -44,7 +40,7 @@ public class MatchUsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
-        adapter = new FriendsListAdapter(this);
+        adapter = new UserListAdapter(this);
         layoutManager = new LinearLayoutManager(this);
         no_users_label = findViewById(R.id.no_friends_label);
 
@@ -60,25 +56,12 @@ public class MatchUsersActivity extends AppCompatActivity {
         userIdList = getIntent().getExtras().getStringArrayList("users");
         title = getIntent().getExtras().getString("title", "Title");
 
+        adapter.refreshUserList(userIdList, null);
+
         toolbar = findViewById(R.id.friends_toolbar);
         toolbar.setTitle(title + " (" + userIdList.size() + ")");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        userList = new ArrayList<>();
-        resetFetchUsersCount();
-        for (String id : userIdList) {
-            UserRepository.getInstance().fetchUserById(id, object -> {
-                if (object != null) {
-                    userList.add((User) object);
-                }
-
-                incrementFetchUsersCount();
-                if (getFetchUsersCount() == userIdList.size()) {
-                    adapter.refreshList(userList);
-                }
-            });
-        }
 
         if (userIdList.size() > 0) {
             no_users_label.setVisibility(View.GONE);

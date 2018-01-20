@@ -6,58 +6,72 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/notification_container"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white_transparency"
-        android:minHeight="72dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp">
+        android:layout_height="match_parent">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/friend_image"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_person_black_24dp"
+            android:tint="@color/colorAccent"
             app:civ_border_width="0dp"
             app:civ_shadow="false"
-            android:src="@drawable/ic_person_black_24dp"
-            android:tint="@color/colorAccent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/friend_name_invitation"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="16dp">
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/colorAccentDark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/friend_image"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Nicola Schiavon" />
 
-            <TextView
-                android:id="@+id/friend_name_invitation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorAccentDark"
-                tools:text="Nicola Schiavon" />
+        <TextView
+            android:id="@+id/friend_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/friend_image"
+            app:layout_constraintTop_toBottomOf="@+id/friend_name_invitation"
+            tools:text="22 anni | Volley" />
 
-            <TextView
-                android:id="@+id/friend_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:layout_marginTop="0dp"
-                tools:text="22 anni | Volley" />
+        <TextView
+            android:id="@+id/friendship_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/friend_image"
+            app:layout_constraintTop_toBottomOf="@+id/friend_info"
+            tools:text="Amici dalla data x" />
 
-            <TextView
-                android:id="@+id/friendship_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp"
-                android:textStyle="italic"
-                tools:text="Amici dalla data x" />
+        <Button
+            android:id="@+id/friendship_request_button"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Notification.Info"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Chiedi\namicizia" />
 
-        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
-    </LinearLayout>
 </LinearLayout>
