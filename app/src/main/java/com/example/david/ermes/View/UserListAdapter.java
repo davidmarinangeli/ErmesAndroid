@@ -125,6 +125,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
         Button friendshipRequestButton;
 
         View itemView;
+        UserListPresenter.RelationType relationType;
+        long friendship_date;
 
         public FriendViewHolder(View itemView) {
             super(itemView);
@@ -145,23 +147,38 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
                 accountActivity.putExtras(extras);
                 context.startActivity(accountActivity);
             });
+
+            friendshipRequestButton.setOnClickListener(view -> {
+                relationType = getRelationType(getAdapterPosition());
+
+                switch (relationType) {
+                    case NO_RELATION:
+                        User user = userList.get(getAdapterPosition());
+                        Friendship.requestFriendshipTo(user.getUID(), object -> {
+                            presenter.updateMyFriendhipRequest(getAdapterPosition(),
+                                    (Notification) object);
+                            notifyDataSetChanged();
+                        });
+                        break;
+                    case REPLY_REQUEST:
+                        Notification request = toMeRequestList.get(getAdapterPosition());
+                        Friendship.acceptRequest(request, object -> {
+                            presenter.updateFriendship(getAdapterPosition(),
+                                    (Friendship) object);
+                            notifyDataSetChanged();
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            });
         }
 
         public void bind(int position) {
             if (userList != null && userList.size() > 0) {
+                relationType = getRelationType(getAdapterPosition());
                 User user = userList.get(position);
                 String sport = sportList.get(position);
-
-                Friendship friendship = friendshipList != null && position < friendshipList.size() ?
-                        friendshipList.get(position) : null;
-
-                Notification friendshipRequestNotification =
-                        myRequestList != null && position < myRequestList.size() ?
-                                myRequestList.get(position) : null;
-
-                Notification toMeFriendshipRequestNotification =
-                        toMeRequestList != null && position < toMeRequestList.size() ?
-                                toMeRequestList.get(position) : null;
 
                 if (user != null) {
                     // name
@@ -183,34 +200,67 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
                     friendInfo.setText(info);
 
                     // friendship date
-                    if (friendship != null) {
-                        friendshipDate.setText(new StringBuilder()
-                                .append("Amici dal ")
-                                .append(TimeUtils.fromMillistoYearMonthDay(friendship.getDate())));
-                        friendshipDate.setVisibility(View.VISIBLE);
+                    switch (relationType) {
+                        case FRIENDS:
+                            friendshipDate.setText(new StringBuilder()
+                                    .append("Amici dal ")
+                                    .append(TimeUtils.fromMillistoYearMonthDay(friendship_date)));
+                            friendshipDate.setVisibility(View.VISIBLE);
 
-                        friendshipRequestButton.setVisibility(View.GONE);
-                    } else if (friendshipRequestNotification != null) {
-                        friendshipRequestButton.setText("Richiesta\neffettuata");
-                        friendshipRequestButton.setVisibility(View.VISIBLE);
-                        friendshipRequestButton.setActivated(false);
+                            friendshipRequestButton.setVisibility(View.GONE);
+                            break;
+                        case WAITING_FOR_RESPONSE:
+                            friendshipRequestButton.setText("Richiesta\neffettuata");
+                            friendshipRequestButton.setVisibility(View.VISIBLE);
+                            friendshipRequestButton.setActivated(false);
 
-                        friendshipDate.setVisibility(View.GONE);
-                    } else if (toMeFriendshipRequestNotification != null) {
-                        friendshipRequestButton.setText("Rispondi alla\nrichiesta");
-                        friendshipRequestButton.setVisibility(View.VISIBLE);
-                        friendshipRequestButton.setActivated(true);
+                            friendshipDate.setVisibility(View.GONE);
+                            break;
+                        case REPLY_REQUEST:
+                            friendshipRequestButton.setText("Rispondi alla\nrichiesta");
+                            friendshipRequestButton.setVisibility(View.VISIBLE);
+                            friendshipRequestButton.setActivated(true);
 
-                        friendshipDate.setVisibility(View.GONE);
-                    } else {
-                        friendshipRequestButton.setText("Chiedi\namicizia");
-                        friendshipRequestButton.setVisibility(View.VISIBLE);
-                        friendshipRequestButton.setActivated(true);
+                            friendshipDate.setVisibility(View.GONE);
+                            break;
+                        default:
+                            friendshipRequestButton.setText("Chiedi\namicizia");
+                            friendshipRequestButton.setVisibility(View.VISIBLE);
+                            friendshipRequestButton.setActivated(true);
 
-                        friendshipDate.setVisibility(View.GONE);
+                            friendshipDate.setVisibility(View.GONE);
+                            break;
                     }
                 }
             }
+        }
+
+        private UserListPresenter.RelationType getRelationType(int position) {
+            if (position >= 0) {
+                Friendship friendship = friendshipList != null && position < friendshipList.size() ?
+                        friendshipList.get(position) : null;
+
+                Notification friendshipRequestNotification =
+                        myRequestList != null && position < myRequestList.size() ?
+                                myRequestList.get(position) : null;
+
+                Notification toMeFriendshipRequestNotification =
+                        toMeRequestList != null && position < toMeRequestList.size() ?
+                                toMeRequestList.get(position) : null;
+
+                if (friendship != null) {
+                    friendship_date = friendship.getDate();
+                    return UserListPresenter.RelationType.FRIENDS;
+                } else if (friendshipRequestNotification != null) {
+                    return UserListPresenter.RelationType.WAITING_FOR_RESPONSE;
+                } else if (toMeFriendshipRequestNotification != null) {
+                    return UserListPresenter.RelationType.REPLY_REQUEST;
+                } else {
+                    return UserListPresenter.RelationType.NO_RELATION;
+                }
+            }
+
+            return UserListPresenter.RelationType.NO_RELATION;
         }
     }
 }

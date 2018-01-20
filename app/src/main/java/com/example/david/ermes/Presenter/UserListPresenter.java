@@ -19,6 +19,10 @@ import java.util.List;
 
 public class UserListPresenter {
 
+    public enum RelationType {
+        FRIENDS, WAITING_FOR_RESPONSE, REPLY_REQUEST, NO_RELATION
+    }
+
     private boolean presenterReady;
     private void setPresenterReady(boolean presenterReady) {
         this.presenterReady = presenterReady;
@@ -195,6 +199,14 @@ public class UserListPresenter {
         } else {
             presenterNotReadyCallbackList.add(object -> prepareFriends());
         }
+    }
+
+    public void updateMyFriendhipRequest(int index, Notification notification) {
+        myRequests.set(index, notification);
+    }
+
+    public void updateFriendship(int index, Friendship friendship) {
+        friendshipList.set(index, friendship);
     }
 
     private void prepareFriends() {
