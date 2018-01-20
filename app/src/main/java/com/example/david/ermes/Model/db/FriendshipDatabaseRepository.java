@@ -32,6 +32,8 @@ public class FriendshipDatabaseRepository {
         results = new ArrayList<>();
     }
 
+    private static boolean find = false;
+
 
     private int fetch_callback_count = 0;
     private int fetch_max_count = 0;
@@ -58,13 +60,9 @@ public class FriendshipDatabaseRepository {
     }
 
     public void push(_Friendship friendship, final FirebaseCallback firebaseCallback) {
-        this.ref.child(friendship.getId()).setValue(friendship).addOnCompleteListener(
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (firebaseCallback != null) {
-                            firebaseCallback.callback(null);
-                        }
+        this.ref.child(friendship.getId()).setValue(friendship).addOnCompleteListener(task -> {
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(null);
                     }
                 }
         );
@@ -135,6 +133,7 @@ public class FriendshipDatabaseRepository {
     }
 
     public void fetchByTwoIds(String id1, String id2, FirebaseCallback firebaseCallback) {
+        find = false;
 
         String id_t1 = Friendship.getFriendshipIdFromIds(id1, id2);
         String id_t2 = Friendship.getFriendshipIdFromIds(id2, id1);
@@ -144,7 +143,8 @@ public class FriendshipDatabaseRepository {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 _Friendship f = dataSnapshot.getValue(_Friendship.class);
 
-                if (f != null && firebaseCallback != null) {
+                if (firebaseCallback != null && !find) {
+                    find = true;
                     firebaseCallback.callback(f);
                 }
             }
@@ -160,7 +160,8 @@ public class FriendshipDatabaseRepository {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 _Friendship f = dataSnapshot.getValue(_Friendship.class);
 
-                if (f != null && firebaseCallback != null) {
+                if (firebaseCallback != null && !find) {
+                    find = true;
                     firebaseCallback.callback(f);
                 }
             }
