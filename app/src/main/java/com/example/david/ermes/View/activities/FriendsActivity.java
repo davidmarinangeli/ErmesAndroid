@@ -69,6 +69,7 @@ public class FriendsActivity extends AppCompatActivity {
                     no_friends_label.setText("Nessun amico");
                     no_friends_label.setVisibility(View.VISIBLE);
                 } else {
+                    toolbar.setTitle(String.valueOf(count).concat(" Amici"));
                     no_friends_label.setVisibility(View.GONE);
                 }
             });

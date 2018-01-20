@@ -97,7 +97,11 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
             refresh(users, friendships, myFriendshipRequests, sports, toMeFriendshipRequests);
 
             if (firebaseCallback != null) {
-                firebaseCallback.callback(users.size());
+                if (users != null) {
+                    firebaseCallback.callback(users.size());
+                } else {
+                    firebaseCallback.callback(0);
+                }
             }
         });
     }
