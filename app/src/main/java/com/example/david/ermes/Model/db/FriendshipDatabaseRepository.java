@@ -33,20 +33,16 @@ public class FriendshipDatabaseRepository {
     }
 
 
-    private static int fetch_callback_count = 0;
-
+    private int fetch_callback_count = 0;
+    private int fetch_max_count = 0;
+    private void setFetchMaxCount(int value) { fetch_max_count = value; }
+    private int getFetchMaxCount() { return fetch_max_count; }
     private int getFetchCallbackCount() {
         return fetch_callback_count;
     }
-
     private void incrementFetchCallbackCount() {
         fetch_callback_count += 1;
     }
-
-    private void decrementFetchCallbackCount() {
-        fetch_callback_count -= 1;
-    }
-
     private void resetFetchCallbackCount() {
         fetch_callback_count = 0;
     }
@@ -86,7 +82,7 @@ public class FriendshipDatabaseRepository {
             }
         }
 
-        if (getFetchCallbackCount() == 2) {
+        if (getFetchCallbackCount() == getFetchMaxCount()) {
             if (firebaseCallback != null) {
                 if (results.size() >= 0) {
                     firebaseCallback.callback(results);
@@ -101,6 +97,7 @@ public class FriendshipDatabaseRepository {
     }
 
     public void fetchListById(String id, final FirebaseCallback firebaseCallback) {
+        setFetchMaxCount(2);
         resetFetchCallbackCount();
         resetResults();
 
@@ -135,5 +132,43 @@ public class FriendshipDatabaseRepository {
                             }
                         }
                 );
+    }
+
+    public void fetchByTwoIds(String id1, String id2, FirebaseCallback firebaseCallback) {
+
+        String id_t1 = Friendship.getFriendshipIdFromIds(id1, id2);
+        String id_t2 = Friendship.getFriendshipIdFromIds(id2, id1);
+
+        this.ref.orderByKey().equalTo(id_t1).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                _Friendship f = dataSnapshot.getValue(_Friendship.class);
+
+                if (f != null && firebaseCallback != null) {
+                    firebaseCallback.callback(f);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        this.ref.orderByKey().equalTo(id_t2).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                _Friendship f = dataSnapshot.getValue(_Friendship.class);
+
+                if (f != null && firebaseCallback != null) {
+                    firebaseCallback.callback(f);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
