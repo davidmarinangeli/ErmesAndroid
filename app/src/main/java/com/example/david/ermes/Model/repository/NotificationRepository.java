@@ -13,9 +13,13 @@ import java.util.List;
 
 public class NotificationRepository {
     private static NotificationRepository instance = new NotificationRepository();
-    public static NotificationRepository getInstance() { return instance; }
 
-    public NotificationRepository() {}
+    public static NotificationRepository getInstance() {
+        return instance;
+    }
+
+    public NotificationRepository() {
+    }
 
     public void fetchNotificationsByIdCreator(String idCreator, FirebaseCallback firebaseCallback) {
         NotificationDatabaseRepository.getInstance().fetchByParam("idCreator", idCreator,
@@ -91,7 +95,7 @@ public class NotificationRepository {
     }
 
     public void fetchUnreadFriendshipRequestByIdCreatorAndIdOwner(String idCreator, String idOwner,
-                                                             FirebaseCallback firebaseCallback) {
+                                                                  FirebaseCallback firebaseCallback) {
         NotificationDatabaseRepository.getInstance().fetchUnreadByIdCreatorAndIdOwner(idCreator,
                 idOwner, object -> {
                     _Notification n = (_Notification) object;
@@ -109,6 +113,14 @@ public class NotificationRepository {
 
     public void sendNotification(Notification notification, FirebaseCallback firebaseCallback) {
         NotificationDatabaseRepository.getInstance().push(notification.convertTo_Notification(),
-                firebaseCallback);
+                object -> {
+                    if (object != null) {
+                        notification.setId((String) object);
+                    }
+
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(notification);
+                    }
+                });
     }
 }

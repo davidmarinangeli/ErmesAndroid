@@ -112,7 +112,7 @@ public class NotificationDatabaseRepository {
 
         query.setValue(notification, (databaseError, databaseReference) -> {
                     if (firebaseCallback != null) {
-                        firebaseCallback.callback(null);
+                        firebaseCallback.callback(databaseReference.getKey());
                     }
                 });
     }
