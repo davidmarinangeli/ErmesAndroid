@@ -81,11 +81,6 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        toolbar = view.findViewById(R.id.account_toolbar);
-        toolbar.setTitle("");
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         name = view.findViewById(R.id.name_account);
         age = view.findViewById(R.id.age_account);
         sport = view.findViewById(R.id.sport_account);
