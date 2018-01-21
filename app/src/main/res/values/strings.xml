@@ -68,6 +68,9 @@
     <string name="no_friends">Nessun amico</string>
     <string name="puoi_invitare_ancora">Puoi invitare ancora</string>
     <string name="giocatori">giocatori</string>
+    <string name="ispublic">Pubblico</string>
+    <string name="dove_vivi">Città</string>
+    <string name="data_di_nascita">Data di nascita</string>
 
 
     <!-- buro gaio -->
