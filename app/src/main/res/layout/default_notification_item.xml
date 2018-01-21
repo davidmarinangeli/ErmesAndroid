@@ -54,6 +54,15 @@
                 android:textStyle="italic"
                 tools:text="in data x" />
 
+            <TextView
+                android:id="@+id/already_reply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:textStyle="italic"
+                tools:text="Hai già risposto" />
+
             <LinearLayout
                 android:id="@+id/notification_match_invitation_buttons"
                 android:layout_width="match_parent"
