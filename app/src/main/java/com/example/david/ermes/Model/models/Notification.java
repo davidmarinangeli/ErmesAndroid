@@ -122,12 +122,10 @@ public class Notification implements Parcelable {
         return null;
     }
 
-    public static Notification createFriendshipRequest(String idUser) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (idUser != null && !idUser.isEmpty() && user != null) {
-            return new Notification(user.getUid(), idUser, "", "Nuova richiesta di amicizia",
-                    user.getDisplayName() + " ti ha inviato una richiesta di amicizia.\n" +
+    public static Notification createFriendshipRequest(User creator, String idUser) {
+        if (idUser != null && !idUser.isEmpty() && creator != null) {
+            return new Notification(creator.getUID(), idUser, "", "Nuova richiesta di amicizia",
+                    creator.getName() + " ti ha inviato una richiesta di amicizia.\n" +
                             "Rispondi subito o visita il suo profilo!",
                     NotificationType.FRIENDSHIP_REQUEST, false, System.currentTimeMillis());
         }
@@ -135,12 +133,10 @@ public class Notification implements Parcelable {
         return null;
     }
 
-    public static Notification createFriendshipAccepted(String idUser) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (idUser != null && !idUser.isEmpty() && user != null) {
-            return new Notification(user.getUid(), idUser, "", "Richiesta di amicizia",
-                    user.getDisplayName() + " ha accettato la tua richiesta di amicizia, visita" +
+    public static Notification createFriendshipAccepted(User creator, String idUser) {
+        if (idUser != null && !idUser.isEmpty() && creator != null) {
+            return new Notification(creator.getUID(), idUser, "", "Richiesta di amicizia",
+                    creator.getName() + " ha accettato la tua richiesta di amicizia, visita" +
                             " il suo profilo!", NotificationType.FRIENDSHIP_ACCEPTED, false,
                     System.currentTimeMillis());
         }

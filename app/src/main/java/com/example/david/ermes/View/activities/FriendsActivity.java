@@ -32,7 +32,10 @@ public class FriendsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
+        currentUser = getIntent().getExtras().getParcelable("user");
+
         adapter = new UserListAdapter(this);
+        adapter.setCurrentUser(currentUser);
         layoutManager = new LinearLayoutManager(this);
         no_friends_label = findViewById(R.id.no_friends_label);
 
@@ -44,8 +47,6 @@ public class FriendsActivity extends AppCompatActivity {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
                 recyclerView.getContext(), LinearLayoutManager.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
-
-        currentUser = getIntent().getExtras().getParcelable("user");
 
         toolbar = findViewById(R.id.friends_toolbar);
         toolbar.setTitle("Amici");
