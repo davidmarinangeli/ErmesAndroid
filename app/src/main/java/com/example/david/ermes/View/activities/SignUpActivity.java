@@ -73,6 +73,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         // prendo l'istanza del FBAuth
         mAuth = FirebaseAuth.getInstance();
+        born_date_calendar = Calendar.getInstance();
 
         toolbar = findViewById(R.id.signup_toolbar);
 
@@ -260,8 +261,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         place_selected.getName().toString(),
                         found_sport.getID(),
                         photoURL,
-                        // TODO inserire la data di nascita
-                        0
+                        born_date_calendar.getTimeInMillis()
                 ).save(object1 -> finish());
                 DatabaseManager.get().setLogged(true);
             });
