@@ -61,6 +61,7 @@ public class NotificationsActivity extends AppCompatActivity {
                 if (object != null) {
                     currentUser = (User) object;
 
+                    adapter.setCurrentUser(currentUser);
                     toolbar.setSubtitle(currentUser.getName());
                     fetchNotifications(currentUser);
                 }
