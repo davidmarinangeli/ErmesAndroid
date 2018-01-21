@@ -116,4 +116,25 @@ public class Friendship {
 
         return l;
     }
+
+    public static void requestFriendshipTo(String userID, FirebaseCallback firebaseCallback) {
+        Notification.createFriendshipRequest(userID).save(firebaseCallback);
+    }
+
+    public static void acceptRequest(Notification notification, FirebaseCallback firebaseCallback) {
+        notification.setRead(true);
+        notification.save();
+
+        Notification.createFriendshipAccepted(notification.getIdCreator()).save(object -> {
+            Notification n = (Notification) object;
+
+            Friendship newFriendship = new Friendship(n.getIdCreator(), n.getIdOwner(),
+                    System.currentTimeMillis());
+            newFriendship.save(object1 -> {
+                if (firebaseCallback != null) {
+                    firebaseCallback.callback(newFriendship);
+                }
+            });
+        });
+    }
 }

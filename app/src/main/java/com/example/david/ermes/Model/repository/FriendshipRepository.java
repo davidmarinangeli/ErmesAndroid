@@ -34,4 +34,19 @@ public class FriendshipRepository {
                     firebaseCallback.callback(list);
                 });
     }
+
+    public void fetchFriendshipByTwoIds(String id1, String id2, FirebaseCallback firebaseCallback) {
+        FriendshipDatabaseRepository.getInstance().fetchByTwoIds(id1, id2, object -> {
+            _Friendship friendship = (_Friendship) object;
+            Friendship result = null;
+
+            if (friendship != null) {
+                result = friendship.convertToFriendship();
+            }
+
+            if (firebaseCallback != null) {
+                firebaseCallback.callback(result);
+            }
+        });
+    }
 }

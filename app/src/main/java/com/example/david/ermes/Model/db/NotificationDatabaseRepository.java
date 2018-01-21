@@ -1,5 +1,6 @@
 package com.example.david.ermes.Model.db;
 
+import com.example.david.ermes.Model.models.NotificationType;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,8 +30,8 @@ public class NotificationDatabaseRepository {
         ref = DatabaseManager.get().getNotificationsRef();
     }
 
-    public void fetchByIdOwner(String id, final FirebaseCallback firebaseCallback) {
-        this.ref.orderByChild("idOwner").equalTo(id).addValueEventListener(new ValueEventListener() {
+    public void fetchByParam(String param, String value, final FirebaseCallback firebaseCallback) {
+        this.ref.orderByChild(param).equalTo(value).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<_Notification> list = null;
@@ -46,16 +47,13 @@ public class NotificationDatabaseRepository {
                     }
 
                     // list sort by date
-                    Collections.sort(list, new Comparator<_Notification>() {
-                        @Override
-                        public int compare(_Notification t1, _Notification t2) {
-                            final long date1 = t1.date;
-                            final long date2 = t2.date;
+                    Collections.sort(list, (t1, t2) -> {
+                        final long date1 = t1.date;
+                        final long date2 = t2.date;
 
-                            return date1 > date2 ? -1
-                                    : date1 < date2 ? 1
-                                    : 0;
-                        }
+                        return date1 > date2 ? -1
+                                : date1 < date2 ? 1
+                                : 0;
                     });
                 }
 
@@ -69,6 +67,40 @@ public class NotificationDatabaseRepository {
         });
     }
 
+    public void fetchUnreadByIdCreatorAndIdOwner(String idCreator, String idOwner,
+                                           FirebaseCallback firebaseCallback) {
+        this.ref.orderByChild("idCreator").equalTo(idCreator).addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        _Notification notification = null;
+
+                        for (DataSnapshot d : dataSnapshot.getChildren()) {
+                            _Notification n = d.getValue(_Notification.class);
+                            n.setID(d.getKey());
+
+                            if (n.idOwner.equals(idOwner) && !n.read &&
+                                    n.type.equals(NotificationType.FRIENDSHIP_REQUEST.toString())) {
+
+                                notification = n;
+                            }
+                        }
+
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(notification);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(null);
+                        }
+                    }
+                }
+        );
+    }
+
     public void push(_Notification notification, final FirebaseCallback firebaseCallback) {
         DatabaseReference query;
 
@@ -78,13 +110,9 @@ public class NotificationDatabaseRepository {
             query = this.ref.push();
         }
 
-        query.setValue(notification,
-                new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if (firebaseCallback != null) {
-                            firebaseCallback.callback(null);
-                        }
+        query.setValue(notification, (databaseError, databaseReference) -> {
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(databaseReference.getKey());
                     }
                 });
     }
