@@ -18,6 +18,7 @@ import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.FriendshipRepository;
 import com.example.david.ermes.Model.repository.NotificationRepository;
 import com.example.david.ermes.Model.repository.SportRepository;
+import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.OnUserListFetchEnd;
 import com.example.david.ermes.Presenter.UserListPresenter;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
@@ -51,6 +52,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
     private UserListPresenter presenter;
     private Context context;
 
+    private User currentUser;
+
     public UserListAdapter(Context context) {
         this.context = context;
         sportList = new ArrayList<>();
@@ -77,6 +80,10 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
     @Override
     public int getItemCount() {
         return userList != null ? userList.size() : 0;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 
     private void refresh(List<User> users, List<Friendship> friendships,
@@ -154,7 +161,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
                 switch (relationType) {
                     case NO_RELATION:
                         User user = userList.get(getAdapterPosition());
-                        Friendship.requestFriendshipTo(user.getUID(), object -> {
+                        Friendship.requestFriendshipTo(currentUser, user.getUID(), object -> {
                             presenter.updateMyFriendhipRequest(getAdapterPosition(),
                                     (Notification) object);
                             notifyDataSetChanged();
@@ -162,7 +169,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
                         break;
                     case REPLY_REQUEST:
                         Notification request = toMeRequestList.get(getAdapterPosition());
-                        Friendship.acceptRequest(request, object -> {
+                        Friendship.acceptRequest(currentUser, request, object -> {
                             presenter.updateFriendship(getAdapterPosition(),
                                     (Friendship) object);
                             notifyDataSetChanged();
@@ -201,6 +208,10 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
 
                     // friendship date
                     switch (relationType) {
+                        case ME:
+                            friendshipDate.setVisibility(View.GONE);
+                            friendshipRequestButton.setVisibility(View.GONE);
+                            break;
                         case FRIENDS:
                             friendshipDate.setText(new StringBuilder()
                                     .append("Amici dal ")
@@ -237,6 +248,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
 
         private UserListPresenter.RelationType getRelationType(int position) {
             if (position >= 0) {
+                User user = userList != null && position < userList.size() ?
+                        userList.get(position) : null;
+
                 Friendship friendship = friendshipList != null && position < friendshipList.size() ?
                         friendshipList.get(position) : null;
 
@@ -248,7 +262,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
                         toMeRequestList != null && position < toMeRequestList.size() ?
                                 toMeRequestList.get(position) : null;
 
-                if (friendship != null) {
+                if (user != null && User.getCurrentUserId().equals(user.getUID())) {
+                    return UserListPresenter.RelationType.ME;
+                } else if (friendship != null) {
                     friendship_date = friendship.getDate();
                     return UserListPresenter.RelationType.FRIENDS;
                 } else if (friendshipRequestNotification != null) {

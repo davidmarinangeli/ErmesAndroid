@@ -20,13 +20,15 @@ import java.util.List;
 public class UserListPresenter {
 
     public enum RelationType {
-        FRIENDS, WAITING_FOR_RESPONSE, REPLY_REQUEST, NO_RELATION
+        ME, FRIENDS, WAITING_FOR_RESPONSE, REPLY_REQUEST, NO_RELATION
     }
 
     private boolean presenterReady;
+
     private void setPresenterReady(boolean presenterReady) {
         this.presenterReady = presenterReady;
     }
+
     private boolean isPresenterReady() {
         return presenterReady;
     }
@@ -160,35 +162,39 @@ public class UserListPresenter {
 
             UserRepository.getInstance().fetchUserById(userID, object -> {
                 User user = (User) object;
-
                 users_temp.set(CURRENT_INDEX, user);
 
-                FriendshipRepository.getInstance()
-                        .fetchFriendshipByTwoIds(currentID, userID, object1 -> {
-                            friendships_temp.set(CURRENT_INDEX, (Friendship) object1);
-                            incrementUserInfoCount(CURRENT_INDEX);
-                        });
+                if (currentID != userID) {
 
-                NotificationRepository.getInstance()
-                        .fetchUnreadFriendshipRequestByIdCreatorAndIdOwner(
-                                currentID, userID, object1 -> {
-                                    myReqs_temp.set(CURRENT_INDEX, (Notification) object1);
-                                    incrementUserInfoCount(CURRENT_INDEX);
-                                });
+                    FriendshipRepository.getInstance()
+                            .fetchFriendshipByTwoIds(currentID, userID, object1 -> {
+                                friendships_temp.set(CURRENT_INDEX, (Friendship) object1);
+                                incrementUserInfoCount(CURRENT_INDEX);
+                            });
 
-                NotificationRepository.getInstance()
-                        .fetchUnreadFriendshipRequestByIdCreatorAndIdOwner(
-                                userID, currentID, object1 -> {
-                                    toMeReqs_temp.set(CURRENT_INDEX, (Notification) object1);
-                                    incrementUserInfoCount(CURRENT_INDEX);
-                                });
+                    NotificationRepository.getInstance()
+                            .fetchUnreadFriendshipRequestByIdCreatorAndIdOwner(
+                                    currentID, userID, object1 -> {
+                                        myReqs_temp.set(CURRENT_INDEX, (Notification) object1);
+                                        incrementUserInfoCount(CURRENT_INDEX);
+                                    });
 
-                SportRepository.getInstance().fetchSportById(user.getIdFavSport(),
-                        object1 -> {
-                            String s = object1 != null ? ((Sport) object1).getName() : null;
-                            sports_temp.set(CURRENT_INDEX, s);
-                            incrementUserInfoCount(CURRENT_INDEX);
-                        });
+                    NotificationRepository.getInstance()
+                            .fetchUnreadFriendshipRequestByIdCreatorAndIdOwner(
+                                    userID, currentID, object1 -> {
+                                        toMeReqs_temp.set(CURRENT_INDEX, (Notification) object1);
+                                        incrementUserInfoCount(CURRENT_INDEX);
+                                    });
+
+                    SportRepository.getInstance().fetchSportById(user.getIdFavSport(),
+                            object1 -> {
+                                String s = object1 != null ? ((Sport) object1).getName() : null;
+                                sports_temp.set(CURRENT_INDEX, s);
+                                incrementUserInfoCount(CURRENT_INDEX);
+                            });
+                } else {
+                    notifyFetchEnd(CURRENT_INDEX);
+                }
             });
         }
     }

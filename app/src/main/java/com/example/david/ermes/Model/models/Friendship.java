@@ -33,7 +33,8 @@ public class Friendship {
     private String id2;
     private long date;
 
-    public Friendship() {}
+    public Friendship() {
+    }
 
     public Friendship(String friendshipId, long date) {
         this.date = date;
@@ -117,24 +118,27 @@ public class Friendship {
         return l;
     }
 
-    public static void requestFriendshipTo(String userID, FirebaseCallback firebaseCallback) {
-        Notification.createFriendshipRequest(userID).save(firebaseCallback);
+    public static void requestFriendshipTo(User currentUser, String userID,
+                                           FirebaseCallback firebaseCallback) {
+        Notification.createFriendshipRequest(currentUser, userID).save(firebaseCallback);
     }
 
-    public static void acceptRequest(Notification notification, FirebaseCallback firebaseCallback) {
+    public static void acceptRequest(User currentUser, Notification notification,
+                                     FirebaseCallback firebaseCallback) {
         notification.setRead(true);
         notification.save();
 
-        Notification.createFriendshipAccepted(notification.getIdCreator()).save(object -> {
-            Notification n = (Notification) object;
+        Notification.createFriendshipAccepted(currentUser, notification.getIdCreator())
+                .save(object -> {
+                    Notification n = (Notification) object;
 
-            Friendship newFriendship = new Friendship(n.getIdCreator(), n.getIdOwner(),
-                    System.currentTimeMillis());
-            newFriendship.save(object1 -> {
-                if (firebaseCallback != null) {
-                    firebaseCallback.callback(newFriendship);
-                }
-            });
-        });
+                    Friendship newFriendship = new Friendship(n.getIdCreator(), n.getIdOwner(),
+                            System.currentTimeMillis());
+                    newFriendship.save(object1 -> {
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(newFriendship);
+                        }
+                    });
+                });
     }
 }

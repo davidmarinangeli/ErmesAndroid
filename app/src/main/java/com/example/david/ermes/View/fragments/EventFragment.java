@@ -82,6 +82,7 @@ public class EventFragment extends Fragment {
     private ImageButton delete_match;
 
     private Button missing_stuff_button;
+    private User currentUser;
 
     public EventFragment() {
     }
@@ -293,8 +294,25 @@ public class EventFragment extends Fragment {
         extras.putStringArrayList("users", (ArrayList<String>) list);
         extras.putString("title", title);
 
-        intent.putExtras(extras);
-        startActivity(intent);
+        if (currentUser != null) {
+
+            extras.putParcelable("user", currentUser);
+            intent.putExtras(extras);
+            startActivity(intent);
+        } else {
+            UserRepository.getInstance().getUser(object -> {
+                currentUser = (User) object;
+
+                if (currentUser != null) {
+                    extras.putParcelable("user", currentUser);
+                    intent.putExtras(extras);
+                    startActivity(intent);
+                } else {
+                    Snackbar.make(getView(), "Errore nello scaricamento dei dati",
+                            Snackbar.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void updateLabels() {

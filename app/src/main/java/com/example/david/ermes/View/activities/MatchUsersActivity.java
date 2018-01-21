@@ -31,9 +31,7 @@ public class MatchUsersActivity extends AppCompatActivity {
 
     private List<String> userIdList;
     private String title;
-    private String subtitle;
-
-    private List<User> userList;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +51,11 @@ public class MatchUsersActivity extends AppCompatActivity {
                 recyclerView.getContext(), LinearLayoutManager.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+        currentUser = getIntent().getExtras().getParcelable("user");
         userIdList = getIntent().getExtras().getStringArrayList("users");
         title = getIntent().getExtras().getString("title", "Title");
 
+        adapter.setCurrentUser(currentUser);
         adapter.refreshUserList(userIdList, null);
 
         toolbar = findViewById(R.id.friends_toolbar);
