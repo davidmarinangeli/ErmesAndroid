@@ -99,6 +99,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         LinearLayout layout;
         Button left_button;
         Button right_button;
+        TextView already_reply;
 
         ProgressDialog mDialog;
 
@@ -112,6 +113,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             layout = itemView.findViewById(R.id.notification_container);
             left_button = itemView.findViewById(R.id.notification_left_button);
             right_button = itemView.findViewById(R.id.notification_right_button);
+            already_reply = itemView.findViewById(R.id.already_reply);
 
             mDialog = new ProgressDialog(context);
             mDialog.setMessage("Attendi...");
@@ -167,7 +169,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     icon.setImageResource(R.drawable.ic_insert_invitation_black_40dp);
 
                     if (notification.isRead()) {
-                        date.append("\n\nHai già risposto a questo invito.");
+                        already_reply.setText("Hai già risposto a questo invito");
+                        already_reply.setVisibility(View.VISIBLE);
                     }
 
                     break;
@@ -186,7 +189,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     icon.setImageResource(R.drawable.ic_person_add_black_40dp);
 
                     if (notification.isRead()) {
-                        date.append("\n\nHai già risposto a questa richiesta.");
+                        already_reply.setText("Hai già risposto a questa richiesta");
+                        already_reply.setVisibility(View.VISIBLE);
                     }
 
                     break;
