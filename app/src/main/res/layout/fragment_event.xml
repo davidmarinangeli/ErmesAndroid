@@ -1,42 +1,42 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:statusBarScrim="@android:color/transparent"
-            android:fitsSystemWindows="true">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:statusBarScrim="@android:color/transparent">
 
             <ImageView
                 android:id="@+id/imageViewFavSport"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/basketball_field"
-                android:foreground="@drawable/toolbar_gradient"
                 android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax"/>
+                android:foreground="@drawable/toolbar_gradient"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax"
+                app:srcCompat="@drawable/basketball_field" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/event_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin">
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
                 <ImageButton
                     android:id="@+id/elimina_evento"
@@ -246,124 +246,157 @@
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:layout_marginTop="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/place_icon">
 
-                        <TextView
-                            android:id="@+id/openSlotNumber"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toTopOf="@+id/openSlot"
-                            app:layout_constraintEnd_toEndOf="@+id/openSlot"
-                            app:layout_constraintStart_toStartOf="@+id/openSlot"
-                            app:layout_constraintTop_toTopOf="@+id/partecipantNumber"
-                            tools:text="10" />
-
-                        <TextView
-                            android:id="@+id/partecipant"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:text="Partecipanti"
-                            android:textSize="16sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/line_right_invited"
-                            app:layout_constraintStart_toEndOf="@+id/line_left_invited" />
-
-                        <TextView
-                            android:id="@+id/openSlot"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:text="Posti liberi"
-                            android:textSize="16sp"
+                            android:orientation="horizontal"
+                            android:weightSum="1"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.45"
-                            app:layout_constraintStart_toEndOf="@+id/line_right_invited" />
-
-                        <TextView
-                            android:id="@+id/partecipantNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toTopOf="@+id/partecipant"
-                            app:layout_constraintEnd_toEndOf="@+id/partecipant"
-                            app:layout_constraintStart_toStartOf="@+id/partecipant"
-                            app:layout_constraintTop_toTopOf="@+id/invitedNumber"
-                            tools:text="4" />
-
-                        <TextView
-                            android:id="@+id/invited"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:text="Invitati"
-                            android:textSize="16sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/line_left_invited"
-                            app:layout_constraintStart_toStartOf="parent" />
-
-                        <TextView
-                            android:id="@+id/invitedNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:textColor="@android:color/darker_gray"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toTopOf="@+id/invited"
-                            app:layout_constraintEnd_toEndOf="@+id/invited"
-                            app:layout_constraintStart_toStartOf="@+id/invited"
-                            tools:text="8" />
-
-                        <View
-                            android:id="@+id/line_left_invited"
-                            android:layout_width="1dp"
-                            android:layout_height="0dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:background="@android:color/darker_gray"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/line_right_invited"
-                            app:layout_constraintHorizontal_bias="0.46"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <View
-                            android:id="@+id/line_right_invited"
-                            android:layout_width="1dp"
-                            android:layout_height="0dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:background="@android:color/darker_gray"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.64"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0" />
+                            <LinearLayout
+                                android:id="@+id/invited_users_list"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight=".33"
+                                android:gravity="center_vertical|center_horizontal"
+                                android:orientation="vertical"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent">
+
+                                <TextView
+                                    android:id="@+id/invitedNumber"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginStart="8dp"
+                                    android:textColor="@android:color/darker_gray"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold"
+                                    tools:text="8" />
+
+                                <TextView
+                                    android:id="@+id/invited"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Invitati"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <View
+                                android:id="@+id/line_left_invited"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@android:color/darker_gray"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@+id/line_right_invited"
+                                app:layout_constraintHorizontal_bias="0.46"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.0" />
+
+                            <LinearLayout
+                                android:id="@+id/partecipant_users_list"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".33"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical"
+                                tools:layout_editor_absoluteX="121dp"
+                                tools:layout_editor_absoluteY="2dp">
+
+                                <TextView
+                                    android:id="@+id/partecipantNumber"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginStart="8dp"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/partecipant"
+                                    app:layout_constraintEnd_toEndOf="@+id/partecipant"
+                                    app:layout_constraintStart_toStartOf="@+id/partecipant"
+                                    app:layout_constraintTop_toTopOf="@+id/invitedNumber"
+                                    tools:text="4" />
+
+                                <TextView
+                                    android:id="@+id/partecipant"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Partecipanti"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <View
+                                android:id="@+id/line_right_invited"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@android:color/darker_gray"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.64"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.0" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".33"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical"
+                                tools:layout_editor_absoluteX="264dp"
+                                tools:layout_editor_absoluteY="2dp">
+
+                                <TextView
+                                    android:id="@+id/openSlotNumber"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginStart="8dp"
+                                    android:textColor="@color/colorAccent"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold"
+                                    tools:text="10" />
+
+                                <TextView
+                                    android:id="@+id/openSlot"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Posti liberi"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
                     </android.support.constraint.ConstraintLayout>
 
 

@@ -250,6 +250,8 @@ public class Notification implements Parcelable {
         return id;
     }
 
+    public void setId(String id) { this.id = id; }
+
     @Override
     public int describeContents() {
         return 0;
