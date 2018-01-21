@@ -37,9 +37,9 @@
             style="@style/MenuButtonsSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fab_label="Crea una partita"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_event_black_24dp"
-            app:fab_label="Crea un evento" />
+            android:src="@drawable/ic_event_black_24dp"/>
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/addplace"
@@ -47,8 +47,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_place_white_24dp"
-            app:fab_label="Aggiungi un campo di gioco" />
+            app:fab_label="Aggiungi un luogo"
+            android:src="@drawable/ic_place_white_24dp" />
 
     </com.github.clans.fab.FloatingActionMenu>
 
