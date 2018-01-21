@@ -1,26 +1,19 @@
 package com.example.david.ermes.View.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.os.Parcelable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -28,17 +21,9 @@ import android.widget.ImageButton;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.david.ermes.Model.db.FirebaseCallback;
-import com.example.david.ermes.Model.models.Friendship;
-import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Notification;
-import com.example.david.ermes.Model.models.NotificationType;
 import com.example.david.ermes.Model.models.User;
-import com.example.david.ermes.Model.repository.FriendshipRepository;
-import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.NotificationRepository;
-import com.example.david.ermes.Model.repository.UserRepository;
-import com.example.david.ermes.Presenter.utils.StyleUtils;
-import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.View.ViewPagerAdapter;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.customviews.CoolViewPager;
@@ -52,17 +37,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.animation.ValueAnimator.INFINITE;
-import static android.animation.ValueAnimator.REVERSE;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private CoolViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
     private FloatingActionMenu menu;
     private AHBottomNavigation bottomNavigation;
-    private FloatingActionButton defaulteventfab;
-    private FloatingActionButton addPlace;
+    private FloatingActionButton default_event_fab;
+    private FloatingActionButton add_place_fab;
     private ImageButton notificationsButton;
 
     private ValueAnimator notification_anim;
@@ -83,25 +67,47 @@ public class MainActivity extends AppCompatActivity{
         menu.setAnimated(true);
         menu.setClosedOnTouchOutside(true);
 
-        defaulteventfab = findViewById(R.id.addefaultevent);
-        addPlace = findViewById(R.id.addplace);
+        default_event_fab = findViewById(R.id.addefaultevent);
+        add_place_fab = findViewById(R.id.addplace);
+
+        if (User.getCurrentUserId() != null) {
+
+            default_event_fab.setColorNormal(default_event_fab.getColorNormal());
+            default_event_fab.setColorPressed(default_event_fab.getColorPressed());
+            add_place_fab.setColorNormal(add_place_fab.getColorNormal());
+            add_place_fab.setColorPressed(add_place_fab.getColorPressed());
+
+        } else {
+
+            default_event_fab.setLabelVisibility(View.GONE);
+            add_place_fab.setLabelVisibility(View.GONE);
+
+            default_event_fab.setColorNormal(default_event_fab.getColorDisabled());
+            default_event_fab.setColorPressed(R.color.inactive_pressed);
+            add_place_fab.setColorNormal(add_place_fab.getColorDisabled());
+            add_place_fab.setColorPressed(R.color.inactive_pressed);
+
+        }
 
 
-        defaulteventfab.setColorFilter(R.color.white);
+        default_event_fab.setColorFilter(R.color.white);
 
-        defaulteventfab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        default_event_fab.setOnClickListener(view1 -> {
+            if (User.getCurrentUserId() != null) {
                 Intent i = new Intent(MainActivity.this, CreateEventActivity.class);
                 startActivityForResult(i, 1);
+            } else {
+                Snackbar.make(default_event_fab, "Registrati per creare una partita ", Snackbar.LENGTH_LONG).show();
             }
         });
 
-        addPlace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this,PickPlaceActivity.class);
-                startActivityForResult(i,1);
+        add_place_fab.setOnClickListener(view -> {
+            if (User.getCurrentUserId() != null) {
+                Intent i = new Intent(MainActivity.this, PickPlaceActivity.class);
+                startActivityForResult(i, 1);
+            } else {
+
+                Snackbar.make(add_place_fab, "Registrati per aggiungere un luogo", Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -138,10 +144,10 @@ public class MainActivity extends AppCompatActivity{
 //                                        notification_anim.setIntValues(Color.WHITE, R.color.colorAccent,
 //                                                R.color.colorAccent, Color.WHITE);
                                         notification_anim.setIntValues(
-                                                Color.argb(255,255,255,255),
+                                                Color.argb(255, 255, 255, 255),
                                                 Color.argb(255, 68, 138, 255),
                                                 Color.argb(255, 68, 138, 255),
-                                                Color.argb(255,255,255,255)
+                                                Color.argb(255, 255, 255, 255)
                                         );
                                         notification_anim.setEvaluator(new ArgbEvaluator());
 
@@ -160,7 +166,7 @@ public class MainActivity extends AppCompatActivity{
                                     }
                                 }
                             } else {
-                                notificationsButton.setColorFilter(Color.argb(255,255,255,255));
+                                notificationsButton.setColorFilter(Color.argb(255, 255, 255, 255));
                             }
 
                             List<Notification> finalList = list;

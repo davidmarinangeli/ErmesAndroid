@@ -32,21 +32,19 @@ public class FriendshipDatabaseRepository {
         results = new ArrayList<>();
     }
 
+    private static boolean find = false;
 
-    private static int fetch_callback_count = 0;
 
+    private int fetch_callback_count = 0;
+    private int fetch_max_count = 0;
+    private void setFetchMaxCount(int value) { fetch_max_count = value; }
+    private int getFetchMaxCount() { return fetch_max_count; }
     private int getFetchCallbackCount() {
         return fetch_callback_count;
     }
-
     private void incrementFetchCallbackCount() {
         fetch_callback_count += 1;
     }
-
-    private void decrementFetchCallbackCount() {
-        fetch_callback_count -= 1;
-    }
-
     private void resetFetchCallbackCount() {
         fetch_callback_count = 0;
     }
@@ -62,13 +60,9 @@ public class FriendshipDatabaseRepository {
     }
 
     public void push(_Friendship friendship, final FirebaseCallback firebaseCallback) {
-        this.ref.child(friendship.getId()).setValue(friendship).addOnCompleteListener(
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (firebaseCallback != null) {
-                            firebaseCallback.callback(null);
-                        }
+        this.ref.child(friendship.getId()).setValue(friendship).addOnCompleteListener(task -> {
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(null);
                     }
                 }
         );
@@ -86,7 +80,7 @@ public class FriendshipDatabaseRepository {
             }
         }
 
-        if (getFetchCallbackCount() == 2) {
+        if (getFetchCallbackCount() == getFetchMaxCount()) {
             if (firebaseCallback != null) {
                 if (results.size() >= 0) {
                     firebaseCallback.callback(results);
@@ -101,6 +95,7 @@ public class FriendshipDatabaseRepository {
     }
 
     public void fetchListById(String id, final FirebaseCallback firebaseCallback) {
+        setFetchMaxCount(2);
         resetFetchCallbackCount();
         resetResults();
 
@@ -135,5 +130,46 @@ public class FriendshipDatabaseRepository {
                             }
                         }
                 );
+    }
+
+    public void fetchByTwoIds(String id1, String id2, FirebaseCallback firebaseCallback) {
+        find = false;
+
+        String id_t1 = Friendship.getFriendshipIdFromIds(id1, id2);
+        String id_t2 = Friendship.getFriendshipIdFromIds(id2, id1);
+
+        this.ref.orderByKey().equalTo(id_t1).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                _Friendship f = dataSnapshot.getValue(_Friendship.class);
+
+                if (firebaseCallback != null && !find) {
+                    find = true;
+                    firebaseCallback.callback(f);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        this.ref.orderByKey().equalTo(id_t2).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                _Friendship f = dataSnapshot.getValue(_Friendship.class);
+
+                if (firebaseCallback != null && !find) {
+                    find = true;
+                    firebaseCallback.callback(f);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

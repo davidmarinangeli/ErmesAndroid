@@ -66,6 +66,7 @@
 
         <activity android:name=".View.activities.MyMatchesActivity" />
         <activity android:name=".View.activities.FriendsActivity" />
+        <activity android:name=".View.activities.MatchUsersActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -10,22 +10,30 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.david.ermes.Model.models.User;
+import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.UserListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nicol on 15/01/2018.
  */
 
-public class FriendsActivity extends AppCompatActivity {
+public class MatchUsersActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private UserListAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private TextView no_friends_label;
+    private TextView no_users_label;
 
-    private User currentUser;
+    private List<String> userIdList;
+    private String title;
+    private String subtitle;
+
+    private List<User> userList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +42,7 @@ public class FriendsActivity extends AppCompatActivity {
 
         adapter = new UserListAdapter(this);
         layoutManager = new LinearLayoutManager(this);
-        no_friends_label = findViewById(R.id.no_friends_label);
+        no_users_label = findViewById(R.id.no_friends_label);
 
         recyclerView = findViewById(R.id.friends_recycler_view);
         recyclerView.setAdapter(adapter);
@@ -45,38 +53,35 @@ public class FriendsActivity extends AppCompatActivity {
                 recyclerView.getContext(), LinearLayoutManager.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        currentUser = getIntent().getExtras().getParcelable("user");
+        userIdList = getIntent().getExtras().getStringArrayList("users");
+        title = getIntent().getExtras().getString("title", "Title");
+
+        adapter.refreshUserList(userIdList, null);
 
         toolbar = findViewById(R.id.friends_toolbar);
-        toolbar.setTitle("Amici");
+        toolbar.setTitle(title + " (" + userIdList.size() + ")");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        if (userIdList.size() > 0) {
+            no_users_label.setVisibility(View.GONE);
+        } else {
+            no_users_label.setText("Nessun utente");
+            no_users_label.setVisibility(View.VISIBLE);
+        }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private int fetch_users_count = 0;
+    private void incrementFetchUsersCount() {
+        fetch_users_count++;
+    }
 
-        if (currentUser != null) {
-            toolbar.setSubtitle(currentUser.getName());
-            no_friends_label.setVisibility(View.GONE);
+    private int getFetchUsersCount() {
+        return fetch_users_count;
+    }
 
-            adapter.refreshFriendList(object -> {
-                int count = (int) object;
-
-                if (count <= 0) {
-                    no_friends_label.setText("Nessun amico");
-                    no_friends_label.setVisibility(View.VISIBLE);
-                } else {
-                    toolbar.setTitle(String.valueOf(count).concat(" Amici"));
-                    no_friends_label.setVisibility(View.GONE);
-                }
-            });
-        } else {
-            no_friends_label.setText("Nessun utente loggato");
-            no_friends_label.setVisibility(View.VISIBLE);
-        }
+    private void resetFetchUsersCount() {
+        fetch_users_count = 0;
     }
 
     @Override

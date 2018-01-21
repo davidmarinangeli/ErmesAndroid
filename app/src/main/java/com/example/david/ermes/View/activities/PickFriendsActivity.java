@@ -1,6 +1,7 @@
 package com.example.david.ermes.View.activities;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,12 +11,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.FriendshipRepository;
+import com.example.david.ermes.Model.repository.NotificationRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.PickFriendsAdapter;
@@ -63,8 +67,17 @@ public class PickFriendsActivity extends AppCompatActivity {
         spunta_done.setOnClickListener(view -> pickFriendsAdapter.saveFriendsList(object -> {
             if (object != null){
                 List<User> invited_friends = (List<User>)object;
-                for (User user : invited_friends){
-                    result_match.addPending(user.getUID());
+                for (User user : invited_friends) {
+                    if (!result_match.getPartecipants().contains(user.getUID()) &&
+                            !result_match.getPending().contains(user.getUID())) {
+                        result_match.addPending(user.getUID());
+                        Notification invitation = Notification.createMatchInvitation(user.getUID(), result_match.getId());
+                        if (invitation != null) {
+                            invitation.save();
+                        } else {
+                            Snackbar.make(view, "Impossibile inviare inviti per la partita", Snackbar.LENGTH_LONG);
+                        }
+                    }
                 }
                 result_match.save(object1 -> {
                     Intent save_intent = new Intent();
