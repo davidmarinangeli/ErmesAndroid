@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -21,15 +20,11 @@ import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
-import com.example.david.ermes.Presenter.utils.StyleUtils;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.FriendsActivity;
 import com.example.david.ermes.View.activities.MainSignInActivity;
 import com.example.david.ermes.View.activities.MyMatchesActivity;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -87,13 +82,10 @@ public class AccountFragment extends Fragment {
         image_account = view.findViewById(R.id.image_account);
 
         if (currentUser == null) {
-            UserRepository.getInstance().getUser(new FirebaseCallback() {
-                @Override
-                public void callback(Object object) {
-                    currentUser = (User) object;
+            UserRepository.getInstance().getUser(object -> {
+                currentUser = (User) object;
 
-                    initComponents();
-                }
+                initComponents();
             });
         } else {
             initComponents();
@@ -101,31 +93,25 @@ public class AccountFragment extends Fragment {
 
         loginbutton = view.findViewById(R.id.loginbutton);
         logoutbutton = view.findViewById(R.id.logoutbutton);
-        loginbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(view.getContext(), MainSignInActivity.class);
-                startActivity(i);
+        loginbutton.setOnClickListener(view12 -> {
+            Intent i = new Intent(view12.getContext(), MainSignInActivity.class);
+            startActivity(i);
 
-            }
         });
 
         myMatchesCard = view.findViewById(R.id.myMatchesCard);
-        myMatchesCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (currentUser != null) {
-                    Bundle extras = new Bundle();
-                    extras.putParcelable("user", currentUser);
+        myMatchesCard.setOnClickListener(view1 -> {
+            if (currentUser != null) {
+                Bundle extras = new Bundle();
+                extras.putParcelable("user", currentUser);
 
-                    Intent myMatchesActivity = new Intent(view.getContext(), MyMatchesActivity.class);
-                    myMatchesActivity.putExtras(extras);
-                    startActivity(myMatchesActivity);
-                } else if (User.getCurrentUserId() != null) {
-                    Toast.makeText(view.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(view.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
-                }
+                Intent myMatchesActivity = new Intent(view1.getContext(), MyMatchesActivity.class);
+                myMatchesActivity.putExtras(extras);
+                startActivity(myMatchesActivity);
+            } else if (User.getCurrentUserId() != null) {
+                Toast.makeText(view1.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(view1.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -133,21 +119,18 @@ public class AccountFragment extends Fragment {
         if (currentUser != null && currentUser.getUID() != User.getCurrentUserId()) {
             friendsCard.setVisibility(View.GONE);
         }
-        friendsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (currentUser != null) {
-                    Bundle extras = new Bundle();
-                    extras.putParcelable("user", currentUser);
+        friendsCard.setOnClickListener(view13 -> {
+            if (currentUser != null) {
+                Bundle extras = new Bundle();
+                extras.putParcelable("user", currentUser);
 
-                    Intent friendsActivity = new Intent(view.getContext(), FriendsActivity.class);
-                    friendsActivity.putExtras(extras);
-                    startActivity(friendsActivity);
-                } else if (User.getCurrentUserId() != null) {
-                    Toast.makeText(view.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(view.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
-                }
+                Intent friendsActivity = new Intent(view13.getContext(), FriendsActivity.class);
+                friendsActivity.putExtras(extras);
+                startActivity(friendsActivity);
+            } else if (User.getCurrentUserId() != null) {
+                Toast.makeText(view13.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(view13.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -164,14 +147,11 @@ public class AccountFragment extends Fragment {
             }
 
             SportRepository.getInstance().fetchSportById(currentUser.getIdFavSport(),
-                    new FirebaseCallback() {
-                        @Override
-                        public void callback(Object object) {
-                            Sport fetch_sport = (Sport) object;
+                    object -> {
+                        Sport fetch_sport = (Sport) object;
 
-                            if (fetch_sport != null) {
-                                sport.setText(fetch_sport.getName());
-                            }
+                        if (fetch_sport != null) {
+                            sport.setText(fetch_sport.getName());
                         }
                     });
         }

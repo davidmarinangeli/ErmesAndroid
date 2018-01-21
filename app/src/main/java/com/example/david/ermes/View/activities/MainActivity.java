@@ -6,17 +6,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
-import android.os.Parcelable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -25,8 +20,8 @@ import com.example.david.ermes.Model.db.DatabaseManager;
 import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.NotificationRepository;
-import com.example.david.ermes.View.ViewPagerAdapter;
 import com.example.david.ermes.R;
+import com.example.david.ermes.View.ViewPagerAdapter;
 import com.example.david.ermes.View.customviews.CoolViewPager;
 import com.example.david.ermes.View.fragments.AccountFragment;
 import com.example.david.ermes.View.fragments.FirstOpenLoginFragment;
@@ -80,27 +75,18 @@ public class MainActivity extends AppCompatActivity {
 
         num_notifications = 0;
 
-        bottomNavigation = findViewById(R.id.bottom_navigation);
-        viewPager = findViewById(R.id.viewPager);
-
-        // Da qui creo la bottom navigation view
-        bottomNavigation.setBehaviorTranslationEnabled(true);
-
-        // Creo items
-        left_item = new AHBottomNavigationItem(R.string.title_maps, R.drawable.ic_place_black_24dp, R.color.colorPrimary);
-        right_item = new AHBottomNavigationItem(R.string.title_account, R.drawable.ic_person_black_24dp, R.color.colorPrimary);
-        central_item = new AHBottomNavigationItem(R.string.title_home, R.drawable.ic_home_black_24dp, R.color.colorPrimary);
-
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        initBottomNavigationView();
+        manageFABs();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        if (User.getCurrentUserId() != null && DatabaseManager.get().isLogged())
+            viewPagerAdapter.replaceFragment(2, new AccountFragment());
+        else
+            viewPagerAdapter.replaceFragment(2,new FirstOpenLoginFragment());
 
-
-        manageFABs();
-        initBottomNavigationView();
     }
 
     private void manageFABs() {
@@ -233,6 +219,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void initBottomNavigationView() {
 
+        bottomNavigation = findViewById(R.id.bottom_navigation);
+        viewPager = findViewById(R.id.viewPager);
+
+        // Da qui creo la bottom navigation view
+        bottomNavigation.setBehaviorTranslationEnabled(true);
+
+        // Creo items
+        left_item = new AHBottomNavigationItem(R.string.title_maps, R.drawable.ic_place_black_24dp, R.color.colorPrimary);
+        right_item = new AHBottomNavigationItem(R.string.title_account, R.drawable.ic_person_black_24dp, R.color.colorPrimary);
+        central_item = new AHBottomNavigationItem(R.string.title_home, R.drawable.ic_home_black_24dp, R.color.colorPrimary);
+
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
         bottomNavigation.removeAllItems();
 
         // Aggiungo items
@@ -242,15 +241,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewPagerAdapter.addFragment(new MapsFragment());
         viewPagerAdapter.addFragment(new HomeFragment());
+        viewPagerAdapter.addFragment(new FirstOpenLoginFragment());
 
-        if (User.getCurrentUserId() != null && DatabaseManager.get().isLogged()) {
-            viewPagerAdapter.addFragment(new AccountFragment());
-            viewPagerAdapter.notifyDataSetChanged();
-        } else {
-            viewPagerAdapter.addFragment(new FirstOpenLoginFragment());
-            viewPagerAdapter.notifyDataSetChanged();
-        }
-        viewPager.removeAllViews();
         viewPager.setAdapter(viewPagerAdapter);
 
         //setto colore
@@ -262,13 +254,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(1);
 
         bottomNavigation.setOnTabSelectedListener((position, wasSelected) -> {
-            if (position == 1) {
-                viewPager.setCurrentItem(position);
-                toolbar.setVisibility(View.VISIBLE);
-            } else {
-                viewPager.setCurrentItem(position);
-                toolbar.setVisibility(View.GONE);
-            }
+            viewPager.setCurrentItem(position);
+            toolbar.setVisibility(View.VISIBLE);
             return true;
         });
     }
