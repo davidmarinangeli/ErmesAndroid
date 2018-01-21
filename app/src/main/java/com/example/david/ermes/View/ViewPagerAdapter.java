@@ -19,8 +19,15 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
     }
 
 
-    public void addFragments(android.support.v4.app.Fragment fragments) {
-        this.fragments.add(fragments);
+    public void addFragment(android.support.v4.app.Fragment fragment) {
+        this.fragments.add(fragment);
+    }
+
+    public void replaceFragment(int position, Fragment fragment) {
+        if (fragments != null && position < fragments.size()) {
+            this.fragments.set(position, fragment);
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -32,4 +39,5 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
     public int getCount() {
         return fragments.size();
     }
+
 }

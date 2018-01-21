@@ -28,6 +28,7 @@ public class DatabaseManager {
         return instance;
     }
 
+    private static boolean logged = FirebaseAuth.getInstance().getCurrentUser() != null;
     private FirebaseDatabase database;
     private DatabaseReference usersRef, matchesRef, sportsRef, locationsRef, notificationsRef,
         friendshipRef;
@@ -44,9 +45,17 @@ public class DatabaseManager {
         this.friendshipRef = database.getReference("friendships");
     }
 
+    public boolean isLogged(){
+        return logged;
+    }
+
+    public void setLogged(boolean logged){
+        this.logged = logged;
+    }
+
     public void getCurrentUser(final FirebaseCallback firebaseCallback) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null && !user.getUid().isEmpty()) {
+        if (user != null && !user.getUid().isEmpty() && isLogged()) {
             this.usersRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

@@ -29,42 +29,45 @@ public class CreateEventPresenter {
                           final String sport,
                           final Location selected_location,
                           final ArrayList<MissingStuffElement> chips_title_list,
-                          final boolean checked) {
+                          final boolean checked,
+                          String maxplayers) {
 
-        UserRepository.getInstance().getUser(new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null) {
-                    final User current_user = (User) object;
+        UserRepository.getInstance().getUser(object -> {
+            if (object != null) {
+                final User current_user = (User) object;
 
-                    SportRepository.getInstance().fetchSportByName(sport, new FirebaseCallback() {
-                        @Override
-                        public void callback(Object object) {
-                            if (object != null) {
-                                Sport found_sport = (Sport) object;
+                SportRepository.getInstance().fetchSportByName(sport, object1 -> {
+                    if (object1 != null) {
+                        Sport found_sport = (Sport) object1;
 
-                                //qui mettere il comportamento alla creazione del match
-                                Match result_match = new Match(
-                                        current_user.getUID(),
-                                        selected_location.getId(),
-                                        com.example.david.ermes.Presenter.utils.TimeUtils.fromMillisToDate(timeInMillis),
-                                        checked,
-                                        found_sport.getID(),
-                                        found_sport.getNumPlayers(),
-                                        2,
-                                        chips_title_list,
-                                        new ArrayList<String>(),
-                                        new ArrayList<String>()
-                                );
-
-                                // result_match.setOwner(current_user);
-                                result_match.save();
-
-                                createEventActivity.goToMainActivity(result_match);
-                            }
+                        int final_max_players;
+                        if (Integer.valueOf(maxplayers)>0){
+                            final_max_players = Integer.valueOf(maxplayers);
+                        } else {
+                            final_max_players = found_sport.getNumPlayers();
                         }
-                    });
-                }
+
+                        //qui mettere il comportamento alla creazione del match
+                        Match result_match = new Match(
+                                current_user.getUID(),
+                                selected_location.getId(),
+                                com.example.david.ermes.Presenter.utils.TimeUtils.fromMillisToDate(timeInMillis),
+                                checked,
+                                found_sport.getID(),
+                                final_max_players,
+                                0,
+                                chips_title_list,
+                                new ArrayList<String>(),
+                                new ArrayList<String>()
+                        );
+
+
+                        result_match.addPartecipant(current_user.getUID());
+                        result_match.save();
+
+                        createEventActivity.goToMainActivity(result_match);
+                    }
+                });
             }
         });
     }
