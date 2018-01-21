@@ -73,7 +73,6 @@ public class AccountFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-
         return inflater.inflate(R.layout.fragment_account, container, false);
 
     }
@@ -81,15 +80,6 @@ public class AccountFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-//        accountLayout = view.findViewById(R.id.account_main_layout);
-//
-//        CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
-//                CoordinatorLayout.LayoutParams.MATCH_PARENT,
-//                CoordinatorLayout.LayoutParams.MATCH_PARENT
-//        );
-//        params.setMarginStart(StyleUtils.getPixelsByDp(getContext(), -56));
-//        accountLayout.setLayoutParams(params);
 
         toolbar = view.findViewById(R.id.account_toolbar);
         toolbar.setTitle("");

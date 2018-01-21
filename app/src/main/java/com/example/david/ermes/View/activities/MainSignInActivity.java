@@ -2,6 +2,7 @@ package com.example.david.ermes.View.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +14,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.david.ermes.Model.db.DatabaseManager;
 import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.google.android.gms.auth.api.Auth;
@@ -138,24 +141,22 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
 
     private void signInNormal(final String email, final String password) {
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainSignInActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-
-                        // ...
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        DatabaseManager.get().setLogged(true);
+                        updateUI(user);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Toast.makeText(MainSignInActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                        updateUI(null);
                     }
+
+                    // ...
                 });
     }
 
@@ -188,58 +189,41 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithCredential:success");
 
-                            final FirebaseUser user = task.getResult().getUser();
+                        final FirebaseUser user = task.getResult().getUser();
 
-                            UserRepository.getInstance().fetchUserById(user.getUid(), new FirebaseCallback() {
-                                @Override
-                                public void callback(Object object) {
-                                    if (object == null) {
-                                        Intent signupactivity = new Intent(getBaseContext(), SignUpActivity.class);
-                                        Bundle extras = new Bundle();
+                        UserRepository.getInstance().fetchUserById(user.getUid(), object -> {
+                            if (object == null) {
+                                Intent signupactivity = new Intent(getBaseContext(), SignUpActivity.class);
+                                Bundle extras = new Bundle();
 
-                                        // c'è un modo più bello di fare sto schifo?
+                                extras.putString("mail", user.getEmail());
+                                extras.putString("uid", user.getUid());
+                                extras.putString("name", user.getDisplayName());
+                                extras.putString("photoURL", user.getPhotoUrl().toString());
 
-                                        /* TODO si può fare a meno di inserire gli extras:
-                                            il FirebaseUser lo puoi ottenere in qualsiasi activity,
-                                            ______FirebaseAuth.getInstance().getCurrentUser()______
-                                            quindi anche nell'activity per il completamento della
-                                            registrazione
+                                signupactivity.putExtras(extras);
+                                startActivity(signupactivity);
+                            } else {
+                                DatabaseManager.get().setLogged(true);
+                                finish();
+                            }
+                        });
 
-                                            Alternativa: passare solamente l'oggetto user
-                                            con il bundle, ma è più fico il primo modo
-                                         */
-
-                                        extras.putString("mail", user.getEmail());
-                                        extras.putString("uid", user.getUid());
-                                        extras.putString("name", user.getDisplayName());
-                                        extras.putString("photoURL", user.getPhotoUrl().toString());
-
-                                        signupactivity.putExtras(extras);
-                                        startActivity(signupactivity);
-                                    } else {
-                                        finish();
-                                    }
-                                }
-                            });
-
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(MainSignInActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-
-                        // ...
+                        updateUI(user);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        Toast.makeText(MainSignInActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                        updateUI(null);
                     }
+
+                    // ...
                 });
     }
 
@@ -254,12 +238,11 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                Log.d(TAG, "Signed out");
-                userlogintext.setText("");
-            }
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(status -> {
+            DatabaseManager.get().setLogged(false);
+            mAuth.signOut();
+            Log.d(TAG, "Signed out");
+            userlogintext.setText("");
         });
     }
 }
