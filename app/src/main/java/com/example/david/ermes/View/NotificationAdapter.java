@@ -49,6 +49,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private List<User> users;
     private Context context;
 
+    private User currentUser;
+
     public NotificationAdapter(Context context) {
         this.context = context;
     }
@@ -72,6 +74,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public int getItemCount() {
         return notifications != null ? notifications.size() : 0;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 
     public void refreshList(List<Notification> notifications) {
@@ -440,16 +446,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             new Friendship(notification.getIdCreator(), notification.getIdOwner(),
                     System.currentTimeMillis()).save(object -> {
-                        notification.setRead(true);
-                        notification.save(object1 -> Notification.createFriendshipAccepted(
-                                notification.getIdCreator()).save(
-                                object11 -> {
-                                    mDialog.dismiss();
-                                    item.setActivated(true);
-                                    notifyDataSetChanged();
-                                }
-                        ));
-                    });
+                notification.setRead(true);
+                notification.save(object1 -> Notification.createFriendshipAccepted(
+                        currentUser, notification.getIdCreator()).save(
+                        object11 -> {
+                            mDialog.dismiss();
+                            item.setActivated(true);
+                            notifyDataSetChanged();
+                        }
+                ));
+            });
         }
 
         private void declineFriendShip(int position) {
