@@ -144,7 +144,9 @@ public class CreateEventActivity extends AppCompatActivity {
                     });
         }
 
-        num_players_button.setOnClickListener(v -> showNumDialog());
+        // creo l'alert con i numeri e lo mostro
+        AlertDialog alert = getAlertDialog();
+        num_players_button.setOnClickListener(v -> alert.show());
 
         fine_creazione.setOnClickListener(v -> {
             ArrayList<MissingStuffElement> chips_title_list = new ArrayList<>();
@@ -153,12 +155,36 @@ public class CreateEventActivity extends AppCompatActivity {
             }
 
             if (selected_sport_string != null && selected_location != null) {
-                createEventPresenter.saveMatch(match_calendar_time.getTimeInMillis(), selected_sport_string, selected_location, chips_title_list, ispublic_switch.isChecked());
+                createEventPresenter.saveMatch(match_calendar_time.getTimeInMillis(),
+                        selected_sport_string,
+                        selected_location,
+                        chips_title_list,
+                        ispublic_switch.isChecked(),
+                        String.valueOf(num_players_button.getText()));
             }
         });
 
         createEventPresenter = new CreateEventPresenter(this);
 
+    }
+
+    private AlertDialog getAlertDialog() {
+        MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(this)
+                .minValue(1)
+                .maxValue(10)
+                .backgroundColor(Color.WHITE)
+                .separatorColor(Color.TRANSPARENT)
+                .textColor(Color.BLACK)
+                .textSize(20)
+                .enableFocusability(false)
+                .wrapSelectorWheel(true)
+                .build();
+
+        return new AlertDialog.Builder(this)
+                .setTitle("Numero giocatori")
+                .setView(numberPicker)
+                .setPositiveButton(getString(android.R.string.ok),
+                        (dialogInterface, i) -> num_players_button.setText(String.valueOf(numberPicker.getValue()))).create();
     }
 
     private ArrayList<com.example.david.ermes.Model.models.Location> createLocationSpinner() {
@@ -179,33 +205,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
                 });
         return downloaded_locations;
-    }
-
-
-    private MaterialNumberPicker createDialog() {
-        MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(this)
-                .minValue(1)
-                .maxValue(10)
-                .defaultValue(1)
-                .backgroundColor(Color.WHITE)
-                .separatorColor(Color.TRANSPARENT)
-                .textColor(Color.BLACK)
-                .textSize(20)
-                .enableFocusability(false)
-                .wrapSelectorWheel(true)
-                .build();
-        return numberPicker;
-
-    }
-
-    private void showNumDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Numero giocatori")
-                .setView(createDialog())
-                .setPositiveButton(getString(android.R.string.ok), (dialog, which) ->
-
-                        Toast.makeText(this, "Yay", Toast.LENGTH_SHORT).show())
-                .show();
     }
 
     private void createSportSpinner() {

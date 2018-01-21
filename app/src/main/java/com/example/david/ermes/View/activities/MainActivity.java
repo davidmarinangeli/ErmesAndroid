@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
 import android.os.Parcelable;
 import android.support.design.widget.CoordinatorLayout;
@@ -20,7 +21,7 @@ import android.widget.ImageButton;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.example.david.ermes.Model.db.FirebaseCallback;
+import com.example.david.ermes.Model.db.DatabaseManager;
 import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.NotificationRepository;
@@ -28,6 +29,7 @@ import com.example.david.ermes.View.ViewPagerAdapter;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.customviews.CoolViewPager;
 import com.example.david.ermes.View.fragments.AccountFragment;
+import com.example.david.ermes.View.fragments.FirstOpenLoginFragment;
 import com.example.david.ermes.View.fragments.HomeFragment;
 import com.example.david.ermes.View.fragments.MapsFragment;
 import com.github.clans.fab.FloatingActionButton;
@@ -49,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton add_place_fab;
     private ImageButton notificationsButton;
 
+    AHBottomNavigationItem left_item;
+    AHBottomNavigationItem right_item;
+    AHBottomNavigationItem central_item;
+
     private ValueAnimator notification_anim;
     private int num_notifications;
 
@@ -58,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setSupportActionBar(toolbar);
-
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
@@ -70,6 +75,35 @@ public class MainActivity extends AppCompatActivity {
         default_event_fab = findViewById(R.id.addefaultevent);
         add_place_fab = findViewById(R.id.addplace);
 
+        notificationsButton = findViewById(R.id.toolbar_notifications_button);
+        notification_anim = new ValueAnimator();
+
+        num_notifications = 0;
+
+        bottomNavigation = findViewById(R.id.bottom_navigation);
+        viewPager = findViewById(R.id.viewPager);
+
+        // Da qui creo la bottom navigation view
+        bottomNavigation.setBehaviorTranslationEnabled(true);
+
+        // Creo items
+        left_item = new AHBottomNavigationItem(R.string.title_maps, R.drawable.ic_place_black_24dp, R.color.colorPrimary);
+        right_item = new AHBottomNavigationItem(R.string.title_account, R.drawable.ic_person_black_24dp, R.color.colorPrimary);
+        central_item = new AHBottomNavigationItem(R.string.title_home, R.drawable.ic_home_black_24dp, R.color.colorPrimary);
+
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+        manageFABs();
+        initBottomNavigationView();
+    }
+
+    private void manageFABs() {
         if (User.getCurrentUserId() != null) {
 
             default_event_fab.setColorNormal(default_event_fab.getColorNormal());
@@ -110,79 +144,71 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(add_place_fab, "Registrati per aggiungere un luogo", Snackbar.LENGTH_LONG).show();
             }
         });
-
-        notificationsButton = findViewById(R.id.toolbar_notifications_button);
-        notification_anim = new ValueAnimator();
-        num_notifications = 0;
-
-        initBottomNavigationView();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (User.getCurrentUserId() != null && !User.getCurrentUserId().isEmpty()) {
+        if (User.getCurrentUserId() != null && DatabaseManager.get().isLogged()) {
+
             notificationsButton.setVisibility(View.VISIBLE);
 
             NotificationRepository.getInstance().fetchNotificationsByIdOwner(User.getCurrentUserId(),
-                    new FirebaseCallback() {
-                        @Override
-                        public void callback(Object object) {
-                            // TODO lasciamo il fetch delle notifiche nella main activity per mettere il numeretto in rosso?
+                    object -> {
+                        // TODO lasciamo il fetch delle notifiche nella main activity per mettere il numeretto in rosso?
 
-                            List<Notification> list = (List<Notification>) object;
+                        List<Notification> list = (List<Notification>) object;
 
-                            if (list == null) {
-                                list = new ArrayList<>();
-                            } else if (Notification.getUnreadNotificationsFromList(list).size() > 0) {
+                        if (list == null) {
+                            list = new ArrayList<>();
+                        } else if (Notification.getUnreadNotificationsFromList(list).size() > 0) {
 
-                                if (notification_anim != null) {
-                                    if (notification_anim.isPaused()) {
-                                        notification_anim.resume();
-                                    } else {
+                            if (notification_anim != null) {
+                                if (notification_anim.isPaused()) {
+                                    notification_anim.resume();
+                                } else {
 //                                        notification_anim.setIntValues(Color.WHITE, R.color.colorAccent,
 //                                                R.color.colorAccent, Color.WHITE);
-                                        notification_anim.setIntValues(
-                                                Color.argb(255, 255, 255, 255),
-                                                Color.argb(255, 68, 138, 255),
-                                                Color.argb(255, 68, 138, 255),
-                                                Color.argb(255, 255, 255, 255)
-                                        );
-                                        notification_anim.setEvaluator(new ArgbEvaluator());
+                                    notification_anim.setIntValues(
+                                            Color.argb(255, 255, 255, 255),
+                                            Color.argb(255, 68, 138, 255),
+                                            Color.argb(255, 68, 138, 255),
+                                            Color.argb(255, 255, 255, 255)
+                                    );
+                                    notification_anim.setEvaluator(new ArgbEvaluator());
 
-                                        notification_anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                            @Override
-                                            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                                notificationsButton.setColorFilter(
-                                                        (Integer) valueAnimator.getAnimatedValue(),
-                                                        PorterDuff.Mode.SRC_ATOP);
-                                            }
-                                        });
+                                    notification_anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                        @Override
+                                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                            notificationsButton.setColorFilter(
+                                                    (Integer) valueAnimator.getAnimatedValue(),
+                                                    PorterDuff.Mode.SRC_ATOP);
+                                        }
+                                    });
 
-                                        notification_anim.setRepeatCount(INFINITE);
-                                        notification_anim.setDuration(4000);
-                                        notification_anim.start();
-                                    }
+                                    notification_anim.setRepeatCount(INFINITE);
+                                    notification_anim.setDuration(4000);
+                                    notification_anim.start();
                                 }
-                            } else {
-                                notificationsButton.setColorFilter(Color.argb(255, 255, 255, 255));
                             }
-
-                            List<Notification> finalList = list;
-                            notificationsButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent notificationActivity = new Intent(MainActivity.this,
-                                            NotificationsActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putParcelableArrayList("notifications", (ArrayList<Notification>) finalList);
-                                    notificationActivity.putExtras(bundle);
-
-                                    startActivity(notificationActivity);
-                                }
-                            });
+                        } else {
+                            notificationsButton.setColorFilter(Color.argb(255, 255, 255, 255));
                         }
+
+                        List<Notification> finalList = list;
+                        notificationsButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent notificationActivity = new Intent(MainActivity.this,
+                                        NotificationsActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelableArrayList("notifications", (ArrayList<Notification>) finalList);
+                                notificationActivity.putExtras(bundle);
+
+                                startActivity(notificationActivity);
+                            }
+                        });
                     });
         } else notificationsButton.setVisibility(View.GONE);
     }
@@ -206,28 +232,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initBottomNavigationView() {
-        // Da qui creo la bottom navigation view
-        bottomNavigation = findViewById(R.id.bottom_navigation);
-        bottomNavigation.setBehaviorTranslationEnabled(true);
-        viewPager = findViewById(R.id.viewPager);
 
-        // Creo items
-        AHBottomNavigationItem left_item = new AHBottomNavigationItem(R.string.title_maps, R.drawable.ic_place_black_24dp, R.color.colorPrimary);
-        AHBottomNavigationItem right_item = new AHBottomNavigationItem(R.string.title_account, R.drawable.ic_person_black_24dp, R.color.colorPrimary);
-        AHBottomNavigationItem central_item = new AHBottomNavigationItem(R.string.title_home, R.drawable.ic_home_black_24dp, R.color.colorPrimary);
+        bottomNavigation.removeAllItems();
 
         // Aggiungo items
         bottomNavigation.addItem(left_item);
         bottomNavigation.addItem(central_item);
         bottomNavigation.addItem(right_item);
 
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter.addFragment(new MapsFragment());
+        viewPagerAdapter.addFragment(new HomeFragment());
 
-        viewPagerAdapter.addFragments(new MapsFragment());
-        viewPagerAdapter.addFragments(new HomeFragment());
-        viewPagerAdapter.addFragments(new AccountFragment());
+        if (User.getCurrentUserId() != null && DatabaseManager.get().isLogged()) {
+            viewPagerAdapter.addFragment(new AccountFragment());
+            viewPagerAdapter.notifyDataSetChanged();
+        } else {
+            viewPagerAdapter.addFragment(new FirstOpenLoginFragment());
+            viewPagerAdapter.notifyDataSetChanged();
+        }
+        viewPager.removeAllViews();
         viewPager.setAdapter(viewPagerAdapter);
-
 
         //setto colore
         bottomNavigation.setAccentColor(ContextCompat.getColor(this, R.color.colorAccent));
@@ -237,21 +261,15 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setCurrentItem(1);
         viewPager.setCurrentItem(1);
 
-        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-            @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
-                if (position == 0) {
-                    viewPager.setCurrentItem(position);
-                    toolbar.setVisibility(View.VISIBLE);
-                } else if (position == 1) {
-                    viewPager.setCurrentItem(position);
-                    toolbar.setVisibility(View.VISIBLE);
-                } else if (position == 2) {
-                    viewPager.setCurrentItem(position);
-                    toolbar.setVisibility(View.GONE);
-                }
-                return true;
+        bottomNavigation.setOnTabSelectedListener((position, wasSelected) -> {
+            if (position == 1) {
+                viewPager.setCurrentItem(position);
+                toolbar.setVisibility(View.VISIBLE);
+            } else {
+                viewPager.setCurrentItem(position);
+                toolbar.setVisibility(View.GONE);
             }
+            return true;
         });
     }
 

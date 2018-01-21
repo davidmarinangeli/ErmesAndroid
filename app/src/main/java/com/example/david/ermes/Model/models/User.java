@@ -3,6 +3,7 @@ package com.example.david.ermes.Model.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.david.ermes.Model.db.DatabaseManager;
 import com.example.david.ermes.Model.db.DbModels;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.repository.SportRepository;
@@ -138,7 +139,7 @@ public class User implements Parcelable {
             currentUser = FirebaseAuth.getInstance().getCurrentUser();
         }
 
-        if (currentUser != null) {
+        if (DatabaseManager.get().isLogged() && currentUser != null) {
             return currentUser.getUid();
         }
 

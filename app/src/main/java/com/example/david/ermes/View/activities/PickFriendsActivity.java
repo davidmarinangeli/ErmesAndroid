@@ -57,12 +57,14 @@ public class PickFriendsActivity extends AppCompatActivity {
         result_match = intent.getParcelableExtra("match");
 
         linearLayoutManager = new LinearLayoutManager(this);
-        pickFriendsAdapter = new PickFriendsAdapter(this);
+        pickFriendsAdapter = new PickFriendsAdapter(PickFriendsActivity.this,this);
         friendsrecyclerview = findViewById(R.id.pick_friends_recycler);
         friendsrecyclerview.setAdapter(pickFriendsAdapter);
         friendsrecyclerview.setNestedScrollingEnabled(false);
         friendsrecyclerview.setLayoutManager(linearLayoutManager);
         initList();
+
+        max_players.setText(String.valueOf(peopleICanInvite(result_match)));
 
         spunta_done.setOnClickListener(view -> pickFriendsAdapter.saveFriendsList(object -> {
             if (object != null){
@@ -90,6 +92,10 @@ public class PickFriendsActivity extends AppCompatActivity {
 
     }
 
+    public void editFreeSlot(FirebaseCallback firebaseCallback){
+        firebaseCallback.callback(max_players);
+    };
+
     public void initList() {
         FriendshipRepository.getInstance().fetchFriendshipsByUserId(User.getCurrentUserId(), object -> {
             if (object != null) {
@@ -107,7 +113,7 @@ public class PickFriendsActivity extends AppCompatActivity {
                         }
 
                         if (getFetchFriendsCount() == user_friends.size()) {
-                            pickFriendsAdapter.refreshList(my_friends);
+                            pickFriendsAdapter.refreshList(my_friends,result_match);
 
                             if (pickFriendsAdapter.getItemCount()>0){
                                 no_friends.setVisibility(View.GONE);
@@ -123,6 +129,11 @@ public class PickFriendsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         onBackPressed();
         return true;
+    }
+
+
+    public static int peopleICanInvite(Match result_match) {
+        return (result_match.getMaxPlayers())-(result_match.getPartecipants().size())-(result_match.getPending().size());
     }
 
     private int fetch_friends_count = 0;

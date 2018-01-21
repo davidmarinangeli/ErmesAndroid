@@ -63,7 +63,6 @@
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme" />
         <activity android:name=".View.activities.NotificationsActivity" />
-
         <activity android:name=".View.activities.MyMatchesActivity" />
         <activity android:name=".View.activities.FriendsActivity" />
         <activity android:name=".View.activities.MatchUsersActivity" />
@@ -74,7 +73,8 @@
 
         <activity android:name=".View.activities.PickPlaceActivity" />
         <activity android:name=".View.activities.SignUpActivity" />
-        <activity android:name=".View.activities.PickFriendsActivity"></activity>
+        <activity android:name=".View.activities.PickFriendsActivity" />
+        <activity android:name=".View.fragments.FirstOpenLoginFragment"></activity>
     </application>
 
 </manifest>
