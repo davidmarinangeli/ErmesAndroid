@@ -4,11 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,6 @@ import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Notification;
-import com.example.david.ermes.Model.models.NotificationType;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.MatchRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
@@ -31,8 +28,6 @@ import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.AccountActivity;
 import com.example.david.ermes.View.activities.EventActivity;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
-
-import static com.example.david.ermes.Model.models.NotificationType.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -185,9 +180,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     setButtonsVisible(View.VISIBLE);
 
                     left_button.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_done_black_24dp, 0, 0, 0);
+                            R.drawable.ic_done_white_24dp, 0, 0, 0);
                     right_button.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_close_black_24dp, 0, 0, 0);
+                            R.drawable.ic_close_white_24dp, 0, 0, 0);
 
                     left_button.setText("Accetta");
                     right_button.setText("Elimina");
