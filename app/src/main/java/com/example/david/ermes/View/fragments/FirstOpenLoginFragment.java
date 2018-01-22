@@ -36,7 +36,6 @@ public class FirstOpenLoginFragment extends Fragment {
         open_login.setOnClickListener(view1 -> {
             Intent login_intent = new Intent(this.getContext(), MainSignInActivity.class);
             startActivity(login_intent);
-
         });
     }
 }
