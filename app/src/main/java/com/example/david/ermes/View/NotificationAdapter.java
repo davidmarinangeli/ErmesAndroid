@@ -160,9 +160,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     setButtonsVisible(View.VISIBLE);
 
                     left_button.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_event_available_black_24dp, 0, 0, 0);
+                            R.drawable.ic_event_available_white_24dp, 0, 0, 0);
                     right_button.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_event_busy_black_24dp, 0, 0, 0);
+                            R.drawable.ic_event_busy_white_24dp, 0, 0, 0);
 
                     left_button.setText("Partecipa");
                     right_button.setText("Rifiuta");
