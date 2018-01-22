@@ -55,7 +55,7 @@
     <string name="city">Città</string>
     <string name="logingoogle">Accedi o Registrati con Google</string>
     <string name="materiali_mancanti">Materiali mancanti</string>
-    <string name="write_missing_stuff">Scrivi gli oggetti mancanti...</string>
+    <string name="write_missing_stuff">Scrivi gli oggetti mancanti</string>
     <string name="annulla">Annulla</string>
     <string name="nome_luogo">Nome luogo</string>
     <string name="che_sport_si_giocano_qui">Che sport si giocano qui?</string>
@@ -71,6 +71,7 @@
     <string name="ispublic">Pubblico</string>
     <string name="dove_vivi">Città</string>
     <string name="data_di_nascita">Data di nascita</string>
+    <string name="whatsmissing">Cosa manca?</string>
 
 
     <!-- buro gaio -->
