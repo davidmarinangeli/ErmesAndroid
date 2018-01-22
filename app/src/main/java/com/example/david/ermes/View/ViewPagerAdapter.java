@@ -4,13 +4,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.example.david.ermes.View.fragments.AccountFragment;
+import com.example.david.ermes.View.fragments.FirstOpenLoginFragment;
+
 import java.util.ArrayList;
 
 /**
  * Created by David on 10/10/2017.
  */
 
-public class ViewPagerAdapter extends FragmentPagerAdapter{
+public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     ArrayList<Fragment> fragments = new ArrayList<>();
 

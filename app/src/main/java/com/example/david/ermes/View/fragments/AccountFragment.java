@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -21,15 +20,11 @@ import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
-import com.example.david.ermes.Presenter.utils.StyleUtils;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.FriendsActivity;
 import com.example.david.ermes.View.activities.MainSignInActivity;
 import com.example.david.ermes.View.activities.MyMatchesActivity;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -38,9 +33,12 @@ import com.squareup.picasso.Picasso;
  */
 public class AccountFragment extends Fragment {
 
+    private CoordinatorLayout accountLayout;
+
     Button loginbutton;
     Button logoutbutton;
 
+    private Toolbar toolbar;
     private TextView name;
     private TextView age;
     private TextView sport;
@@ -59,7 +57,6 @@ public class AccountFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-
         currentUser = args != null ?
                 args.getParcelable("user")
                 : null;
@@ -87,6 +84,7 @@ public class AccountFragment extends Fragment {
         if (currentUser == null) {
             UserRepository.getInstance().getUser(object -> {
                 currentUser = (User) object;
+
                 initComponents();
             });
         } else {
@@ -95,25 +93,25 @@ public class AccountFragment extends Fragment {
 
         loginbutton = view.findViewById(R.id.loginbutton);
         logoutbutton = view.findViewById(R.id.logoutbutton);
-        loginbutton.setOnClickListener(view13 -> {
-            Intent i = new Intent(view13.getContext(), MainSignInActivity.class);
+        loginbutton.setOnClickListener(view12 -> {
+            Intent i = new Intent(view12.getContext(), MainSignInActivity.class);
             startActivity(i);
 
         });
 
         myMatchesCard = view.findViewById(R.id.myMatchesCard);
-        myMatchesCard.setOnClickListener(view12 -> {
+        myMatchesCard.setOnClickListener(view1 -> {
             if (currentUser != null) {
                 Bundle extras = new Bundle();
                 extras.putParcelable("user", currentUser);
 
-                Intent myMatchesActivity = new Intent(view12.getContext(), MyMatchesActivity.class);
+                Intent myMatchesActivity = new Intent(view1.getContext(), MyMatchesActivity.class);
                 myMatchesActivity.putExtras(extras);
                 startActivity(myMatchesActivity);
             } else if (User.getCurrentUserId() != null) {
-                Toast.makeText(view12.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view1.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(view12.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view1.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -121,18 +119,18 @@ public class AccountFragment extends Fragment {
         if (currentUser != null && currentUser.getUID() != User.getCurrentUserId()) {
             friendsCard.setVisibility(View.GONE);
         }
-        friendsCard.setOnClickListener(view1 -> {
+        friendsCard.setOnClickListener(view13 -> {
             if (currentUser != null) {
                 Bundle extras = new Bundle();
                 extras.putParcelable("user", currentUser);
 
-                Intent friendsActivity = new Intent(view1.getContext(), FriendsActivity.class);
+                Intent friendsActivity = new Intent(view13.getContext(), FriendsActivity.class);
                 friendsActivity.putExtras(extras);
                 startActivity(friendsActivity);
             } else if (User.getCurrentUserId() != null) {
-                Toast.makeText(view1.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view13.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(view1.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view13.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -148,13 +146,14 @@ public class AccountFragment extends Fragment {
                 Picasso.with(getContext()).load(R.drawable.user_placeholder).into(image_account);
             }
 
-            SportRepository.getInstance().fetchSportById(currentUser.getIdFavSport(), object -> {
-                Sport fetch_sport = (Sport) object;
+            SportRepository.getInstance().fetchSportById(currentUser.getIdFavSport(),
+                    object -> {
+                        Sport fetch_sport = (Sport) object;
 
-                if (fetch_sport != null) {
-                    sport.setText(fetch_sport.getName());
-                }
-            });
+                        if (fetch_sport != null) {
+                            sport.setText(fetch_sport.getName());
+                        }
+                    });
         }
     }
 
