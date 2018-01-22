@@ -15,6 +15,12 @@ public class SportChip extends Chip {
     private int id;
     private String name;
 
+    public SportChip() {}
+
+    public SportChip(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     @Nullable
     @Override
