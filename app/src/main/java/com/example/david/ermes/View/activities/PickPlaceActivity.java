@@ -6,15 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.example.david.ermes.Model.db.FirebaseCallback;
-import com.example.david.ermes.Model.db.SportDatabaseRepository;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
@@ -30,6 +24,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.tylersuehr.chips.ChipsInputLayout;
+import com.tylersuehr.chips.data.Chip;
+import com.tylersuehr.chips.data.ChipSelectionObserver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +36,13 @@ public class PickPlaceActivity extends AppCompatActivity {
     MapView mMapView;
     private GoogleMap googleMap;
     private MaterialEditText place_name;
-    private Button dismiss;
-    private Button fine;
+    private ImageButton dismiss;
+    private ImageButton fine;
     private ChipsInputLayout sport_chips;
-    private Spinner sport_spinner;
-    private String selected_sport_string;
-    SpinnerAdapter sportadapter;
+
+    private List<String> all_sports_ids;
+    private List<String> selected_sports_ids;
+    private List<SportChip> choises;
 
 
     @Override
@@ -53,18 +50,34 @@ public class PickPlaceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_place);
 
+        selected_sports_ids = new ArrayList<>();
+
         dismiss = findViewById(R.id.dismiss);
         place_name = findViewById(R.id.nome_location);
         fine = findViewById(R.id.accept);
         sport_chips = findViewById(R.id.sports_chips);
-        sport_spinner = findViewById(R.id.sport_spinner_place);
+        // sport_spinner = findViewById(R.id.sport_spinner_place);
+
+        sport_chips.addChipSelectionObserver(new ChipSelectionObserver() {
+            @Override
+            public void onChipSelected(Chip chip) {
+                int sport_index = choises.indexOf(chip);
+                selected_sports_ids.add(all_sports_ids.get(sport_index));
+            }
+
+            @Override
+            public void onChipDeselected(Chip chip) {
+                int sport_index = choises.indexOf(chip);
+                selected_sports_ids.remove(all_sports_ids.get(sport_index));
+            }
+        });
 
         mMapView = findViewById(R.id.pick_place_map);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume(); // needed to get the map to display immediately
 
         createSportSpinner();
-        sport_spinner.setOnItemSelectedListener(new sportSpinnerSelectedListener());
+        // sport_spinner.setOnItemSelectedListener(new sportSpinnerSelectedListener());
 
         try {
             MapsInitializer.initialize(this);
@@ -97,32 +110,23 @@ public class PickPlaceActivity extends AppCompatActivity {
             }
         });
 
-        dismiss.setOnClickListener(view -> {finish(); hideKeyboard();});
+        dismiss.setOnClickListener(view -> {
+            finish();
+            hideKeyboard();
+        });
 
         fine.setOnClickListener(view -> {
             if ((location_create != null)) {
                 if ((place_name.getText() != null) && (location_create.getLatitude() != 0)) {
-                    final List<SportChip> sport_chips_list = (List<SportChip>) sport_chips.getSelectedChips();
-                    final List<String> sport_id_list = new ArrayList<>();
+                    if (selected_sports_ids.size() == 0) {
+                        selected_sports_ids = all_sports_ids;
+                    }
 
-                    SportRepository.getInstance().fetchAll(object -> {
-                        if (object != null) {
-                            List<Sport> sport = (List<Sport>) object;
-
-                            for (Sport s : sport) {
-                                for (SportChip sportChip_name : sport_chips_list)
-                                    if (sportChip_name.getTitle().equals(s.getName())) {
-                                        sport_id_list.add(s.getID());
-
-                                    }
-                            }
-                            location_create.setName(place_name.getText().toString());
-                            location_create.setSportIds(sport_id_list);
-                            location_create.save();
-                            setResult(Activity.RESULT_OK);
-                            finish();
-                        }
-                    });
+                    location_create.setName(place_name.getText().toString());
+                    location_create.setSportIds(selected_sports_ids);
+                    location_create.save();
+                    setResult(Activity.RESULT_OK);
+                    finish();
                 } else {
                     if (place_name.getText() == null) {
                         place_name.setError("Inserisci un nome");
@@ -152,31 +156,18 @@ public class PickPlaceActivity extends AppCompatActivity {
 
     private void createSportSpinner() {
 
-        final ArrayList<String> arraySpinner = new ArrayList<>();
+        choises = new ArrayList<>();
+        all_sports_ids = new ArrayList<>();
 
         SportRepository.getInstance().fetchAll(object -> {
             for (Sport s : (ArrayList<Sport>) object) {
-                arraySpinner.add(s.getName());
+                all_sports_ids.add(s.getID());
+
+                SportChip sc = new SportChip(Integer.parseInt(s.getID()), s.getName());
+                choises.add(sc);
             }
-            sportadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
-            sport_spinner.setAdapter(sportadapter);
 
-
+            sport_chips.setFilterableChipList(choises);
         });
-    }
-
-    private class sportSpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
-
-        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-            selected_sport_string = parent.getItemAtPosition(pos).toString();
-            SportChip sportChip = new SportChip();
-            sportChip.setName(selected_sport_string);
-
-            sport_chips.addSelectedChip(sportChip);
-        }
-
-        public void onNothingSelected(AdapterView parent) {
-            // Do nothing.
-        }
     }
 }

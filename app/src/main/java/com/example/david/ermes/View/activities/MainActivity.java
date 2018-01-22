@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -51,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     AHBottomNavigationItem central_item;
 
     private ValueAnimator notification_anim;
-    private int num_notifications;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
         notificationsButton = findViewById(R.id.toolbar_notifications_button);
         notification_anim = new ValueAnimator();
-
-        num_notifications = 0;
 
         initBottomNavigationView();
         manageFABs();
