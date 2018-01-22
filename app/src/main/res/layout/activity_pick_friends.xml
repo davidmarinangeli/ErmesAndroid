@@ -27,7 +27,7 @@
                 android:layout_margin="4dp"
                 android:background="@null"
                 android:padding="12dp"
-                android:src="@drawable/ic_done_black_24dp"
+                android:src="@drawable/ic_done_white_24dp"
                 android:tint="@color/white" />
         </android.support.v7.widget.Toolbar>
 

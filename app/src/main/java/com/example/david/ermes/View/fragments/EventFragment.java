@@ -19,7 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.MissingStuffElement;
@@ -32,7 +31,6 @@ import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.AccountActivity;
-import com.example.david.ermes.View.activities.EventActivity;
 import com.example.david.ermes.View.activities.MatchUsersActivity;
 import com.example.david.ermes.View.activities.PickFriendsActivity;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -78,7 +76,7 @@ public class EventFragment extends Fragment {
 
     private Toolbar toolbar;
     private ImageButton invite;
-    private Button join;
+    private com.github.clans.fab.FloatingActionButton join;
     private ImageButton delete_match;
 
     private Button missing_stuff_button;
@@ -330,27 +328,27 @@ public class EventFragment extends Fragment {
                 break;
             case PRIVATE_PARTECIPANT:
                 join.setVisibility(View.VISIBLE);
-                join.setText(R.string.rimuovi);
+                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_24dp));
                 invite.setVisibility(View.GONE);
                 break;
             case PRIVATE_GUEST:
                 join.setVisibility(View.VISIBLE);
-                join.setText(R.string.partecipa);
+                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_done_white_24dp));
                 invite.setVisibility(View.GONE);
                 break;
             case PUBLIC_PARTECIPANT:
                 join.setVisibility(View.VISIBLE);
-                join.setText(R.string.rimuovi);
+                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_24dp));
                 invite.setVisibility(View.VISIBLE);
                 break;
             case PUBLIC_GUEST:
                 join.setVisibility(View.VISIBLE);
-                join.setText(R.string.partecipa);
+                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_done_white_24dp));
                 invite.setVisibility(View.VISIBLE);
                 break;
             case NOT_PARTECIPANT:
                 join.setVisibility(View.VISIBLE);
-                join.setText(R.string.partecipa);
+                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_done_white_24dp));
                 invite.setVisibility(View.VISIBLE);
                 break;
             case UNAVAILABLE:

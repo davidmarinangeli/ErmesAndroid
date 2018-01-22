@@ -77,9 +77,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
                     android:paddingHorizontal="16dp"
-                    android:drawableStart="@drawable/ic_done_black_24dp"
+                    android:drawableStart="@drawable/ic_done_white_24dp"
                     style="@style/Widget.AppCompat.Button.Borderless"
-                    android:drawableLeft="@drawable/ic_done_black_24dp"
+                    android:drawableLeft="@drawable/ic_done_white_24dp"
                     android:text="partecipa"/>
 
                 <Button
@@ -89,7 +89,7 @@
                     android:layout_weight=".5"
                     android:paddingHorizontal="16dp"
                     style="@style/Widget.AppCompat.Button.Borderless"
-                    android:drawableLeft="@drawable/ic_close_black_24dp"
+                    android:drawableLeft="@drawable/ic_close_white_24dp"
                     android:text="rifiuta"/>
 
             </LinearLayout>
