@@ -264,10 +264,8 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setOnTabSelectedListener((position, wasSelected) -> {
             if (position == 1) {
                 viewPager.setCurrentItem(position);
-                toolbar.setVisibility(View.VISIBLE);
             } else {
                 viewPager.setCurrentItem(position);
-                toolbar.setVisibility(View.GONE);
             }
             return true;
         });
