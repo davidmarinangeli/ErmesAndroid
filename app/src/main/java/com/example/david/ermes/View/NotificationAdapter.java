@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.david.ermes.Model.db.DatabaseManager;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Match;
@@ -313,7 +314,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     item.setActivated(false);
                     mDialog.show();
 
-                    if (matches.get(position) != null && User.getCurrentUserId() != null) {
+                    if (matches.get(position) != null && DatabaseManager.get().isLogged()) {
                         declineMatchInvitation(position);
                     } else {
                         fetchMatch(notifications.get(position).getIdMatch(), position, object -> {

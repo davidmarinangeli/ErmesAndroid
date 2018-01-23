@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.david.ermes.Model.db.DatabaseManager;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.MissingStuffElement;
@@ -121,7 +122,7 @@ public class EventFragment extends Fragment {
                 userCase = PUBLIC_PARTECIPANT;
             } else if (match.getPending().contains(User.getCurrentUserId())) {
                 userCase = PUBLIC_GUEST;
-            } else if (User.getCurrentUserId() != null) {
+            } else if (DatabaseManager.get().isLogged()) {
                 userCase = NOT_PARTECIPANT;
             } else {
                 userCase = UNAVAILABLE;

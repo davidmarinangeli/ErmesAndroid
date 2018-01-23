@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.david.ermes.Model.db.DatabaseManager;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
@@ -108,7 +109,7 @@ public class AccountFragment extends Fragment {
                 Intent myMatchesActivity = new Intent(view1.getContext(), MyMatchesActivity.class);
                 myMatchesActivity.putExtras(extras);
                 startActivity(myMatchesActivity);
-            } else if (User.getCurrentUserId() != null) {
+            } else if (DatabaseManager.get().isLogged()) {
                 Toast.makeText(view1.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(view1.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
@@ -116,7 +117,7 @@ public class AccountFragment extends Fragment {
         });
 
         friendsCard = view.findViewById(R.id.cardViewFriends);
-        if (currentUser != null && currentUser.getUID() != User.getCurrentUserId()) {
+        if (currentUser != null && !currentUser.getUID().equals(User.getCurrentUserId())) {
             friendsCard.setVisibility(View.GONE);
         }
         friendsCard.setOnClickListener(view13 -> {
@@ -127,7 +128,7 @@ public class AccountFragment extends Fragment {
                 Intent friendsActivity = new Intent(view13.getContext(), FriendsActivity.class);
                 friendsActivity.putExtras(extras);
                 startActivity(friendsActivity);
-            } else if (User.getCurrentUserId() != null) {
+            } else if (DatabaseManager.get().isLogged()) {
                 Toast.makeText(view13.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(view13.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
