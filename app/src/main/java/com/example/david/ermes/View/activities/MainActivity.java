@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (User.getCurrentUserId() != null && DatabaseManager.get().isLogged())
+        if (DatabaseManager.get().isLogged())
             viewPagerAdapter.replaceFragment(2, new AccountFragment());
         else
             viewPagerAdapter.replaceFragment(2,new FirstOpenLoginFragment());
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void manageFABs() {
-        if (User.getCurrentUserId() != null) {
+        if (DatabaseManager.get().isLogged()) {
 
             default_event_fab.setColorNormal(default_event_fab.getColorNormal());
             default_event_fab.setColorPressed(default_event_fab.getColorPressed());
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         default_event_fab.setColorFilter(R.color.white);
         default_event_fab.setOnClickListener(view1 -> {
-            if (User.getCurrentUserId() == null || !DatabaseManager.get().isLogged()) {
+            if (!DatabaseManager.get().isLogged()) {
                 Snackbar.make(default_event_fab, "Registrati per creare una partita",
                         Snackbar.LENGTH_LONG).show();
             } else if (num_locations == null) {
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         add_place_fab.setOnClickListener(view -> {
-            if (User.getCurrentUserId() == null || !DatabaseManager.get().isLogged()) {
+            if (!DatabaseManager.get().isLogged()) {
                 Snackbar.make(add_place_fab, "Registrati per aggiungere un luogo", Snackbar.LENGTH_LONG).show();
             } else {
                 Intent i = new Intent(MainActivity.this, PickPlaceActivity.class);
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (User.getCurrentUserId() != null && DatabaseManager.get().isLogged()) {
+        if (DatabaseManager.get().isLogged()) {
 
             notificationsButton.setVisibility(View.VISIBLE);
 
