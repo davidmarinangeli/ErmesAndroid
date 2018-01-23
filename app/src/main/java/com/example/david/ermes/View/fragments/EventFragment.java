@@ -1,11 +1,13 @@
 package com.example.david.ermes.View.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,7 +36,11 @@ import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.AccountActivity;
 import com.example.david.ermes.View.activities.MatchUsersActivity;
 import com.example.david.ermes.View.activities.PickFriendsActivity;
+import android.support.design.widget.FloatingActionButton;
+
+import com.example.david.ermes.View.activities.PickPlaceActivity;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -68,6 +75,7 @@ public class EventFragment extends Fragment {
     private CircularImageView imageCreator;
     private LinearLayout showInvited;
     private LinearLayout showPartecipants;
+    private ImageView place_cover;
 
     private CardView profileCardView;
 
@@ -76,7 +84,7 @@ public class EventFragment extends Fragment {
 
     private Toolbar toolbar;
     private ImageButton invite;
-    private com.github.clans.fab.FloatingActionButton join;
+    private FloatingActionButton join;
     private ImageButton delete_match;
 
     private Button missing_stuff_button;
@@ -156,6 +164,7 @@ public class EventFragment extends Fragment {
         delete_match = view.findViewById(R.id.elimina_evento);
 
         profileCardView = view.findViewById(R.id.profileCard);
+        place_cover = view.findViewById(R.id.imageViewFavSport);
 
         // scarico lo user name in base all'id che mi ha dato il match
         UserRepository.getInstance().fetchUserById(match.getIdOwner(), object -> {
@@ -193,6 +202,12 @@ public class EventFragment extends Fragment {
             if (object != null) {
                 Location match_location = (Location) object;
                 placeofevent.setText(match_location.getName());
+                Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/staticmap?center="
+                                + match_location.getLatitude()+ "," + match_location.getLongitude()+
+                        "&zoom=18&size=600x400&maptype=hybrid&key=AIzaSyCCBlMJByIIPjLX3U045lwn93G-os92Zfw");
+
+                Picasso.with(this.getContext()).load(uri).memoryPolicy(MemoryPolicy.NO_CACHE).into(place_cover);
+
             }
         });
 
