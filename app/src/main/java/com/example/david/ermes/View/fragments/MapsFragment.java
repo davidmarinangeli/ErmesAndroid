@@ -238,25 +238,37 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onResume() {
         super.onResume();
-        mMapView.onResume();
+
+        if (mMapView != null) {
+            mMapView.onResume();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mMapView.onPause();
+
+        if (mMapView != null) {
+            mMapView.onPause();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mMapView.onDestroy();
+
+        if (mMapView != null) {
+            mMapView.onDestroy();
+        }
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mMapView.onLowMemory();
+
+        if (mMapView != null) {
+            mMapView.onLowMemory();
+        }
     }
 
     @Override
