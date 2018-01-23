@@ -16,8 +16,10 @@ import android.widget.ImageButton;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.david.ermes.Model.db.DatabaseManager;
+import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.User;
+import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.NotificationRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.ViewPagerAdapter;
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     AHBottomNavigationItem central_item;
 
     private ValueAnimator notification_anim;
+    private Integer num_locations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
 
         notificationsButton = findViewById(R.id.toolbar_notifications_button);
         notification_anim = new ValueAnimator();
+
+        LocationRepository.getInstance().fetchAllLocations(
+                object -> num_locations = ((List<Location>) object).size());
 
         initBottomNavigationView();
         manageFABs();
@@ -107,23 +113,29 @@ public class MainActivity extends AppCompatActivity {
 
 
         default_event_fab.setColorFilter(R.color.white);
-
         default_event_fab.setOnClickListener(view1 -> {
-            if (User.getCurrentUserId() != null) {
+            if (User.getCurrentUserId() == null || !DatabaseManager.get().isLogged()) {
+                Snackbar.make(default_event_fab, "Registrati per creare una partita",
+                        Snackbar.LENGTH_LONG).show();
+            } else if (num_locations == null) {
+                Snackbar.make(default_event_fab, "Attendi lo scaricamento dei dati...",
+                        Snackbar.LENGTH_LONG).show();
+            } else if (num_locations == 0) {
+                Snackbar.make(default_event_fab, "Non ci sono luoghi sulla mappa.\nCreane uno" +
+                                " per organizzare una partita!",
+                        Snackbar.LENGTH_LONG).show();
+            } else {
                 Intent i = new Intent(MainActivity.this, CreateEventActivity.class);
                 startActivityForResult(i, 1);
-            } else {
-                Snackbar.make(default_event_fab, "Registrati per creare una partita ", Snackbar.LENGTH_LONG).show();
             }
         });
 
         add_place_fab.setOnClickListener(view -> {
-            if (User.getCurrentUserId() != null) {
+            if (User.getCurrentUserId() == null || !DatabaseManager.get().isLogged()) {
+                Snackbar.make(add_place_fab, "Registrati per aggiungere un luogo", Snackbar.LENGTH_LONG).show();
+            } else {
                 Intent i = new Intent(MainActivity.this, PickPlaceActivity.class);
                 startActivityForResult(i, 1);
-            } else {
-
-                Snackbar.make(add_place_fab, "Registrati per aggiungere un luogo", Snackbar.LENGTH_LONG).show();
             }
         });
     }
