@@ -53,7 +53,8 @@
             android:name=".View.activities.CreateEventActivity"
             android:exported="true"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".View.activities.EventActivity" />
+        <activity
+            android:name=".View.activities.EventActivity"/>
         <activity android:name=".View.activities.AccountActivity" />
         <activity
             android:name=".View.activities.MapsActivity"
@@ -74,7 +75,7 @@
         <activity android:name=".View.activities.PickPlaceActivity" />
         <activity android:name=".View.activities.SignUpActivity" />
         <activity android:name=".View.activities.PickFriendsActivity" />
-        <activity android:name=".View.fragments.FirstOpenLoginFragment"></activity>
+        <activity android:name=".View.fragments.FirstOpenLoginFragment" />
     </application>
 
 </manifest>
