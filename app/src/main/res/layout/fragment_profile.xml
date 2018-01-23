@@ -19,8 +19,7 @@
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="2dp"
         card_view:layout_constraintEnd_toEndOf="parent"
-        card_view:layout_constraintStart_toStartOf="parent"
-        card_view:layout_constraintTop_toTopOf="@+id/playerCard">
+        card_view:layout_constraintStart_toStartOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"

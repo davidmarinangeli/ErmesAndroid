@@ -177,7 +177,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
                 // sees the explanation, try again to request the permission.
                 new AlertDialog.Builder(this.getContext())
                         .setTitle("Posizione GPS Richiesta")
-                        .setMessage("UniMeal necessita della posizione per mostrarti le mense più vicine")
+                        .setMessage("Ermes necessita della posizione per mostrarti i luoghi")
                         .setPositiveButton("Oke", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
