@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -56,12 +55,12 @@ import static com.example.david.ermes.View.activities.EventActivity.*;
 public class EventFragment extends Fragment {
 
     private final String CREATOR = "CREATOR",
-        NOT_PARTECIPANT = "NOT_PARTECIPANT",
-        PUBLIC_PARTECIPANT = "PUBLIC_PARTECIPANT",
-        PRIVATE_PARTECIPANT = "PRIVATE_PARTECIPANT",
-        PUBLIC_GUEST = "PUBLIC_GUEST",
-        PRIVATE_GUEST = "PRIVATE_GUEST",
-        UNAVAILABLE = "UNAVAILABLE";
+            NOT_PARTECIPANT = "NOT_PARTECIPANT",
+            PUBLIC_PARTECIPANT = "PUBLIC_PARTECIPANT",
+            PRIVATE_PARTECIPANT = "PRIVATE_PARTECIPANT",
+            PUBLIC_GUEST = "PUBLIC_GUEST",
+            PRIVATE_GUEST = "PRIVATE_GUEST",
+            UNAVAILABLE = "UNAVAILABLE";
     private String userCase;
 
     private TextView sportname;
@@ -72,6 +71,9 @@ public class EventFragment extends Fragment {
     private TextView pending;
     private TextView freeslots;
     private TextView usercreator;
+    private TextView missing_stuff_paragraph;
+
+
     private CircularImageView imageCreator;
     private LinearLayout showInvited;
     private LinearLayout showPartecipants;
@@ -87,7 +89,7 @@ public class EventFragment extends Fragment {
     private FloatingActionButton join;
     private ImageButton delete_match;
 
-    private Button missing_stuff_button;
+    private ImageButton missing_stuff_button;
     private User currentUser;
 
     public EventFragment() {
@@ -150,6 +152,7 @@ public class EventFragment extends Fragment {
         hourofevent = view.findViewById(R.id.when_hour_text_hour);
         usercreator = view.findViewById(R.id.userNameText);
         imageCreator = view.findViewById(R.id.small_circular_user_image);
+        missing_stuff_paragraph = view.findViewById(R.id.missing_paragraph);
 
         participant = view.findViewById(R.id.partecipantNumber);
         pending = view.findViewById(R.id.invitedNumber);
@@ -165,6 +168,8 @@ public class EventFragment extends Fragment {
 
         profileCardView = view.findViewById(R.id.profileCard);
         place_cover = view.findViewById(R.id.imageViewFavSport);
+
+        setMissingStuffParagraph();
 
         // scarico lo user name in base all'id che mi ha dato il match
         UserRepository.getInstance().fetchUserById(match.getIdOwner(), object -> {
@@ -212,9 +217,6 @@ public class EventFragment extends Fragment {
         });
 
 
-        // ** GESTIONE VISBILITA' OGGETTI IN BASE ALL'ACCOUNT LOGGATO **
-        manageItemsByUserCase();
-
         if (!areAllMissingItemsChecked()) {
             ArrayList<String> missing_items_instring = new ArrayList<>();
             for (MissingStuffElement missing_item : match.getMissingStuff()) {
@@ -229,7 +231,7 @@ public class EventFragment extends Fragment {
 
         invite.setOnClickListener(view1 -> {
             Intent invite_friends = new Intent(getContext(), PickFriendsActivity.class);
-            invite_friends.putExtra("match",match);
+            invite_friends.putExtra("match", match);
             getActivity().startActivityForResult(invite_friends, INVITE_FRIEND_CODE);
         });
 
@@ -246,7 +248,7 @@ public class EventFragment extends Fragment {
                 .show());
 
 
-        join.setOnClickListener( view1 -> {
+        join.setOnClickListener(view1 -> {
             if (userCase.equals(PRIVATE_PARTECIPANT) ||
                     userCase.equals(PUBLIC_PARTECIPANT)) {
                 new MaterialDialog.Builder(this.getContext())
@@ -298,6 +300,30 @@ public class EventFragment extends Fragment {
         participant.setText(String.valueOf(match.getPartecipants().size()));
         pending.setText(String.valueOf(match.getPending().size()));
         freeslots.setText(String.valueOf(match.getMaxPlayers() - match.getPartecipants().size()));
+
+        // ** GESTIONE VISIBILITA' OGGETTI IN BASE ALL'ACCOUNT LOGGATO **
+        manageItemsByUserCase();
+    }
+
+    private void setMissingStuffParagraph() {
+        boolean at_least_an_unchecked = false;
+        StringBuilder missing_stuff_text = new StringBuilder();
+        for (int index = 0; index < match.getMissingStuff().size(); index++) {
+            if (!match.getMissingStuff().get(index).isChecked()) {
+                missing_stuff_text.append("- ");
+                missing_stuff_text.append(match.getMissingStuff().get(index).getName());
+                if (index < match.getMissingStuff().size() - 1) {
+                    missing_stuff_text.append("\n");
+                }
+                at_least_an_unchecked = true;
+            }
+        }
+
+        if (at_least_an_unchecked) {
+            missing_stuff_paragraph.setText(missing_stuff_text);
+        } else {
+            missing_stuff_paragraph.setText("Nessun materiale mancante");
+        }
     }
 
     private void startMatchUsersActivity(String title, List<String> list) {
@@ -336,48 +362,51 @@ public class EventFragment extends Fragment {
     }
 
     private void manageItemsByUserCase() {
-        switch(userCase) {
+
+        switch (userCase) {
             case CREATOR:
-                join.setVisibility(View.GONE);
                 invite.setVisibility(View.VISIBLE);
+                missing_stuff_button.setVisibility(View.VISIBLE);
                 break;
             case PRIVATE_PARTECIPANT:
-                join.setVisibility(View.VISIBLE);
-                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_24dp));
+                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_busy_white_24dp));
                 invite.setVisibility(View.GONE);
+                missing_stuff_button.setVisibility(View.VISIBLE);
                 break;
             case PRIVATE_GUEST:
-                join.setVisibility(View.VISIBLE);
-                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_done_white_24dp));
+                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_available_white_24dp));
                 invite.setVisibility(View.GONE);
+                missing_stuff_button.setVisibility(View.GONE);
                 break;
             case PUBLIC_PARTECIPANT:
-                join.setVisibility(View.VISIBLE);
-                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_24dp));
+                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_busy_white_24dp));
                 invite.setVisibility(View.VISIBLE);
+                missing_stuff_button.setVisibility(View.VISIBLE);
                 break;
             case PUBLIC_GUEST:
-                join.setVisibility(View.VISIBLE);
-                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_done_white_24dp));
+                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_available_white_24dp));
                 invite.setVisibility(View.VISIBLE);
+                missing_stuff_button.setVisibility(View.GONE);
                 break;
             case NOT_PARTECIPANT:
-                join.setVisibility(View.VISIBLE);
-                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_done_white_24dp));
+                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_available_white_24dp));
                 invite.setVisibility(View.VISIBLE);
+                missing_stuff_button.setVisibility(View.GONE);
                 break;
             case UNAVAILABLE:
-                join.setVisibility(View.GONE);
                 invite.setVisibility(View.GONE);
+                missing_stuff_button.setVisibility(View.GONE);
                 break;
             default:
                 break;
         }
 
-        if (!userCase.equals(CREATOR)) {
-            delete_match.setVisibility(View.GONE);
-        } else {
+        if (userCase.equals(CREATOR)) {
+            join.setVisibility(View.GONE);
             delete_match.setVisibility(View.VISIBLE);
+        } else {
+            join.setVisibility(View.VISIBLE);
+            delete_match.setVisibility(View.GONE);
         }
     }
 
