@@ -6,13 +6,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Sport;
+import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.SportRepository;
-import com.example.david.ermes.Presenter.utils.FetchMatchUtils;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -64,7 +63,7 @@ public class MainAdapterViewHolder {
                 String sport_name = found.getName();
 
                 Picasso.with(cx)
-                        .load(FetchMatchUtils.setImageToMatch(cx, sport_name))
+                        .load(User.setImageToSport(cx, Integer.valueOf(found.getID())))
                         .memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
             }
         });
