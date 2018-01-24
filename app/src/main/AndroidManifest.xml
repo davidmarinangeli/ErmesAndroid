@@ -77,6 +77,7 @@
         <activity android:name=".View.activities.SignUpActivity" />
         <activity android:name=".View.activities.PickFriendsActivity" />
         <activity android:name=".View.fragments.FirstOpenLoginFragment" />
+        <activity android:name=".View.activities.CustomizeProfileActivity" />
     </application>
 
 </manifest>
