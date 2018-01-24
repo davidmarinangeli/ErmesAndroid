@@ -140,13 +140,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         private void styleDefault(Notification notification) {
             // set default style
 
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(notification.getDate());
-
             title.setText(notification.getTitle());
             text.setText(notification.getText());
-            date.setText(TimeUtils.fromMillistoYearMonthDay(notification.getDate()) + " alle " +
-                    TimeUtils.getFormattedHourMinute(c));
+            date.setText(TimeUtils.getFormattedElapsedTime(notification.getDate()));
 
             if (notification.isRead()) {
                 layout.setBackgroundColor(Color.WHITE);

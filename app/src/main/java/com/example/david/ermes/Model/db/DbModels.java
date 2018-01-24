@@ -37,6 +37,7 @@ public class DbModels {
             this.email = email;
             this.idFavSport = idFavSport;
             this.city = city;
+            this.photoURL = photoURL;
             this.birthDate = birthDate;
         }
 

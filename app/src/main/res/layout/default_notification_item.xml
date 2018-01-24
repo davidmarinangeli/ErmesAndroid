@@ -26,40 +26,49 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="16dp">
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/notification_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="@color/colorAccentDark"
-                tools:text="Nuovo invito" />
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/notification_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccentDark"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Nuovo invito" />
+
+                <TextView
+                    android:id="@+id/notification_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textStyle="italic"
+                    app:layout_constraintBottom_toBottomOf="@+id/notification_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="in data x" />
+            </android.support.constraint.ConstraintLayout>
 
             <TextView
                 android:id="@+id/notification_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
                 android:layout_marginTop="4dp"
+                android:textSize="14sp"
                 tools:text="Nicola Schiavon ti ha invitato ad una nuova partita." />
-
-            <TextView
-                android:id="@+id/notification_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:layout_marginTop="4dp"
-                android:textStyle="italic"
-                tools:text="in data x" />
 
             <TextView
                 android:id="@+id/already_reply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
                 android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:textSize="14sp"
                 android:textStyle="italic"
                 tools:text="Hai già risposto" />
 
@@ -67,30 +76,31 @@
                 android:id="@+id/notification_match_invitation_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
                 android:orientation="horizontal"
-                android:layout_marginTop="4dp"
                 android:weightSum="1">
 
                 <Button
                     android:id="@+id/notification_left_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
                     android:paddingHorizontal="16dp"
-                    android:drawableStart="@drawable/ic_done_white_24dp"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:drawableLeft="@drawable/ic_done_white_24dp"
-                    android:text="partecipa"/>
+                    android:text="partecipa"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+
 
                 <Button
                     android:id="@+id/notification_right_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
                     android:paddingHorizontal="16dp"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:drawableLeft="@drawable/ic_close_white_24dp"
-                    android:text="rifiuta"/>
+                    android:text="rifiuta"
+                    android:textColor="@color/inactive" />
 
             </LinearLayout>
 
