@@ -81,6 +81,8 @@ public class PickPlaceActivity extends AppCompatActivity implements GoogleApiCli
         sport_chips = findViewById(R.id.sports_chips);
         // sport_spinner = findViewById(R.id.sport_spinner_place);
 
+
+        sport_chips.setShowChipAvatarEnabled(false);
         sport_chips.addChipSelectionObserver(new ChipSelectionObserver() {
             @Override
             public void onChipSelected(Chip chip) {
@@ -95,6 +97,7 @@ public class PickPlaceActivity extends AppCompatActivity implements GoogleApiCli
             }
         });
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mMapView = findViewById(R.id.pick_place_map);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume(); // needed to get the map to display immediately

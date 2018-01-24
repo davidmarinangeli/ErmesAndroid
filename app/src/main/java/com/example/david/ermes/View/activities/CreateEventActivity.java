@@ -12,10 +12,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -48,31 +51,31 @@ import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 
 public class CreateEventActivity extends AppCompatActivity {
 
-    TextView event_orario_textview;
-    TextView event_data_textview;
+    private TextView event_orario_textview;
+    private TextView event_data_textview;
 
-    Spinner sport_selector;
-    Spinner location_selector;
+    private Spinner sport_selector;
+    private Spinner location_selector;
 
-    Button fine_creazione;
-    Button num_players_button;
+    private ImageButton fine_creazione;
+    private Button num_players_button;
 
-    ChipsInputLayout missing_chips;
+    private ChipsInputLayout missing_chips;
 
-    SpinnerAdapter sportadapter;
-    SpinnerAdapter locationadapter;
+    private SpinnerAdapter sportadapter;
+    private SpinnerAdapter locationadapter;
 
-    SwitchCompat ispublic_switch;
+    private SwitchCompat ispublic_switch;
 
-    Calendar match_calendar_time;
+    private Calendar match_calendar_time;
 
     private FusedLocationProviderClient mFusedLocationClient;
+    private Toolbar toolbar;
 
+    private String selected_sport_string;
+    private String selected_location_string;
 
-    String selected_sport_string;
-    String selected_location_string;
-
-    com.example.david.ermes.Model.models.Location selected_location;
+    private com.example.david.ermes.Model.models.Location selected_location;
 
 
     final String SPORT_HINT = "Seleziona uno sport...";
@@ -103,14 +106,20 @@ public class CreateEventActivity extends AppCompatActivity {
         ispublic_switch = findViewById(R.id.ispublic_switch);
 
         match_calendar_time = Calendar.getInstance();
+        toolbar = findViewById(R.id.create_event_toolbar);
 
         sport = new Sport();
         downloaded_locations = new ArrayList<>();
+
+        toolbar.setTitle("Crea l'evento");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         event_data_textview.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(onDateSetListener);
+            datePickerDialog.setMinDate(Calendar.getInstance());
             datePickerDialog.show(getFragmentManager(), "datepickerdialog");
         });
 
@@ -148,6 +157,8 @@ public class CreateEventActivity extends AppCompatActivity {
         AlertDialog alert = getAlertDialog();
         num_players_button.setOnClickListener(v -> alert.show());
 
+        //setto i parametri delle chips
+        missing_chips.setShowChipAvatarEnabled(false);
         fine_creazione.setOnClickListener(v -> {
             ArrayList<MissingStuffElement> chips_title_list = new ArrayList<>();
             for (Chip chip : missing_chips.getSelectedChips()) {
@@ -171,7 +182,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private AlertDialog getAlertDialog() {
         MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(this)
                 .minValue(1)
-                .maxValue(10)
+                .maxValue(30)
                 .backgroundColor(Color.WHITE)
                 .separatorColor(Color.TRANSPARENT)
                 .textColor(Color.BLACK)
@@ -265,6 +276,11 @@ public class CreateEventActivity extends AppCompatActivity {
     }
     // fine abominio per gli spinner
 
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return true;
+    }
 
     private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
