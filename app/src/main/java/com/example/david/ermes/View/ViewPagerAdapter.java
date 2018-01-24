@@ -4,9 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.david.ermes.View.fragments.AccountFragment;
-import com.example.david.ermes.View.fragments.FirstOpenLoginFragment;
-
 import java.util.ArrayList;
 
 /**
