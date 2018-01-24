@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Friendship;
@@ -19,11 +18,9 @@ import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.FriendshipRepository;
-import com.example.david.ermes.Model.repository.NotificationRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.PickFriendsAdapter;
-import com.example.david.ermes.View.fragments.EventFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +43,7 @@ public class PickFriendsActivity extends AppCompatActivity {
 
         max_players = findViewById(R.id.remaining_invitation);
         no_friends = findViewById(R.id.no_friends);
-        toolbar = findViewById(R.id.pick_people_toolbar);
+        toolbar = findViewById(R.id.create_event_toolbar);
         spunta_done = findViewById(R.id.spunta_done);
 
         setSupportActionBar(toolbar);

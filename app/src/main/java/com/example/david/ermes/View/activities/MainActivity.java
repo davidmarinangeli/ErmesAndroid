@@ -25,7 +25,6 @@ import com.example.david.ermes.R;
 import com.example.david.ermes.View.ViewPagerAdapter;
 import com.example.david.ermes.View.customviews.CoolViewPager;
 import com.example.david.ermes.View.fragments.AccountFragment;
-import com.example.david.ermes.View.fragments.FirstOpenLoginFragment;
 import com.example.david.ermes.View.fragments.HomeFragment;
 import com.example.david.ermes.View.fragments.MapsFragment;
 import com.github.clans.fab.FloatingActionButton;
@@ -75,7 +74,12 @@ public class MainActivity extends AppCompatActivity {
         notification_anim = new ValueAnimator();
 
         LocationRepository.getInstance().fetchAllLocations(
-                object -> num_locations = ((List<Location>) object).size());
+                object -> {
+
+                    if (object != null) {
+                        num_locations = ((List<Location>) object).size();
+                    }
+                });
 
         initBottomNavigationView();
         manageFABs();
@@ -84,11 +88,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (DatabaseManager.get().isLogged())
-            viewPagerAdapter.replaceFragment(2, new AccountFragment());
-        else
-            viewPagerAdapter.replaceFragment(2,new FirstOpenLoginFragment());
-
     }
 
     private void manageFABs() {
@@ -249,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewPagerAdapter.addFragment(new MapsFragment());
         viewPagerAdapter.addFragment(new HomeFragment());
-        viewPagerAdapter.addFragment(new FirstOpenLoginFragment());
+        viewPagerAdapter.addFragment(new AccountFragment());
 
         viewPager.setAdapter(viewPagerAdapter);
 
