@@ -56,17 +56,10 @@ public class MainAdapterViewHolder {
             }
         });
 
-        final String sport_id = matchList.get(position).getIdSport();
-        SportRepository.getInstance().fetchSportById(sport_id, object -> {
-            Sport found = (Sport) object;
-            if (found != null) {
-                String sport_name = found.getName();
 
-                Picasso.with(cx)
-                        .load(User.setImageToSport(cx, Integer.valueOf(found.getID())))
-                        .memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
-            }
-        });
+        Picasso.with(cx)
+                .load(User.setImageToSport(cx, Integer.valueOf(matchList.get(position).getIdSport())))
+                .memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
 
 
     }
