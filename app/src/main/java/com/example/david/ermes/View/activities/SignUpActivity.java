@@ -101,6 +101,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         born_date_button.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(onDateSetListener);
+            datePickerDialog.setMaxDate(Calendar.getInstance());
             datePickerDialog.show(getFragmentManager(), "datepickerdialog");
         });
 

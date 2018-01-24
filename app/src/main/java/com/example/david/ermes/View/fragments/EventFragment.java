@@ -268,11 +268,12 @@ public class EventFragment extends Fragment {
                             });
                         })
                         .show();
+            } else if (userCase.equals(UNAVAILABLE)){
+                Snackbar.make(view, "Registrati per partecipare alla partita", Snackbar.LENGTH_SHORT).show();
             } else {
                 match.addPartecipant(User.getCurrentUserId());
                 match.save(object -> {
                     updateUI();
-
                     Snackbar.make(view, "Buona partita!", Snackbar.LENGTH_SHORT).show();
                 });
             }
@@ -395,6 +396,7 @@ public class EventFragment extends Fragment {
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
             case UNAVAILABLE:
+                join.setBackgroundColor(getResources().getColor(R.color.inactive));
                 invite.setVisibility(View.GONE);
                 missing_stuff_button.setVisibility(View.GONE);
                 break;

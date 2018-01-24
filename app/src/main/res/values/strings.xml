@@ -72,6 +72,14 @@
     <string name="dove_vivi">Città</string>
     <string name="data_di_nascita">Data di nascita</string>
     <string name="whatsmissing">Cosa manca?</string>
+    <string name="amici">Amici</string>
+    <string name="partite">Partite</string>
+    <string name="sport">Sport</string>
+    <string name="data_e_ora">Data e ora</string>
+    <string name="inserisci_la_data">Inserisci la data</string>
+    <string name="numero_giocatori">Numero giocatori</string>
+    <string name="visibilit">Visibilità</string>
+    <string name="materiali">Materiali mancanti</string>
 
 
     <!-- buro gaio -->

@@ -1,5 +1,6 @@
 package com.example.david.ermes.Model.models;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -149,6 +150,28 @@ public class User implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public static int getSportCoverForFavouriteSport(int sportid, Context cx){
+        int image_tag = 0;
+        switch (sportid) {
+            case 0:
+                image_tag = cx.getResources().getIdentifier("basketball", "drawable", cx.getPackageName());
+                break;
+            case 1:
+                image_tag = cx.getResources().getIdentifier("volley_cover", "drawable", cx.getPackageName());
+                break;
+            case 3:
+                image_tag = cx.getResources().getIdentifier("tennis", "drawable", cx.getPackageName());
+                break;
+            case 2:
+                image_tag = cx.getResources().getIdentifier("soccer", "drawable", cx.getPackageName());
+                break;
+            case 4:
+                image_tag = cx.getResources().getIdentifier("pingpong", "drawable", cx.getPackageName());
+                break;
+        }
+        return image_tag;
     }
 
     @Override
