@@ -12,9 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.david.ermes.Model.db.DatabaseManager;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
@@ -33,20 +36,25 @@ import com.squareup.picasso.Picasso;
  */
 public class AccountFragment extends Fragment {
 
-    private CoordinatorLayout accountLayout;
-
-    Button loginbutton;
-    Button logoutbutton;
-
     private Toolbar toolbar;
+
     private TextView name;
     private TextView age;
     private TextView sport;
+    private TextView welcome_text;
+
     private CircularImageView image_account;
+
     private CardView myMatchesCard;
     private CardView friendsCard;
 
+    private Button welcome_button;
+
+    private ScrollView main_scrollview;
+
     private User currentUser;
+
+    private ImageView cover;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -73,6 +81,28 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        if (currentUser == null && !DatabaseManager.get().isLogged()) {
+            main_scrollview.setVisibility(View.GONE);
+            welcome_button.setVisibility(View.VISIBLE);
+            welcome_text.setVisibility(View.VISIBLE);
+            welcome_button.setOnClickListener(view12 -> {
+                Intent i = new Intent(view12.getContext(), MainSignInActivity.class);
+                startActivity(i);
+
+            });
+        } else {
+            main_scrollview.setVisibility(View.VISIBLE);
+            welcome_button.setVisibility(View.GONE);
+            welcome_text.setVisibility(View.GONE);
+            onViewCreated(getView(),null);
+        }
+
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -80,26 +110,28 @@ public class AccountFragment extends Fragment {
         age = view.findViewById(R.id.age_account);
         sport = view.findViewById(R.id.sport_account);
         image_account = view.findViewById(R.id.image_account);
+        cover = view.findViewById(R.id.fav_sport_cover);
+
+        myMatchesCard = view.findViewById(R.id.myMatchesCard);
+        friendsCard = view.findViewById(R.id.cardViewFriends);
+
+        main_scrollview = view.findViewById(R.id.account_nested_scrollview);
+
+        welcome_button = view.findViewById(R.id.open_login);
+        welcome_text = view.findViewById(R.id.welcome_button);
 
         if (currentUser == null) {
+            // se sto vedendo il mio account
             UserRepository.getInstance().getUser(object -> {
                 currentUser = (User) object;
 
                 initComponents();
             });
         } else {
+            // se sto vedendo l'account di altri
             initComponents();
         }
 
-        loginbutton = view.findViewById(R.id.loginbutton);
-        logoutbutton = view.findViewById(R.id.logoutbutton);
-        loginbutton.setOnClickListener(view12 -> {
-            Intent i = new Intent(view12.getContext(), MainSignInActivity.class);
-            startActivity(i);
-
-        });
-
-        myMatchesCard = view.findViewById(R.id.myMatchesCard);
         myMatchesCard.setOnClickListener(view1 -> {
             if (currentUser != null) {
                 Bundle extras = new Bundle();
@@ -115,7 +147,6 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        friendsCard = view.findViewById(R.id.cardViewFriends);
         if (currentUser != null && currentUser.getUID() != User.getCurrentUserId()) {
             friendsCard.setVisibility(View.GONE);
         }
@@ -146,6 +177,7 @@ public class AccountFragment extends Fragment {
                 Picasso.with(getContext()).load(R.drawable.user_placeholder).into(image_account);
             }
 
+            cover.setImageResource(User.getSportCoverForFavouriteSport(Integer.valueOf(currentUser.getIdFavSport()),getContext()));
             SportRepository.getInstance().fetchSportById(currentUser.getIdFavSport(),
                     object -> {
                         Sport fetch_sport = (Sport) object;

@@ -26,7 +26,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/imageView7"
+                    android:id="@+id/fav_sport_cover"
                     android:layout_width="wrap_content"
                     android:layout_height="256dp"
                     android:foreground="@drawable/trending_gradient_shape"
@@ -163,17 +163,14 @@
 
                         <TextView
                             android:id="@+id/cardtext1"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-
                             android:layout_marginLeft="16dp"
                             android:layout_marginRight="8dp"
                             android:layout_marginTop="8dp"
                             android:text="Profilo"
                             android:textSize="20sp"
-                            android:textStyle="bold"
                             card_view:layout_constraintBottom_toBottomOf="parent"
                             card_view:layout_constraintHorizontal_bias="0.07"
                             card_view:layout_constraintLeft_toRightOf="@+id/imageView4"
@@ -221,30 +218,28 @@
 
                         <ImageView
                             android:id="@+id/imageView5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_marginBottom="8dp"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
                             android:tint="@color/colorAccent"
                             card_view:layout_constraintBottom_toBottomOf="parent"
                             card_view:layout_constraintLeft_toLeftOf="parent"
                             card_view:layout_constraintTop_toTopOf="parent"
-                            card_view:srcCompat="@drawable/icons8_trophy_24" />
+                            card_view:layout_constraintVertical_bias="0.47"
+                            card_view:srcCompat="@drawable/icons_trofeo_96" />
 
                         <TextView
                             android:id="@+id/cardtext2"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
+                            android:layout_marginStart="16dp"
                             android:layout_marginEnd="8dp"
-
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="8dp"
                             android:layout_marginTop="8dp"
-                            android:text="Mie partite"
+                            android:text="@string/partite"
                             android:textSize="20sp"
-                            android:textStyle="bold"
                             card_view:layout_constraintBottom_toBottomOf="parent"
                             card_view:layout_constraintHorizontal_bias="0.07"
                             card_view:layout_constraintLeft_toRightOf="@+id/imageView5"
@@ -274,12 +269,14 @@
                     android:id="@+id/cardViewFriends"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:clickable="true"
                     card_view:cardCornerRadius="2dp"
                     card_view:cardElevation="2dp"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
                     card_view:layout_constraintEnd_toEndOf="parent"
                     card_view:layout_constraintStart_toStartOf="parent"
                     card_view:layout_constraintTop_toBottomOf="@+id/myMatchesCard">
@@ -304,20 +301,16 @@
 
                         <TextView
                             android:id="@+id/cardtext3"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
-                            android:text="Amici"
+                            android:text="@string/amici"
                             android:textSize="20sp"
-                            android:textStyle="bold"
                             card_view:layout_constraintBottom_toBottomOf="parent"
-                            card_view:layout_constraintHorizontal_bias="0.07"
-                            card_view:layout_constraintLeft_toRightOf="@+id/imageView6"
                             card_view:layout_constraintRight_toLeftOf="@+id/imageArrow3"
+                            card_view:layout_constraintStart_toEndOf="@+id/imageView6"
                             card_view:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
@@ -325,7 +318,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
-                            android:layout_marginRight="16dp"
+                            android:layout_marginEnd="16dp"
                             android:layout_marginTop="16dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
@@ -338,26 +331,45 @@
 
                 </android.support.v7.widget.CardView>
 
-                <Button
-                    android:id="@+id/loginbutton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="56dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="200dp"
-                    android:clickable="true"
-                    android:text="@string/login"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cardViewFriends" />
-
             </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
 
     </ScrollView>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/welcome_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="300dp"
+            android:text="ENTRA IN ERMES "
+            android:visibility="gone"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/open_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="120dp"
+            android:text="Registrati in Ermes"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/welcome_button" />
+
+    </android.support.constraint.ConstraintLayout>
 
 
 </android.support.design.widget.CoordinatorLayout>
