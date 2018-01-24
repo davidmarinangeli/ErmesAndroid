@@ -1,6 +1,7 @@
 package com.example.david.ermes.View.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -193,22 +194,27 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
 
-                        final FirebaseUser user = task.getResult().getUser();
+                        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                         UserRepository.getInstance().fetchUserById(user.getUid(), object -> {
-                            if (object == null) {
+                            User current = (User) object;
+                            if (current == null) {
                                 Intent signupactivity = new Intent(getBaseContext(), SignUpActivity.class);
                                 Bundle extras = new Bundle();
 
                                 extras.putString("mail", user.getEmail());
                                 extras.putString("uid", user.getUid());
                                 extras.putString("name", user.getDisplayName());
-                                extras.putString("photoURL", user.getPhotoUrl().toString());
+                                extras.putString("photoURL", String.valueOf(user.getPhotoUrl()));
 
                                 signupactivity.putExtras(extras);
                                 startActivity(signupactivity);
                             } else {
-                                finish();
+                                current.setName(user.getDisplayName());
+                                current.setEmail(user.getEmail());
+                                current.setPhotoURL(String.valueOf(user.getPhotoUrl()));
+
+                                current.save(object1 -> finish());
                             }
                         });
 
