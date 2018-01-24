@@ -25,6 +25,7 @@ import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
+import com.example.david.ermes.View.activities.CustomizeProfileActivity;
 import com.example.david.ermes.View.activities.FriendsActivity;
 import com.example.david.ermes.View.activities.MainSignInActivity;
 import com.example.david.ermes.View.activities.MyMatchesActivity;
@@ -47,6 +48,7 @@ public class AccountFragment extends Fragment {
 
     private CardView myMatchesCard;
     private CardView friendsCard;
+    private CardView customizeProfileCard;
 
     private Button welcome_button;
 
@@ -164,6 +166,28 @@ public class AccountFragment extends Fragment {
                 Toast.makeText(view13.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
             }
         });
+        customizeProfileCard = view.findViewById(R.id.myProfileCard);
+        if (currentUser != null && currentUser.getUID() != User.getCurrentUserId()) {
+            friendsCard.setVisibility(View.GONE);
+        }
+        customizeProfileCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentUser != null) {
+                    Bundle extras = new Bundle();
+                    extras.putParcelable("user", currentUser);
+
+                    Intent profileAcitivty = new Intent(view.getContext(), CustomizeProfileActivity.class);
+                    profileAcitivty.putExtras(extras);
+                    startActivity(profileAcitivty);
+                } else if (User.getCurrentUserId() != null) {
+                    Toast.makeText(view.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(view.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     private void initComponents() {
