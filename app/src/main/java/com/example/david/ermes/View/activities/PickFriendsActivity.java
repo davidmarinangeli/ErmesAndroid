@@ -88,7 +88,7 @@ public class PickFriendsActivity extends AppCompatActivity {
                     finish();
                 });
             }
-        }));
+        })) ;
 
     }
 

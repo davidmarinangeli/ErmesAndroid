@@ -7,121 +7,141 @@
     android:layout_height="match_parent"
     tools:context="com.example.david.ermes.View.activities.EventActivity">
 
+
+
     <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/profileCard1"
+
+        android:id="@+id/card_info_personal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="2dp"
-        android:layout_marginStart="2dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        card_view:cardCornerRadius="2dp"
-        card_view:cardElevation="2dp"
-        card_view:layout_constraintEnd_toEndOf="parent"
-        card_view:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/username"
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:textSize="20sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteY="8dp"
-                tools:text="mpcicco" />
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                tools:text="Enrico"
-                android:textSize="18sp"
-                app:layout_constraintLeft_toLeftOf="@+id/username"
-                app:layout_constraintTop_toBottomOf="@+id/username"
-                 />
+                android:text="Informazioni personali"
+                android:textSize="16dp"
+                android:textColor="@color/colorPrimaryDark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/surname"
-                android:layout_width="wrap_content"
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/username_profile_text"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="0dp"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/name"
-                app:layout_constraintLeft_toRightOf="@+id/name"
-                app:layout_constraintTop_toTopOf="@+id/name"
-                tools:text="Marcantoni"
-                 />
-
-            <TextView
-                android:id="@+id/favSport"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:textSize="18sp"
-                app:layout_constraintLeft_toLeftOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/name"
-                tools:text="Softei"
-                 />
+                android:hint="@string/name"
+                android:inputType="text"
+                android:orientation="vertical"
+                android:text="Enrico"
+                android:textSize="16sp"
+                android:theme="@style/MyEditText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:met_floatingLabel="highlight" />
 
-
-
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/surname_profile_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="Sport"
+                android:inputType="text"
+                android:orientation="vertical"
+                android:text="Basket"
+                android:textSize="16sp"
+                android:theme="@style/MyEditText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/username_profile_text" />
         </android.support.constraint.ConstraintLayout>
-
-
 
     </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/profileCard2"
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_info_access"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_info_personal"
         android:layout_marginTop="8dp"
-        card_view:cardCornerRadius="2dp"
-        card_view:cardElevation="2dp"
-        card_view:layout_constraintEnd_toEndOf="parent"
-        card_view:layout_constraintStart_toStartOf="parent"
-        card_view:layout_constraintTop_toBottomOf="@+id/profileCard1">
+        tools:layout_editor_absoluteY="195dp">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/city"
+                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:textSize="20sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteY="8dp"
-                tools:text="Zevio" />
-
-            <TextView
-                android:id="@+id/email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:text="Dati di acesso"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/profile_mail_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/e_mail"
+                android:inputType="textEmailAddress"
+                android:orientation="vertical"
                 android:text="marcantonienrico@gmail.com"
-                android:textSize="18sp"
-                app:layout_constraintLeft_toLeftOf="@+id/city"
-                app:layout_constraintTop_toBottomOf="@+id/city"
-                 />
+                android:textSize="16sp"
+                android:theme="@style/MyEditText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/profile_pwd_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:orientation="vertical"
+                android:text="123455334"
+                android:textSize="16sp"
+                android:theme="@style/MyEditText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_mail_text"
+                app:met_minCharacters="6" />
         </android.support.constraint.ConstraintLayout>
-
-
     </android.support.v7.widget.CardView>
+
 </android.support.constraint.ConstraintLayout>
