@@ -52,6 +52,7 @@
     <string name="fine">Fine</string>
     <string name="registrati">Registrati</string>
     <string name="name">Nome</string>
+    <string name="surname">Cognome</string>
     <string name="city">Città</string>
     <string name="logingoogle">Accedi o Registrati con Google</string>
     <string name="materiali_mancanti">Materiali mancanti</string>
