@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -54,8 +55,8 @@ public class PickPlaceActivity extends AppCompatActivity implements GoogleApiCli
     MapView mMapView;
     private GoogleMap googleMap;
     private MaterialEditText place_name;
-    private ImageButton dismiss;
-    private ImageButton fine;
+    private Button dismiss;
+    private Button fine;
     private ChipsInputLayout sport_chips;
 
 
