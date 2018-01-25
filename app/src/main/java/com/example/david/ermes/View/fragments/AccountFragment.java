@@ -29,6 +29,7 @@ import com.example.david.ermes.View.activities.CustomizeProfileActivity;
 import com.example.david.ermes.View.activities.FriendsActivity;
 import com.example.david.ermes.View.activities.MainSignInActivity;
 import com.example.david.ermes.View.activities.MyMatchesActivity;
+import com.github.clans.fab.FloatingActionButton;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -57,6 +58,8 @@ public class AccountFragment extends Fragment {
     private User currentUser;
 
     private ImageView cover;
+    private FloatingActionButton default_event_fab;
+    private FloatingActionButton add_place_fab;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -86,7 +89,7 @@ public class AccountFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        if (currentUser == null && !DatabaseManager.get().isLogged()) {
+        if (!DatabaseManager.get().isLogged()) {
             main_scrollview.setVisibility(View.GONE);
             welcome_button.setVisibility(View.VISIBLE);
             welcome_text.setVisibility(View.VISIBLE);
@@ -96,6 +99,7 @@ public class AccountFragment extends Fragment {
 
             });
         } else {
+
             main_scrollview.setVisibility(View.VISIBLE);
             welcome_button.setVisibility(View.GONE);
             welcome_text.setVisibility(View.GONE);
@@ -170,21 +174,20 @@ public class AccountFragment extends Fragment {
         if (currentUser != null && currentUser.getUID() != User.getCurrentUserId()) {
             friendsCard.setVisibility(View.GONE);
         }
-        customizeProfileCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (currentUser != null) {
-                    Bundle extras = new Bundle();
-                    extras.putParcelable("user", currentUser);
+        customizeProfileCard.setOnClickListener(view12 -> {
+            if (currentUser != null) {
+                Bundle extras = new Bundle();
+                extras.putParcelable("user", currentUser);
 
-                    Intent profileAcitivty = new Intent(view.getContext(), CustomizeProfileActivity.class);
-                    profileAcitivty.putExtras(extras);
-                    startActivity(profileAcitivty);
-                } else if (User.getCurrentUserId() != null) {
-                    Toast.makeText(view.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(view.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
-                }
+                Intent profileAcitivty = new Intent(view12.getContext(), CustomizeProfileActivity.class);
+                profileAcitivty.putExtras(extras);
+                startActivity(profileAcitivty);
+
+
+            } else if (User.getCurrentUserId() != null) {
+                Toast.makeText(view12.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(view12.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
             }
         });
 

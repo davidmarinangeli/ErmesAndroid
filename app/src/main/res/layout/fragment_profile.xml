@@ -32,7 +32,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Informazioni personali"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:textColor="@color/colorPrimaryDark"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -47,7 +47,7 @@
                 android:hint="@string/name"
                 android:inputType="text"
                 android:orientation="vertical"
-                android:text="Enrico"
+                tools:text="Enrico"
                 android:textSize="16sp"
                 android:theme="@style/MyEditText"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -57,17 +57,17 @@
                 app:met_floatingLabel="highlight" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/surname_profile_text"
+                android:id="@+id/sport_profile_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:hint="Sport"
+                android:hint="@string/sport"
                 android:inputType="text"
                 android:orientation="vertical"
-                android:text="Basket"
+                tools:text="Basket"
                 android:textSize="16sp"
                 android:theme="@style/MyEditText"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -117,30 +117,26 @@
                 android:hint="@string/e_mail"
                 android:inputType="textEmailAddress"
                 android:orientation="vertical"
-                android:text="marcantonienrico@gmail.com"
+                tools:text="marcantonienrico@gmail.com"
                 android:textSize="16sp"
                 android:theme="@style/MyEditText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/profile_pwd_text"
+            <Button
+                android:id="@+id/logout_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:orientation="vertical"
-                android:text="123455334"
-                android:textSize="16sp"
-                android:theme="@style/MyEditText"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/red"
+                android:text="@string/esci"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_mail_text"
-                app:met_minCharacters="6" />
+                app:layout_constraintTop_toBottomOf="@+id/profile_mail_text" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 
