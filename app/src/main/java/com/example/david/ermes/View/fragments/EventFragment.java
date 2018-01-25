@@ -21,13 +21,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.david.ermes.Model.db.DatabaseManager;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.MissingStuffElement;
+import com.example.david.ermes.Model.models.Notification;
+import com.example.david.ermes.Model.models.NotificationType;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.MatchRepository;
+import com.example.david.ermes.Model.repository.NotificationRepository;
 import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
@@ -63,6 +67,7 @@ public class EventFragment extends Fragment {
             UNAVAILABLE = "UNAVAILABLE";
     private String userCase;
 
+    private TextView already_invited;
     private TextView sportname;
     private TextView dateofevent;
     private TextView placeofevent;
@@ -92,6 +97,7 @@ public class EventFragment extends Fragment {
     private ImageButton missing_stuff_button;
 
     private User currentUser;
+    private Notification inviteNotification;
 
     public EventFragment() {
     }
@@ -122,7 +128,7 @@ public class EventFragment extends Fragment {
                 userCase = PUBLIC_PARTECIPANT;
             } else if (match.getPending().contains(User.getCurrentUserId())) {
                 userCase = PUBLIC_GUEST;
-            } else if (User.getCurrentUserId() != null) {
+            } else if (DatabaseManager.get().isLogged()) {
                 userCase = NOT_PARTECIPANT;
             } else {
                 userCase = UNAVAILABLE;
@@ -144,9 +150,11 @@ public class EventFragment extends Fragment {
 
         toolbar = view.findViewById(R.id.event_toolbar);
         toolbar.setTitle("");
-
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        already_invited = view.findViewById(R.id.already_invited);
+        initAlreadyInvitedLabel();
 
         sportname = view.findViewById(R.id.sport_name);
         dateofevent = view.findViewById(R.id.when_text_calendar);
@@ -202,7 +210,7 @@ public class EventFragment extends Fragment {
                 sportname.setText(match_sport.getName());
             }
         });
-        
+
         Picasso.with(getContext())
                 .load(User.setImageToSport(getContext(), Integer.valueOf(match.getIdSport())))
                 .memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
@@ -285,6 +293,11 @@ public class EventFragment extends Fragment {
                     updateUI();
                     Snackbar.make(view, "Buona partita!", Snackbar.LENGTH_SHORT).show();
                 });
+
+                if (inviteNotification != null) {
+                    inviteNotification.setRead(true);
+                    inviteNotification.save(object -> initAlreadyInvitedLabel());
+                }
             }
         });
 
@@ -314,6 +327,44 @@ public class EventFragment extends Fragment {
 
         // ** GESTIONE VISIBILITA' OGGETTI IN BASE ALL'ACCOUNT LOGGATO **
         manageItemsByUserCase();
+    }
+
+    private void initAlreadyInvitedLabel() {
+        already_invited.setText("Hai ricevuto un invito da\n");
+        already_invited.setVisibility(View.GONE);
+
+        if (DatabaseManager.get().isLogged() && inviteNotification == null) {
+
+            NotificationRepository.getInstance().fetchNotificationsByIdOwner(User.getCurrentUserId(),
+                    object -> {
+                        List<Notification> list = (List<Notification>) object;
+
+                        if (list != null && list.size() > 0) {
+                            // cerco la notifica di invito a questo match
+                            Notification n;
+                            int i = 0;
+                            do {
+                                n = list.get(i);
+                            }
+                            while (!(!n.isRead() && n.getIdMatch().equals(match.getId())
+                                    && n.getType() == NotificationType.MATCH_INVITE_USER)
+                                    && ++i < list.size());
+
+                            // trovata
+                            if (!n.isRead() && n.getIdMatch().equals(match.getId())
+                                    && n.getType() == NotificationType.MATCH_INVITE_USER) {
+                                inviteNotification = n;
+
+                                UserRepository.getInstance().fetchUserById(n.getIdCreator(),
+                                        object1 -> {
+                                            already_invited.append(((User) object1).getName());
+                                            already_invited.setVisibility(View.VISIBLE);
+                                        });
+                            }
+
+                        }
+                    });
+        }
     }
 
     private void setMissingStuffParagraph() {
