@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -36,9 +35,9 @@ import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.AccountActivity;
 import com.example.david.ermes.View.activities.MatchUsersActivity;
 import com.example.david.ermes.View.activities.PickFriendsActivity;
+
 import android.support.design.widget.FloatingActionButton;
 
-import com.example.david.ermes.View.activities.PickPlaceActivity;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -74,11 +73,12 @@ public class EventFragment extends Fragment {
     private TextView usercreator;
     private TextView missing_stuff_paragraph;
 
-
     private CircularImageView imageCreator;
     private LinearLayout showInvited;
     private LinearLayout showPartecipants;
+
     private ImageView place_cover;
+    private ImageView sport_icon;
 
     private CardView profileCardView;
 
@@ -89,8 +89,8 @@ public class EventFragment extends Fragment {
     private ImageButton invite;
     private FloatingActionButton join;
     private ImageButton delete_match;
-
     private ImageButton missing_stuff_button;
+
     private User currentUser;
 
     public EventFragment() {
@@ -144,6 +144,7 @@ public class EventFragment extends Fragment {
 
         toolbar = view.findViewById(R.id.event_toolbar);
         toolbar.setTitle("");
+
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -154,6 +155,8 @@ public class EventFragment extends Fragment {
         usercreator = view.findViewById(R.id.userNameText);
         imageCreator = view.findViewById(R.id.small_circular_user_image);
         missing_stuff_paragraph = view.findViewById(R.id.missing_paragraph);
+
+        sport_icon = view.findViewById(R.id.sport_icon_event);
 
         participant = view.findViewById(R.id.partecipantNumber);
         pending = view.findViewById(R.id.invitedNumber);
@@ -199,6 +202,11 @@ public class EventFragment extends Fragment {
                 sportname.setText(match_sport.getName());
             }
         });
+        
+        Picasso.with(getContext())
+                .load(User.setImageToSport(getContext(), Integer.valueOf(match.getIdSport())))
+                .memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
+
         Calendar c = Calendar.getInstance();
         c.setTime(match.getDate());
 
@@ -209,7 +217,7 @@ public class EventFragment extends Fragment {
                 Location match_location = (Location) object;
                 placeofevent.setText(match_location.getName());
                 Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/staticmap?center="
-                                + match_location.getLatitude()+ "," + match_location.getLongitude()+
+                        + match_location.getLatitude() + "," + match_location.getLongitude() +
                         "&zoom=18&size=600x400&maptype=hybrid&key=AIzaSyCCBlMJByIIPjLX3U045lwn93G-os92Zfw");
 
                 Picasso.with(this.getContext()).load(uri).memoryPolicy(MemoryPolicy.NO_CACHE).into(place_cover);
@@ -268,7 +276,7 @@ public class EventFragment extends Fragment {
                             });
                         })
                         .show();
-            } else if (userCase.equals(UNAVAILABLE)){
+            } else if (userCase.equals(UNAVAILABLE)) {
                 Snackbar.make(view, "Registrati per partecipare alla partita", Snackbar.LENGTH_SHORT).show();
             } else {
                 match.addPartecipant(User.getCurrentUserId());
