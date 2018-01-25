@@ -177,6 +177,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     if (notification.isRead()) {
                         already_reply.setText("Hai già risposto a questa richiesta");
                         already_reply.setVisibility(View.VISIBLE);
+                    } else {
+                        already_reply.setVisibility(View.GONE);
                     }
 
                     break;

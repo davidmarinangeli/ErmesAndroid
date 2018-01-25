@@ -37,7 +37,7 @@
                     android:id="@+id/notification_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccentDark"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="parent"
@@ -52,22 +52,24 @@
                     app:layout_constraintBottom_toBottomOf="@+id/notification_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     tools:text="in data x" />
-            </android.support.constraint.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/notification_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textSize="14sp"
-                tools:text="Nicola Schiavon ti ha invitato ad una nuova partita." />
+                <TextView
+                    android:id="@+id/notification_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/notification_title"
+                    app:layout_constraintTop_toBottomOf="@+id/notification_title"
+                    tools:text="Nicola Schiavon ti ha invitato ad una nuova partita." />
+            </android.support.constraint.ConstraintLayout>
 
             <TextView
                 android:id="@+id/already_reply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="6dp"
                 android:textSize="14sp"
                 android:textStyle="italic"
                 tools:text="Hai già risposto" />
@@ -76,7 +78,7 @@
                 android:id="@+id/notification_match_invitation_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="4dp"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -98,7 +100,7 @@
                     android:layout_weight=".5"
                     android:paddingHorizontal="16dp"
                     android:text="partecipa"
-                    android:textColor="@color/colorPrimaryDark"/>
+                    android:textColor="@color/colorAccentDark"/>
 
             </LinearLayout>
 
