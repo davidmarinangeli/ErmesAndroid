@@ -30,6 +30,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.NFC" />
 
 
     <application
@@ -56,6 +57,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".View.activities.EventActivity"/>
+
         <activity android:name=".View.activities.AccountActivity" />
         <activity
             android:name=".View.activities.MapsActivity"
