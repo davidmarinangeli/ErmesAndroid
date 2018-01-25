@@ -4,7 +4,6 @@ package com.example.david.ermes.View.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.david.ermes.Model.db.DatabaseManager;
-import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.SportRepository;
@@ -49,6 +47,8 @@ public class AccountFragment extends Fragment {
     private CardView myMatchesCard;
     private CardView friendsCard;
     private CardView customizeProfileCard;
+    private ImageView appIcon;
+    private TextView welcomeDescription;
 
     private Button welcome_button;
 
@@ -90,15 +90,21 @@ public class AccountFragment extends Fragment {
             main_scrollview.setVisibility(View.GONE);
             welcome_button.setVisibility(View.VISIBLE);
             welcome_text.setVisibility(View.VISIBLE);
+            welcomeDescription.setVisibility(View.VISIBLE);
+            appIcon.setVisibility(View.VISIBLE);
             welcome_button.setOnClickListener(view12 -> {
                 Intent i = new Intent(view12.getContext(), MainSignInActivity.class);
                 startActivity(i);
+
 
             });
         } else {
             main_scrollview.setVisibility(View.VISIBLE);
             welcome_button.setVisibility(View.GONE);
             welcome_text.setVisibility(View.GONE);
+            appIcon.setVisibility(View.GONE);
+            welcomeDescription.setVisibility(View.GONE);
+
             onViewCreated(getView(),null);
         }
 
@@ -121,6 +127,8 @@ public class AccountFragment extends Fragment {
 
         welcome_button = view.findViewById(R.id.open_login);
         welcome_text = view.findViewById(R.id.welcome_button);
+        appIcon = view.findViewById(R.id.welcome_icon);
+        welcomeDescription = view.findViewById(R.id.welcome_descrption);
 
         if (currentUser == null) {
             // se sto vedendo il mio account

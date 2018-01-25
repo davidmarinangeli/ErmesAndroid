@@ -99,7 +99,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView7">
+                    app:layout_constraintTop_toBottomOf="@+id/welcome_icon">
 
                     <TextView
                         android:id="@+id/textView2"
