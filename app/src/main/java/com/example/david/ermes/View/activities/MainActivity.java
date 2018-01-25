@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -53,10 +55,14 @@ public class MainActivity extends AppCompatActivity {
     private ValueAnimator notification_anim;
     private Integer num_locations;
 
+    public static final int PICKACTIVITY_CODE = 42;
+    public static final int ACCOUNT_ACTIVITY = 43;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         setSupportActionBar(toolbar);
 
@@ -82,23 +88,16 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         initBottomNavigationView();
-        manageFABs();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        manageFABs();
     }
 
     private void manageFABs() {
-        if (User.getCurrentUserId() != null) {
-
-            default_event_fab.setColorNormal(default_event_fab.getColorNormal());
-            default_event_fab.setColorPressed(default_event_fab.getColorPressed());
-            add_place_fab.setColorNormal(add_place_fab.getColorNormal());
-            add_place_fab.setColorPressed(add_place_fab.getColorPressed());
-
-        } else {
+        if (User.getCurrentUserId() == null || !DatabaseManager.get().isLogged()) {
 
             default_event_fab.setLabelVisibility(View.GONE);
             add_place_fab.setLabelVisibility(View.GONE);
@@ -108,11 +107,21 @@ public class MainActivity extends AppCompatActivity {
             add_place_fab.setColorNormal(add_place_fab.getColorDisabled());
             add_place_fab.setColorPressed(R.color.inactive_pressed);
 
+        } else {
+
+            default_event_fab.setLabelVisibility(View.VISIBLE);
+            add_place_fab.setLabelVisibility(View.VISIBLE);
+
+            default_event_fab.setColorNormal(getResources().getColor(R.color.colorPrimary));
+            default_event_fab.setColorPressed(getResources().getColor(R.color.colorPrimaryDark));
+            add_place_fab.setColorNormal(getResources().getColor(R.color.colorPrimary));
+            add_place_fab.setColorPressed(getResources().getColor(R.color.colorPrimaryDark));
         }
 
 
         default_event_fab.setColorFilter(R.color.white);
         default_event_fab.setOnClickListener(view1 -> {
+
             if (User.getCurrentUserId() == null || !DatabaseManager.get().isLogged()) {
                 Snackbar.make(default_event_fab, "Registrati per creare una partita",
                         Snackbar.LENGTH_LONG).show();
@@ -134,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(add_place_fab, "Registrati per aggiungere un luogo", Snackbar.LENGTH_LONG).show();
             } else {
                 Intent i = new Intent(MainActivity.this, PickPlaceActivity.class);
-                startActivityForResult(i, 1);
+                startActivityForResult(i, PICKACTIVITY_CODE);
             }
         });
     }
@@ -190,17 +199,14 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         List<Notification> finalList = list;
-                        notificationsButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent notificationActivity = new Intent(MainActivity.this,
-                                        NotificationsActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelableArrayList("notifications", (ArrayList<Notification>) finalList);
-                                notificationActivity.putExtras(bundle);
+                        notificationsButton.setOnClickListener(view -> {
+                            Intent notificationActivity = new Intent(MainActivity.this,
+                                    NotificationsActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelableArrayList("notifications", (ArrayList<Notification>) finalList);
+                            notificationActivity.putExtras(bundle);
 
-                                startActivity(notificationActivity);
-                            }
+                            startActivity(notificationActivity);
                         });
                     });
         } else notificationsButton.setVisibility(View.GONE);
@@ -222,6 +228,21 @@ public class MainActivity extends AppCompatActivity {
         if (notification_anim != null) {
             notification_anim.pause();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICKACTIVITY_CODE) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Snackbar info = Snackbar.make(getWindow().getDecorView(), "Luogo aggiunto correttamente", Snackbar.LENGTH_LONG);
+                info.setAction("Yay!", view -> info.dismiss());
+            }
+        } else if (requestCode == ACCOUNT_ACTIVITY) {
+
+        }
+
     }
 
     private void initBottomNavigationView() {

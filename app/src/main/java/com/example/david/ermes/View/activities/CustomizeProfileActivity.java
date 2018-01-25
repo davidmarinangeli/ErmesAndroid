@@ -20,6 +20,7 @@ public class CustomizeProfileActivity extends AppCompatActivity {
     private ImageButton done_profile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         done_profile= findViewById(R.id.spunta_done_profile);

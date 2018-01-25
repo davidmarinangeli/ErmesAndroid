@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
@@ -67,6 +68,8 @@ public class PickPlaceActivity extends AppCompatActivity implements GoogleApiCli
     private List<String> selected_sports_ids;
     private List<SportChip> choises;
 
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,13 +152,11 @@ public class PickPlaceActivity extends AppCompatActivity implements GoogleApiCli
                         location_create.setLongitude(marker[0].getPosition().longitude);
                         location_create.setIdUserCreator(((User) object).getUID());
 
-                        if (googleMap.isMyLocationEnabled()){
-                            mFusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-                                LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-                                CameraPosition position = new CameraPosition.Builder().zoom(12).target(latLng).build();
-                                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
-                            });
+                        if (!googleMap.isMyLocationEnabled()) {
+                            Toast.makeText(getBaseContext(), "Posizione non attiva", Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Log.e("mapserror", "Errore nell'ottenimento delle coordinate.");
                     }
                 }));
             }
@@ -175,6 +176,8 @@ public class PickPlaceActivity extends AppCompatActivity implements GoogleApiCli
 
                     location_create.setName(place_name.getText().toString());
                     location_create.setSportIds(selected_sports_ids);
+
+                    // salvo online la location e do un okay all'activity
                     location_create.save();
                     setResult(Activity.RESULT_OK);
                     finish();
@@ -231,7 +234,6 @@ public class PickPlaceActivity extends AppCompatActivity implements GoogleApiCli
         mGoogleApiClient.connect();
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)

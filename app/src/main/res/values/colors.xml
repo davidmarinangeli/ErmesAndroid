@@ -12,7 +12,7 @@
     <color name="notificationBackground">#dbebfa</color>
 
     <!-- misc colors -->
-    <color name="red">#FF0000</color>
+    <color name="red">#f44336</color>
     <color name="green">#FF25A900</color>
     <color name="white">#FFFFFF</color>
     <color name="bright_foreground_holo_light">#150707</color>
