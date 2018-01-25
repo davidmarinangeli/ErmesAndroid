@@ -98,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
     private void manageFABs() {
         if (User.getCurrentUserId() == null || !DatabaseManager.get().isLogged()) {
 
-            default_event_fab.setLabelVisibility(View.GONE);
-            add_place_fab.setLabelVisibility(View.GONE);
+            default_event_fab.setLabelVisibility(View.INVISIBLE);
+            add_place_fab.setLabelVisibility(View.INVISIBLE);
 
             default_event_fab.setColorNormal(default_event_fab.getColorDisabled());
             default_event_fab.setColorPressed(R.color.inactive_pressed);
@@ -283,6 +283,15 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setOnTabSelectedListener((position, wasSelected) -> {
             viewPager.setCurrentItem(position);
             toolbar.setVisibility(View.VISIBLE);
+
+            if(position == 2){
+                menu.hideMenu(true);
+                menu.hideMenuButton(true);
+            } else {
+                menu.showMenu(true);
+                menu.showMenuButton(true);
+            }
+
             return true;
         });
     }
