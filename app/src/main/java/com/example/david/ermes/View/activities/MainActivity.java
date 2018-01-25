@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                             list = new ArrayList<>();
                         } else if (Notification.getUnreadNotificationsFromList(list).size() > 0) {
 
+                            // icon animation
                             if (notification_anim != null) {
                                 if (notification_anim.isPaused()) {
                                     notification_anim.resume();
