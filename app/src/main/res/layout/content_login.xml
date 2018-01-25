@@ -41,14 +41,25 @@
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_login_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_gravity="center|top"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:onClick="onClick"
         android:text="@string/login"
-        app:layout_constraintEnd_toEndOf="@+id/oppure"
-        app:layout_constraintStart_toStartOf="@+id/oppure"
-        app:layout_constraintTop_toBottomOf="@+id/oppure" />
+        app:layout_constraintTop_toBottomOf="@+id/loginbutton" />
+
+    <View
+        android:id="@+id/line_left_invited"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/google_login_button" />
 
     <TextView
         android:id="@+id/user_email_login"
@@ -67,7 +78,7 @@
     <Button
         android:id="@+id/loginbutton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/colorAccent"
         android:elevation="2dp"
@@ -76,16 +87,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pwd" />
-
-    <TextView
-        android:id="@+id/oppure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/oppure"
-        app:layout_constraintEnd_toEndOf="@+id/loginbutton"
-        app:layout_constraintStart_toStartOf="@+id/loginbutton"
-        app:layout_constraintTop_toBottomOf="@+id/loginbutton" />
 
     <Button
         android:id="@+id/logoutbutton"
@@ -99,30 +100,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signupbutton" />
 
-    <TextView
-        android:id="@+id/oppure2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/oppure"
-        app:layout_constraintEnd_toEndOf="@+id/google_login_button"
-        app:layout_constraintStart_toStartOf="@+id/google_login_button"
-        app:layout_constraintTop_toBottomOf="@+id/google_login_button" />
-
     <Button
         android:id="@+id/signupbutton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="14dp"
         android:backgroundTint="@color/colorPrimary"
         android:elevation="2dp"
         android:text="@string/registrati"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/oppure2" />
+        app:layout_constraintTop_toBottomOf="@+id/line_left_invited" />
 
 
 </android.support.constraint.ConstraintLayout>
