@@ -3,18 +3,11 @@ package com.example.david.ermes.View.activities;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
-
-import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
-import com.example.david.ermes.Model.repository.MatchRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.fragments.EventFragment;
 
@@ -48,7 +41,6 @@ public class EventActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.event_container, eventFragment).commit();
 
         }
-
     }
 
     @Override
