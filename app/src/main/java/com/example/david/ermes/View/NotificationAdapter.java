@@ -99,8 +99,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         TextView text;
         TextView date;
         LinearLayout layout;
-        Button left_button;
         Button right_button;
+        Button left_button;
         TextView already_reply;
 
         ProgressDialog mDialog;
@@ -113,8 +113,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             text = itemView.findViewById(R.id.notification_text);
             date = itemView.findViewById(R.id.notification_date);
             layout = itemView.findViewById(R.id.notification_container);
-            left_button = itemView.findViewById(R.id.notification_left_button);
             right_button = itemView.findViewById(R.id.notification_right_button);
+            left_button = itemView.findViewById(R.id.notification_left_button);
             already_reply = itemView.findViewById(R.id.already_reply);
 
             mDialog = new ProgressDialog(context);
@@ -124,8 +124,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             item = itemView;
 
             item.setOnClickListener(itemListener);
-            left_button.setOnClickListener(leftButtonListener);
             right_button.setOnClickListener(rightButtonListener);
+            left_button.setOnClickListener(leftButtonListener);
         }
 
         public void bind(int position) {
@@ -155,14 +155,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 case MATCH_INVITE_USER:
                     // buttons style
                     setButtonsVisible(View.VISIBLE);
-
-                    left_button.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_event_available_white_24dp, 0, 0, 0);
-                    right_button.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_event_busy_white_24dp, 0, 0, 0);
-
-                    left_button.setText("Partecipa");
-                    right_button.setText("Rifiuta");
+                    right_button.setText("Partecipa");
+                    left_button.setText("Rifiuta");
 
                     icon.setImageResource(R.drawable.ic_insert_invitation_black_40dp);
 
@@ -175,14 +169,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 case FRIENDSHIP_REQUEST:
                     // buttons style
                     setButtonsVisible(View.VISIBLE);
-
-                    left_button.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_done_white_24dp, 0, 0, 0);
-                    right_button.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_close_white_24dp, 0, 0, 0);
-
-                    left_button.setText("Accetta");
-                    right_button.setText("Elimina");
+                    right_button.setText("Accetta");
+                    left_button.setText("Elimina");
 
                     icon.setImageResource(R.drawable.ic_person_add_black_40dp);
 
@@ -195,6 +183,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 case FRIENDSHIP_ACCEPTED:
                     icon.setImageResource(R.drawable.ic_group_black_40dp);
 
+                    already_reply.setVisibility(View.GONE);
                     setButtonsVisible(View.GONE);
                     break;
             }
@@ -268,7 +257,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }
         };
 
-        private View.OnClickListener leftButtonListener = view -> {
+        private View.OnClickListener rightButtonListener = view -> {
             int position = getAdapterPosition();
 
             switch (notifications.get(position).getType()) {
@@ -302,7 +291,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }
         };
 
-        private View.OnClickListener rightButtonListener = view -> {
+        private View.OnClickListener leftButtonListener = view -> {
             int position = getAdapterPosition();
 
             switch (notifications.get(position).getType()) {
@@ -454,14 +443,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             Notification notification = notifications.get(position);
 
             notification.setRead(true);
-            notification.save(new FirebaseCallback() {
-                @Override
-                public void callback(Object object) {
-                    mDialog.dismiss();
-                    item.setActivated(true);
+            notification.save(object -> {
+                mDialog.dismiss();
+                item.setActivated(true);
 
-                    notifyDataSetChanged();
-                }
+                notifyDataSetChanged();
             });
         }
 
@@ -477,8 +463,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
 
         private void setButtonsVisible(int visible) {
-            left_button.setVisibility(visible);
             right_button.setVisibility(visible);
+            left_button.setVisibility(visible);
 
             final int PADDING = StyleUtils.getDpByPixels(context, 16);
 
