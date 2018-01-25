@@ -1,6 +1,7 @@
 package com.example.david.ermes.View.fragments;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -234,6 +235,7 @@ public class EventFragment extends Fragment {
             }
             missing_stuff_button.setOnClickListener(view1 -> showMultiChoice(new ArrayList<>(), missing_items_instring));
         } else {
+            missing_stuff_button.setColorFilter(R.color.inactive_pressed);
             missing_stuff_button.setEnabled(false);
         }
 
@@ -403,7 +405,7 @@ public class EventFragment extends Fragment {
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
             case UNAVAILABLE:
-                join.setBackgroundColor(getResources().getColor(R.color.inactive));
+                join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.inactive)));
                 invite.setVisibility(View.GONE);
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
