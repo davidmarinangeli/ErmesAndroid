@@ -186,7 +186,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                         photoURL,
                                         born_date_calendar.getTimeInMillis()
                                 ).save(object1 -> finish());
-                                DatabaseManager.get().setLogged(true);
                             } else {
                                 Snackbar.make(getWindow().getDecorView(), "Errore nella ricerca dello sport", Snackbar.LENGTH_LONG)
                                         .setAction(":(", null);
@@ -264,7 +263,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         photoURL,
                         born_date_calendar.getTimeInMillis()
                 ).save(object1 -> finish());
-                DatabaseManager.get().setLogged(true);
             });
         } else {
 
