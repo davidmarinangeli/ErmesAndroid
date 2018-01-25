@@ -62,7 +62,7 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_login);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Login in Ermes");
+        toolbar.setTitle("Accedi o Registrati");
 
         // setto i parametri dell'editext login e password
         email_editext = findViewById(R.id.mail);
