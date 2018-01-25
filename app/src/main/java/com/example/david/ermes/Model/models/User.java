@@ -174,6 +174,28 @@ public class User implements Parcelable {
         return image_tag;
     }
 
+    public static int setImageToSport(Context cx,int sport){
+        int image_tag = 0;
+        switch (sport) {
+            case 0:
+                image_tag = cx.getResources().getIdentifier("basketball96", "drawable", cx.getPackageName());
+                break;
+            case 1:
+                image_tag = cx.getResources().getIdentifier("volleyball696", "drawable", cx.getPackageName());
+                break;
+            case 3:
+                image_tag = cx.getResources().getIdentifier("tennisracquet96", "drawable", cx.getPackageName());
+                break;
+            case 2:
+                image_tag = cx.getResources().getIdentifier("soccerball96", "drawable", cx.getPackageName());
+                break;
+            case 4:
+                image_tag = cx.getResources().getIdentifier("pingpong96", "drawable", cx.getPackageName());
+                break;
+        }
+        return image_tag;
+    }
+
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
