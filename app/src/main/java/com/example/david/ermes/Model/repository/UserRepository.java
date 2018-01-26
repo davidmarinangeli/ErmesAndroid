@@ -38,16 +38,13 @@ public class UserRepository {
     }
 
     public void fetchUserById(String id, final FirebaseCallback firebaseCallback) {
-        UserDatabaseRepository.getInstance().fetchUserById(id, new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                User user = null;
-                if (object != null) {
-                    user = ((DbModels._User) object).convertToUser();
-                }
-
-                firebaseCallback.callback(user);
+        UserDatabaseRepository.getInstance().fetchUserById(id, object -> {
+            User user = null;
+            if (object != null) {
+                user = ((DbModels._User) object).convertToUser();
             }
+
+            firebaseCallback.callback(user);
         });
     }
 }

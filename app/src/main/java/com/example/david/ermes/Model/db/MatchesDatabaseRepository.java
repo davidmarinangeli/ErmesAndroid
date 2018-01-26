@@ -63,15 +63,12 @@ public class MatchesDatabaseRepository {
     }
 
     public void fetchMatchById(String id, final FirebaseCallback firebaseCallback) {
-        fetchMatches("key", id, new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null) {
-                    List<_Match> list = (List<_Match>) object;
-                    firebaseCallback.callback(list.get(0));
-                } else {
-                    firebaseCallback.callback(null);
-                }
+        fetchMatches("key", id, object -> {
+            if (object != null) {
+                List<_Match> list = (List<_Match>) object;
+                firebaseCallback.callback(list.get(0));
+            } else {
+                firebaseCallback.callback(null);
             }
         });
     }
@@ -134,9 +131,9 @@ public class MatchesDatabaseRepository {
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("FIREBASE", "Failed to read value.", error.toException());
-                fc.callback(null);
+                if (fc != null) {
+                    fc.callback(null);
+                }
             }
         });
     }
@@ -163,7 +160,9 @@ public class MatchesDatabaseRepository {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-                            firebaseCallback.callback(null);
+                            if (firebaseCallback != null) {
+                                firebaseCallback.callback(null);
+                            }
                         }
                     });
         } else if (firebaseCallback != null) {
@@ -201,7 +200,9 @@ public class MatchesDatabaseRepository {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-                            firebaseCallback.callback(null);
+                            if (firebaseCallback != null) {
+                                firebaseCallback.callback(null);
+                            }
                         }
                     }
             );
@@ -212,12 +213,9 @@ public class MatchesDatabaseRepository {
 
     public void deleteById(String id, FirebaseCallback firebaseCallback) {
         if (id != null && !id.isEmpty()) {
-            this.matchesRef.child(id).removeValue(new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    if (firebaseCallback != null) {
-                        firebaseCallback.callback(null);
-                    }
+            this.matchesRef.child(id).removeValue((databaseError, databaseReference) -> {
+                if (firebaseCallback != null) {
+                    firebaseCallback.callback(null);
                 }
             });
         }
