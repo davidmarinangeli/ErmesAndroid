@@ -44,9 +44,6 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
     private Button loginInButton;
     private EditText email_editext;
     private EditText password_editext;
-    private TextView userlogintext;
-
-    private Button logoutbutton;
 
     private GoogleSignInAccount account;
     private FirebaseAuth mAuth;
@@ -68,9 +65,6 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
         email_editext = findViewById(R.id.mail);
         password_editext = findViewById(R.id.pwd);
 
-        logoutbutton = findViewById(R.id.logoutbutton);
-        logoutbutton.setOnClickListener(this);
-
         // prendo l'istanza del FBAuth
         mAuth = FirebaseAuth.getInstance();
 
@@ -82,7 +76,6 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
         loginInButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
 
-        userlogintext = findViewById(R.id.user_email_login);
         googleLogInButton.setOnClickListener(this);
 
         TextView textView = (TextView) googleLogInButton.getChildAt(0);
@@ -107,7 +100,6 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
         super.onStart();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
     }
 
     @Override
@@ -132,9 +124,6 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
             case R.id.signupbutton:
                 Intent signupactivity = new Intent(this, SignUpActivity.class);
                 startActivity(signupactivity);
-
-            case R.id.logoutbutton:
-                signOut();
             default:
                 break;
         }
@@ -147,13 +136,11 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
-                        updateUI(user);
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         Toast.makeText(MainSignInActivity.this, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
-                        updateUI(null);
                     }
 
                     // ...
@@ -218,13 +205,11 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                             }
                         });
 
-                        updateUI(user);
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                         Toast.makeText(MainSignInActivity.this, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
-                        updateUI(null);
                     }
 
                     // ...
@@ -236,16 +221,5 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
         Log.d(TAG, "onConnectionFailed: " + connectionResult);
     }
 
-    public void updateUI(FirebaseUser user) {
-        if (user != null)
-            userlogintext.setText(user.getEmail());
-    }
 
-    public void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(status -> {
-            mAuth.signOut();
-            Log.d(TAG, "Signed out");
-            userlogintext.setText("");
-        });
-    }
 }
