@@ -43,7 +43,9 @@ public class SportDatabaseRepository {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(null);
+                    }
                 }
             });
         } else {
@@ -69,7 +71,9 @@ public class SportDatabaseRepository {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(null);
+                    }
                 }
             });
         } else {
@@ -99,8 +103,9 @@ public class SportDatabaseRepository {
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("FIREBASE", "Failed to read value.", error.toException());
+                if (fc != null) {
+                    fc.callback(null);
+                }
             }
         });
     }

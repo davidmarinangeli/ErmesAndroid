@@ -24,57 +24,42 @@ public class MatchRepository {
     }
 
     public void fetchMatches(final FirebaseCallback firebaseCallback) {
-        MatchesDatabaseRepository.getInstance().fetchAllMatches(new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                firebaseCallback.callback(DbModels._Match.convertToMatchList((List<DbModels._Match>) object));
-            }
-        });
+        MatchesDatabaseRepository.getInstance().fetchAllMatches(object ->
+                firebaseCallback.callback(
+                        DbModels._Match.convertToMatchList((List<DbModels._Match>) object)));
     }
 
     public void fetchMatchesByOwner(User user, final FirebaseCallback firebaseCallback) {
-        MatchesDatabaseRepository.getInstance().fetchMatchesByIdOwner(user.getUID(), new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                firebaseCallback.callback(DbModels._Match.convertToMatchList((List<DbModels._Match>) object));
-            }
-        });
+        MatchesDatabaseRepository.getInstance().fetchMatchesByIdOwner(user.getUID(), object ->
+                firebaseCallback.callback(
+                        DbModels._Match.convertToMatchList((List<DbModels._Match>) object)));
     }
 
     public void fetchOrderedMatchesByDate(long date, final FirebaseCallback firebaseCallback) {
-        MatchesDatabaseRepository.getInstance().orderMatchesByDate(date, new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                firebaseCallback.callback(DbModels._Match.convertToMatchList((List<DbModels._Match>) object));
-            }
-        });
+        MatchesDatabaseRepository.getInstance().orderMatchesByDate(date, object ->
+                firebaseCallback.callback(
+                        DbModels._Match.convertToMatchList((List<DbModels._Match>) object)));
     }
 
     public void fetchMatchById(String id, final FirebaseCallback firebaseCallback) {
-        MatchesDatabaseRepository.getInstance().fetchMatchById(id, new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null) {
-                    firebaseCallback.callback(((DbModels._Match) object).convertToMatch());
-                } else {
-                    firebaseCallback.callback(null);
-                }
+        MatchesDatabaseRepository.getInstance().fetchMatchById(id, object -> {
+            if (object != null) {
+                firebaseCallback.callback(((DbModels._Match) object).convertToMatch());
+            } else {
+                firebaseCallback.callback(null);
             }
         });
     }
 
     public void fetchFinishedJoinedMatchesByUserId(String idUser, FirebaseCallback firebaseCallback) {
         MatchesDatabaseRepository.getInstance().fetchFinishedJoinedMatches(idUser,
-                new FirebaseCallback() {
-                    @Override
-                    public void callback(Object object) {
-                        List<DbModels._Match> list = (List<DbModels._Match>) object;
+                object -> {
+                    List<DbModels._Match> list = (List<DbModels._Match>) object;
 
-                        if (list != null && firebaseCallback != null) {
-                            firebaseCallback.callback(DbModels._Match.convertToMatchList(list));
-                        } else if (firebaseCallback != null) {
-                            firebaseCallback.callback(null);
-                        }
+                    if (list != null && firebaseCallback != null) {
+                        firebaseCallback.callback(DbModels._Match.convertToMatchList(list));
+                    } else if (firebaseCallback != null) {
+                        firebaseCallback.callback(null);
                     }
                 });
     }

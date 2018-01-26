@@ -20,7 +20,9 @@ import java.util.List;
 public class LocationDatabaseRepository {
     private static LocationDatabaseRepository instance = new LocationDatabaseRepository();
 
-    public static LocationDatabaseRepository getInstance() { return instance; }
+    public static LocationDatabaseRepository getInstance() {
+        return instance;
+    }
 
     private DatabaseReference ref;
 
@@ -53,7 +55,9 @@ public class LocationDatabaseRepository {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                if (firebaseCallback != null) {
+                    firebaseCallback.callback(null);
+                }
             }
         });
     }
@@ -70,13 +74,15 @@ public class LocationDatabaseRepository {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                firebaseCallback.callback(null);
+                if (firebaseCallback != null) {
+                    firebaseCallback.callback(null);
+                }
             }
         });
     }
 
     public void fetchLocationsByRange(double center_x, final double center_y, final double range,
-                                         final FirebaseCallback firebaseCallback) {
+                                      final FirebaseCallback firebaseCallback) {
         this.ref.orderByChild("x").startAt(center_x - range).endAt(center_x + range)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -96,36 +102,32 @@ public class LocationDatabaseRepository {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(null);
+                        }
                     }
                 });
     }
 
     public void fetchLocationsByProximity(final Location location,
                                           final FirebaseCallback firebaseCallback) {
-        fetchAllLocations(new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null) {
-                    List<Location> list = DbModels._Location.convertToLocationList(
-                            (List<DbModels._Location>) object);
+        fetchAllLocations(object -> {
+            if (object != null) {
+                List<Location> list = DbModels._Location.convertToLocationList(
+                        (List<DbModels._Location>) object);
 
-                    Collections.sort(list, new Comparator<Location>() {
-                        @Override
-                        public int compare(Location l1, Location l2) {
-                            double d1 = l1.getDistanceFromLocation(location);
-                            double d2 = l2.getDistanceFromLocation(location);
+                Collections.sort(list, (l1, l2) -> {
+                    double d1 = l1.getDistanceFromLocation(location);
+                    double d2 = l2.getDistanceFromLocation(location);
 
-                            return d1 > d2 ? 1
-                                    : d1 < d2 ? -1
-                                    : 0;
-                        }
-                    });
+                    return d1 > d2 ? 1
+                            : d1 < d2 ? -1
+                            : 0;
+                });
 
-                    firebaseCallback.callback(list);
-                } else {
-                    firebaseCallback.callback(null);
-                }
+                firebaseCallback.callback(list);
+            } else {
+                firebaseCallback.callback(null);
             }
         });
     }
