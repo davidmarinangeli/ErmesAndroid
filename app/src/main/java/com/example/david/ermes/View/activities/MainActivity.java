@@ -108,9 +108,6 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
 
-            default_event_fab.setLabelVisibility(View.VISIBLE);
-            add_place_fab.setLabelVisibility(View.VISIBLE);
-
             default_event_fab.setColorNormal(getResources().getColor(R.color.colorPrimary));
             default_event_fab.setColorPressed(getResources().getColor(R.color.colorPrimaryDark));
             add_place_fab.setColorNormal(getResources().getColor(R.color.colorPrimary));
@@ -284,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
             viewPager.setCurrentItem(position);
             toolbar.setVisibility(View.VISIBLE);
 
-            if(position == 2){
+            if (position == 2) {
                 menu.hideMenu(true);
                 menu.hideMenuButton(true);
             } else {
