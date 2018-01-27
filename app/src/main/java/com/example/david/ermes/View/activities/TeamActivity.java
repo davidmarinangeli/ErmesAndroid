@@ -21,7 +21,6 @@ import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.Team;
 import com.example.david.ermes.Model.models.User;
-import com.example.david.ermes.Model.repository.MatchRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.UserListAdapter;
