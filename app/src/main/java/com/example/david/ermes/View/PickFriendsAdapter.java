@@ -13,9 +13,11 @@ import android.widget.TextView;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.models.Team;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.PickFriendsActivity;
+import com.example.david.ermes.View.activities.TeamActivity;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -32,8 +34,11 @@ public class PickFriendsAdapter extends RecyclerView.Adapter<PickFriendsAdapter.
     private List<User> friendship_list = new ArrayList<>();
     private List<User> invited_friends = new ArrayList<>();
     private Match result_match;
+    private Team result_team;
     private Context context;
     private int who_i_can_invite = 0;
+
+    private int team_activity_code = 0;
 
     public PickFriendsAdapter(PickFriendsActivity from, Context context) {
         this.context = context;
@@ -61,7 +66,19 @@ public class PickFriendsAdapter extends RecyclerView.Adapter<PickFriendsAdapter.
         friendship_list = friends_list;
         result_match = match;
         who_i_can_invite = PickFriendsActivity.peopleICanInvite(result_match);
+        team_activity_code = 0;
         notifyDataSetChanged();
+    }
+
+    public void refreshList(List<User> friends_list, Team team, int code) {
+        friendship_list = friends_list;
+        result_team = team;
+        team_activity_code = code;
+        notifyDataSetChanged();
+    }
+
+    public Team getResultTeam() {
+        return result_team;
     }
 
 
@@ -90,26 +107,36 @@ public class PickFriendsAdapter extends RecyclerView.Adapter<PickFriendsAdapter.
 
             invite_checkbox.setOnClickListener(view -> {
 
-                if (!invite_checkbox.isChecked()) {
-                    invited_friends.remove(friendship_list.get(getAdapterPosition()));
-                    pickactivity.editFreeSlot(object -> {
-                        TextView maxplayers = (TextView) object;
-                        who_i_can_invite++;
-                        maxplayers.setText(who_i_can_invite+"");
-                    });
-
-                } else {
-
-                    if (invited_friends.size() <= who_i_can_invite) {
-                        invited_friends.add(friendship_list.get(getAdapterPosition()));
+                if (result_match != null) {
+                    if (!invite_checkbox.isChecked()) {
+                        invited_friends.remove(friendship_list.get(getAdapterPosition()));
                         pickactivity.editFreeSlot(object -> {
                             TextView maxplayers = (TextView) object;
-                            who_i_can_invite--;
-                            maxplayers.setText(who_i_can_invite+"");
+                            who_i_can_invite++;
+                            maxplayers.setText(who_i_can_invite + "");
                         });
+
                     } else {
-                        Snackbar.make(itemView, "Puoi invitare al massimo " + result_match.getMaxPlayers() + " giocatori", Snackbar.LENGTH_LONG);
-                        invite_checkbox.setChecked(false);
+
+                        if (invited_friends.size() <= who_i_can_invite) {
+                            invited_friends.add(friendship_list.get(getAdapterPosition()));
+                            pickactivity.editFreeSlot(object -> {
+                                TextView maxplayers = (TextView) object;
+                                who_i_can_invite--;
+                                maxplayers.setText(who_i_can_invite + "");
+                            });
+                        } else {
+                            Snackbar.make(itemView, "Puoi invitare al massimo " + result_match.getMaxPlayers() + " giocatori", Snackbar.LENGTH_LONG);
+                            invite_checkbox.setChecked(false);
+                        }
+                    }
+                } else if (result_team != null) {
+                    String user_id = friendship_list.get(getAdapterPosition()).getUID();
+
+                    if (invite_checkbox.isChecked()) {
+                        result_team.addUser(user_id);
+                    } else {
+                        result_team.removeUser(user_id);
                     }
                 }
             });
@@ -119,13 +146,26 @@ public class PickFriendsAdapter extends RecyclerView.Adapter<PickFriendsAdapter.
         public void bind(int pos) {
             friend_name.setText(friendship_list.get(pos).getName());
             Picasso.with(context).load(friendship_list.get(pos).getPhotoURL()).memoryPolicy(MemoryPolicy.NO_CACHE).into(friend_image);
-            if (result_match.getPartecipants().contains(friendship_list.get(pos).getUID())) {
+
+            if (result_match != null && result_match.getPartecipants().contains(friendship_list.get(pos).getUID())) {
                 // se è già tra gli invitati disattivo la checkbox
                 invite_checkbox.setChecked(true);
                 invite_checkbox.setEnabled(false);
                 friend_name.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+            } else if (result_team != null && result_team.getUserIdList().contains(friendship_list.get(pos).getUID())) {
+                switch (team_activity_code) {
+                    case TeamActivity.SELECT_FRIENDS_CREATE_TEAM_REQUEST_CODE:
+                        invite_checkbox.setChecked(true);
+                        invite_checkbox.setEnabled(true);
+                        break;
+                    case TeamActivity.SELECT_FRIENDS_ADD_REQUEST_CODE:
+                        invite_checkbox.setChecked(true);
+                        invite_checkbox.setEnabled(false);
+                        break;
+                    default:
+                        break;
+                }
             }
-
         }
 
     }

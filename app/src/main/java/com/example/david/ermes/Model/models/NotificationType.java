@@ -7,7 +7,9 @@ package com.example.david.ermes.Model.models;
 public enum NotificationType {
     MATCH_INVITE_USER,
     FRIENDSHIP_REQUEST,
-    FRIENDSHIP_ACCEPTED;
+    FRIENDSHIP_ACCEPTED,
+    TEAM_ADDED,
+    USER_LEAVE_TEAM;
 
     public static String toString(NotificationType notificationType) {
         String s = null;
@@ -21,6 +23,12 @@ public enum NotificationType {
                 break;
             case FRIENDSHIP_ACCEPTED:
                 s = "FRIENDSHIP_ACCEPTED";
+                break;
+            case TEAM_ADDED:
+                s = "TEAM_ADDED";
+                break;
+            case USER_LEAVE_TEAM:
+                s = "USER_LEAVE_TEAM";
                 break;
         }
 
@@ -39,6 +47,12 @@ public enum NotificationType {
                 break;
             case "FRIENDSHIP_ACCEPTED":
                 nt = FRIENDSHIP_ACCEPTED;
+                break;
+            case "TEAM_ADDED":
+                nt = TEAM_ADDED;
+                break;
+            case "USER_LEAVE_TEAM":
+                nt = USER_LEAVE_TEAM;
                 break;
         }
 

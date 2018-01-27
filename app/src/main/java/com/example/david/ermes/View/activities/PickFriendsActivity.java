@@ -1,5 +1,6 @@
 package com.example.david.ermes.View.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Notification;
+import com.example.david.ermes.Model.models.Team;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.FriendshipRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
@@ -35,6 +37,11 @@ public class PickFriendsActivity extends AppCompatActivity {
     private TextView max_players;
     private ImageButton spunta_done;
     private Match result_match;
+    private Team result_team;
+
+    private boolean invite_match;
+    private boolean invite_team;
+    private int activity_request_code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +58,11 @@ public class PickFriendsActivity extends AppCompatActivity {
         toolbar.setTitle("Invita amici");
 
         Intent intent = getIntent();
+        activity_request_code = intent.getIntExtra(TeamActivity.ACTIVITY_REQUEST_CODE_KEY, 0);
         result_match = intent.getParcelableExtra("match");
+        result_team = intent.getParcelableExtra(TeamActivity.ACTIVITY_TEAM_KEY);
+        invite_match = result_match != null;
+        invite_team = result_team != null;
 
         linearLayoutManager = new LinearLayoutManager(this);
         pickFriendsAdapter = new PickFriendsAdapter(PickFriendsActivity.this,this);
@@ -61,37 +72,58 @@ public class PickFriendsActivity extends AppCompatActivity {
         friendsrecyclerview.setLayoutManager(linearLayoutManager);
         initList();
 
-        max_players.setText(String.valueOf(peopleICanInvite(result_match)));
+        if (invite_match) {
+            max_players.setText(String.valueOf(peopleICanInvite(result_match)));
+        } else {
+            max_players.setVisibility(View.GONE);
+        }
 
-        spunta_done.setOnClickListener(view -> pickFriendsAdapter.saveFriendsList(object -> {
-            if (object != null){
-                List<User> invited_friends = (List<User>)object;
-                for (User user : invited_friends) {
-                    if (!result_match.getPartecipants().contains(user.getUID()) &&
-                            !result_match.getPending().contains(user.getUID())) {
-                        result_match.addPending(user.getUID());
-                        Notification invitation = Notification.createMatchInvitation(user.getUID(), result_match.getId());
-                        if (invitation != null) {
-                            invitation.save();
-                        } else {
-                            Snackbar.make(view, "Impossibile inviare inviti per la partita", Snackbar.LENGTH_LONG);
+        spunta_done.setOnClickListener(view -> {
+            if (invite_match) {
+                pickFriendsAdapter.saveFriendsList(object -> {
+                    if (object != null) {
+                        List<User> invited_friends = (List<User>) object;
+                        for (User user : invited_friends) {
+                            if (!result_match.getPartecipants().contains(user.getUID()) &&
+                                    !result_match.getPending().contains(user.getUID())) {
+                                result_match.addPending(user.getUID());
+                                Notification invitation = Notification.createMatchInvitation(
+                                        user.getUID(), result_match.getId());
+                                if (invitation != null) {
+                                    invitation.save();
+                                } else {
+                                    Snackbar.make(view,
+                                            "Impossibile inviare inviti per la partita",
+                                            Snackbar.LENGTH_LONG);
+                                }
+                            }
                         }
+                        result_match.save(object1 -> {
+                            Intent save_intent = new Intent();
+                            save_intent.putExtra("new_match", result_match);
+                            setResult(RESULT_OK, save_intent);
+                            finish();
+                        });
                     }
-                }
-                result_match.save(object1 -> {
-                    Intent save_intent = new Intent();
-                    save_intent.putExtra("new_match", result_match);
-                    setResult(RESULT_OK, save_intent);
-                    finish();
                 });
+            } else if (invite_team) {
+                result_team = pickFriendsAdapter.getResultTeam();
+
+                Bundle extras = new Bundle();
+                extras.putParcelable("result_team", result_team);
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtras(extras);
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
             }
-        })) ;
+        });
 
     }
 
-    public void editFreeSlot(FirebaseCallback firebaseCallback){
+    public void editFreeSlot(FirebaseCallback firebaseCallback) {
         firebaseCallback.callback(max_players);
-    };
+    }
 
     public void initList() {
         FriendshipRepository.getInstance().fetchFriendshipsByUserId(User.getCurrentUserId(), object -> {
@@ -110,7 +142,12 @@ public class PickFriendsActivity extends AppCompatActivity {
                         }
 
                         if (getFetchFriendsCount() == user_friends.size()) {
-                            pickFriendsAdapter.refreshList(my_friends,result_match);
+                            if (invite_match) {
+                                pickFriendsAdapter.refreshList(my_friends, result_match);
+                            } else if (invite_team) {
+                                pickFriendsAdapter.refreshList(my_friends, result_team,
+                                        activity_request_code);
+                            }
 
                             if (pickFriendsAdapter.getItemCount()>0){
                                 no_friends.setVisibility(View.GONE);
