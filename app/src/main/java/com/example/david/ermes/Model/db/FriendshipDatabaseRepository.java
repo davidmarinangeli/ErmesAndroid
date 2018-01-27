@@ -32,7 +32,7 @@ public class FriendshipDatabaseRepository {
         results = new ArrayList<>();
     }
 
-    private boolean ready, found;
+    private boolean ready, found, callback_called;
     private int fetchBy2IdsCount = 0;
     private final int MAX_FETCH_BY_2_IDS_COUNT = 2;
     private List<FirebaseCallback> syncList;
@@ -64,6 +64,7 @@ public class FriendshipDatabaseRepository {
         syncList = new ArrayList<>();
         ready= true;
         found = false;
+        callback_called = false;
     }
 
     public void push(_Friendship friendship, final FirebaseCallback firebaseCallback) {
@@ -142,6 +143,7 @@ public class FriendshipDatabaseRepository {
     private void fetch_by_2_ids(String id_t1, String id_t2, FirebaseCallback firebaseCallback) {
         ready = false;
         found = false;
+        callback_called = false;
         fetchBy2IdsCount = 0;
 
         this.ref.orderByKey().equalTo(id_t1).addValueEventListener(new ValueEventListener() {
@@ -149,18 +151,27 @@ public class FriendshipDatabaseRepository {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 fetchBy2IdsCount++;
 
-                _Friendship f = dataSnapshot.getValue(_Friendship.class);
+                _Friendship f = null;
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    f = d.getValue(_Friendship.class);
+                }
                 found = f != null;
 
-                if (firebaseCallback != null && (found || fetchBy2IdsCount == MAX_FETCH_BY_2_IDS_COUNT)) {
-                    ready = true;
+                if (firebaseCallback != null && found) {
+                    callback_called = true;
+                    firebaseCallback.callback(f);
+                }
 
+                if (fetchBy2IdsCount == MAX_FETCH_BY_2_IDS_COUNT) {
+                    if (firebaseCallback != null && !callback_called && !found) {
+                        firebaseCallback.callback(f);
+                    }
+
+                    ready = true;
                     if (syncList.size() > 0) {
                         syncList.get(0).callback(null);
                         syncList.remove(0);
                     }
-
-                    firebaseCallback.callback(f);
                 }
             }
 
@@ -175,18 +186,27 @@ public class FriendshipDatabaseRepository {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 fetchBy2IdsCount++;
 
-                _Friendship f = dataSnapshot.getValue(_Friendship.class);
+                _Friendship f = null;
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    f = d.getValue(_Friendship.class);
+                }
                 found = f != null;
 
-                if (firebaseCallback != null && (found || fetchBy2IdsCount == MAX_FETCH_BY_2_IDS_COUNT)) {
-                    ready = true;
+                if (firebaseCallback != null && found) {
+                    callback_called = true;
+                    firebaseCallback.callback(f);
+                }
 
+                if (fetchBy2IdsCount == MAX_FETCH_BY_2_IDS_COUNT) {
+                    if (firebaseCallback != null && !callback_called && !found) {
+                        firebaseCallback.callback(f);
+                    }
+
+                    ready = true;
                     if (syncList.size() > 0) {
                         syncList.get(0).callback(null);
                         syncList.remove(0);
                     }
-
-                    firebaseCallback.callback(f);
                 }
             }
 

@@ -27,6 +27,8 @@ import com.example.david.ermes.View.activities.CustomizeProfileActivity;
 import com.example.david.ermes.View.activities.FriendsActivity;
 import com.example.david.ermes.View.activities.MainSignInActivity;
 import com.example.david.ermes.View.activities.MyMatchesActivity;
+import com.example.david.ermes.View.activities.TeamActivity;
+import com.example.david.ermes.View.activities.TeamsActivity;
 import com.github.clans.fab.FloatingActionButton;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
@@ -35,8 +37,6 @@ import com.squareup.picasso.Picasso;
  * A simple {@link Fragment} subclass.
  */
 public class AccountFragment extends Fragment {
-
-    private Toolbar toolbar;
 
     private TextView name;
     private TextView age;
@@ -48,6 +48,7 @@ public class AccountFragment extends Fragment {
     private CardView myMatchesCard;
     private CardView friendsCard;
     private CardView customizeProfileCard;
+    private CardView teamsCard;
     private ImageView appIcon;
     private TextView welcomeDescription;
 
@@ -58,8 +59,8 @@ public class AccountFragment extends Fragment {
     private User currentUser;
 
     private ImageView cover;
-    private FloatingActionButton default_event_fab;
-    private FloatingActionButton add_place_fab;
+
+    private Button team_create_btn;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -126,6 +127,10 @@ public class AccountFragment extends Fragment {
 
         myMatchesCard = view.findViewById(R.id.myMatchesCard);
         friendsCard = view.findViewById(R.id.cardViewFriends);
+        teamsCard = view.findViewById(R.id.cardViewTeams);
+        customizeProfileCard = view.findViewById(R.id.myProfileCard);
+
+        team_create_btn = view.findViewById(R.id.teamCreateButton);
 
         main_scrollview = view.findViewById(R.id.account_nested_scrollview);
 
@@ -139,10 +144,12 @@ public class AccountFragment extends Fragment {
             UserRepository.getInstance().getUser(object -> {
                 currentUser = (User) object;
 
+                team_create_btn.setVisibility(View.VISIBLE);
                 initComponents();
             });
         } else {
             // se sto vedendo l'account di altri
+            team_create_btn.setVisibility(View.GONE);
             initComponents();
         }
 
@@ -163,40 +170,53 @@ public class AccountFragment extends Fragment {
 
         if (currentUser != null && !currentUser.getUID().equals(User.getCurrentUserId())) {
             friendsCard.setVisibility(View.GONE);
-        }
-        friendsCard.setOnClickListener(view13 -> {
-            if (currentUser != null) {
-                Bundle extras = new Bundle();
-                extras.putParcelable("user", currentUser);
+            customizeProfileCard.setVisibility(View.GONE);
+        } else {
+            friendsCard.setOnClickListener(view13 -> {
+                if (currentUser != null) {
+                    Bundle extras = new Bundle();
+                    extras.putParcelable("user", currentUser);
 
-                Intent friendsActivity = new Intent(view13.getContext(), FriendsActivity.class);
-                friendsActivity.putExtras(extras);
-                startActivity(friendsActivity);
-            } else if (DatabaseManager.get().isLogged()) {
-                Toast.makeText(view13.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(view13.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
-            }
+                    Intent friendsActivity = new Intent(view13.getContext(), FriendsActivity.class);
+                    friendsActivity.putExtras(extras);
+                    startActivity(friendsActivity);
+                } else if (DatabaseManager.get().isLogged()) {
+                    Toast.makeText(view13.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(view13.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            customizeProfileCard.setOnClickListener(view12 -> {
+                if (currentUser != null) {
+                    Bundle extras = new Bundle();
+                    extras.putParcelable("user", currentUser);
+
+                    Intent profileAcitivty = new Intent(view12.getContext(), CustomizeProfileActivity.class);
+                    profileAcitivty.putExtras(extras);
+                    startActivity(profileAcitivty);
+
+
+                } else if (User.getCurrentUserId() != null) {
+                    Toast.makeText(view12.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(view12.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        teamsCard.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), TeamsActivity.class);
+            startActivity(i);
         });
-        customizeProfileCard = view.findViewById(R.id.myProfileCard);
-        if (currentUser != null && currentUser.getUID() != User.getCurrentUserId()) {
-            friendsCard.setVisibility(View.GONE);
-        }
-        customizeProfileCard.setOnClickListener(view12 -> {
-            if (currentUser != null) {
-                Bundle extras = new Bundle();
-                extras.putParcelable("user", currentUser);
 
-                Intent profileAcitivty = new Intent(view12.getContext(), CustomizeProfileActivity.class);
-                profileAcitivty.putExtras(extras);
-                startActivity(profileAcitivty);
+        team_create_btn.setOnClickListener(view14 -> {
+            Bundle extras = new Bundle();
+            extras.putString(TeamActivity.ACTIVITY_TYPE_KEY, TeamActivity.CREATE_TEAM);
 
-
-            } else if (User.getCurrentUserId() != null) {
-                Toast.makeText(view12.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(view12.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
-            }
+            Intent teamActivity = new Intent(view14.getContext(), TeamActivity.class);
+            teamActivity.putExtras(extras);
+            startActivity(teamActivity);
         });
 
     }
