@@ -207,6 +207,7 @@ public class AccountFragment extends Fragment {
 
         teamsCard.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), TeamsActivity.class);
+            i.putExtra(TeamsActivity.ACTIVITY_CODE_KEY, TeamsActivity.VIEW_CODE);
             startActivity(i);
         });
 
