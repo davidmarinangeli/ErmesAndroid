@@ -42,6 +42,7 @@ import com.example.david.ermes.View.activities.PickFriendsActivity;
 
 import android.support.design.widget.FloatingActionButton;
 
+import com.example.david.ermes.View.activities.TeamsActivity;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -91,8 +92,9 @@ public class EventFragment extends Fragment {
     private User matchCreator;
 
     private Toolbar toolbar;
-    private ImageButton invite;
     private FloatingActionButton join;
+    private ImageButton invite;
+    private ImageButton invite_team;
     private ImageButton delete_match;
     private ImageButton missing_stuff_button;
 
@@ -176,6 +178,7 @@ public class EventFragment extends Fragment {
         missing_stuff_button = view.findViewById(R.id.missing_stuff_button);
         join = view.findViewById(R.id.buttonPartecipa);
         invite = view.findViewById(R.id.buttonInvita);
+        invite_team = view.findViewById(R.id.buttonInvitaTeam);
         delete_match = view.findViewById(R.id.elimina_evento);
 
         profileCardView = view.findViewById(R.id.profileCard);
@@ -251,6 +254,13 @@ public class EventFragment extends Fragment {
             Intent invite_friends = new Intent(getContext(), PickFriendsActivity.class);
             invite_friends.putExtra("match", match);
             getActivity().startActivityForResult(invite_friends, INVITE_FRIEND_CODE);
+        });
+
+        invite_team.setOnClickListener(v -> {
+            Intent invite_teams = new Intent(getContext(), TeamsActivity.class);
+            invite_teams.putExtra("match", match);
+            invite_teams.putExtra(TeamsActivity.ACTIVITY_CODE_KEY, TeamsActivity.PICK_CODE);
+            getActivity().startActivityForResult(invite_teams, TeamsActivity.PICK_CODE);
         });
 
         delete_match.setOnClickListener(view1 -> new MaterialDialog.Builder(this.getContext())
@@ -428,36 +438,43 @@ public class EventFragment extends Fragment {
         switch (userCase) {
             case CREATOR:
                 invite.setVisibility(View.VISIBLE);
+                invite_team.setVisibility(View.VISIBLE);
                 missing_stuff_button.setVisibility(View.VISIBLE);
                 break;
             case PRIVATE_PARTECIPANT:
                 join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_busy_white_24dp));
                 invite.setVisibility(View.GONE);
+                invite_team.setVisibility(View.GONE);
                 missing_stuff_button.setVisibility(View.VISIBLE);
                 break;
             case PRIVATE_GUEST:
                 join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_available_white_24dp));
                 invite.setVisibility(View.GONE);
+                invite_team.setVisibility(View.GONE);
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
             case PUBLIC_PARTECIPANT:
                 join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_busy_white_24dp));
                 invite.setVisibility(View.VISIBLE);
+                invite_team.setVisibility(View.VISIBLE);
                 missing_stuff_button.setVisibility(View.VISIBLE);
                 break;
             case PUBLIC_GUEST:
                 join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_available_white_24dp));
                 invite.setVisibility(View.VISIBLE);
+                invite_team.setVisibility(View.VISIBLE);
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
             case NOT_PARTECIPANT:
                 join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_available_white_24dp));
-                invite.setVisibility(View.VISIBLE);
+                invite.setVisibility(View.GONE);
+                invite_team.setVisibility(View.GONE);
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
             case UNAVAILABLE:
                 join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.inactive)));
                 invite.setVisibility(View.GONE);
+                invite_team.setVisibility(View.GONE);
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
             default:
