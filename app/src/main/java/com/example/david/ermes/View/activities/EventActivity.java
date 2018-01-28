@@ -47,9 +47,14 @@ public class EventActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == INVITE_FRIEND_CODE && resultCode == RESULT_OK) {
-            Match saved_match = data.getParcelableExtra("new_match");
-            eventFragment.updateMatch(saved_match);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case INVITE_FRIEND_CODE:
+                case TeamsActivity.PICK_CODE:
+                    Match saved_match = data.getParcelableExtra("new_match");
+                    eventFragment.updateMatch(saved_match);
+                    break;
+            }
         }
     }
 

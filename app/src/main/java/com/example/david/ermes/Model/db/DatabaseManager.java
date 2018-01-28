@@ -30,7 +30,7 @@ public class DatabaseManager {
 
     private FirebaseDatabase database;
     private DatabaseReference usersRef, matchesRef, sportsRef, locationsRef, notificationsRef,
-        friendshipRef;
+        friendshipRef, teamRef;
 
     private DatabaseManager() {
 
@@ -42,6 +42,7 @@ public class DatabaseManager {
         this.locationsRef = database.getReference("locations");
         this.notificationsRef = database.getReference("notifications");
         this.friendshipRef = database.getReference("friendships");
+        this.teamRef = database.getReference("teams");
     }
 
     public boolean isLogged(){
@@ -88,6 +89,8 @@ public class DatabaseManager {
     public DatabaseReference getFriendshipRef() {
         return friendshipRef;
     }
+
+    public DatabaseReference getTeamRef() { return teamRef; }
 
     public interface OnDataChangedListener<T> {
         void onDataChanged(T data);

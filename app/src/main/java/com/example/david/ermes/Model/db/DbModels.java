@@ -6,6 +6,7 @@ import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.NotificationType;
 import com.example.david.ermes.Model.models.Sport;
+import com.example.david.ermes.Model.models.Team;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.models.MissingStuffElement;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
@@ -320,6 +321,7 @@ public class DbModels {
         public String idCreator;
         public String idOwner;
         public String idMatch;
+        public String idTeam;
         public String title;
         public String text;
         public String type;
@@ -330,12 +332,13 @@ public class DbModels {
 
         public _Notification() {}
 
-        public _Notification(String id, String idCreator, String idOwner, String idMatch,
+        public _Notification(String id, String idCreator, String idOwner, String idMatch, String idTeam,
                              String title, String text, String type, boolean read, long date) {
             this.id = id;
             this.idCreator = idCreator;
             this.idOwner = idOwner;
             this.idMatch = idMatch;
+            this.idTeam = idTeam;
             this.title = title;
             this.text = text;
             this.type = type;
@@ -355,6 +358,7 @@ public class DbModels {
                     this.idCreator,
                     this.idOwner,
                     this.idMatch,
+                    this.idTeam,
                     this.title,
                     this.text,
                     NotificationType.getNotificationTypeFromString(this.type),
@@ -371,6 +375,45 @@ public class DbModels {
             }
 
             return l;
+        }
+    }
+
+    public static class _Team {
+        public String name;
+        public List<String> users;
+
+        private String id;
+
+        public _Team() {}
+
+        public _Team(String id, String name, List<String> userIdList) {
+            this.id = id;
+            this.name = name;
+            this.users = userIdList;
+        }
+
+        public void setID(String id) {
+            this.id = id;
+        }
+
+        public Team convertToTeam() {
+            return new Team(
+                    this.id,
+                    this.name,
+                    this.users
+            );
+        }
+
+        public static List<Team> convertToTeamList(List<_Team> teamList) {
+            List<Team> result = new ArrayList<>();
+
+            if (teamList != null) {
+                for (_Team t : teamList) {
+                    result.add(t.convertToTeam());
+                }
+            }
+
+            return result;
         }
     }
 }
