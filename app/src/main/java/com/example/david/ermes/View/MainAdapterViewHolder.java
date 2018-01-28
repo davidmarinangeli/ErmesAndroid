@@ -56,7 +56,6 @@ public class MainAdapterViewHolder {
             }
         });
 
-
         Picasso.with(cx)
                 .load(User.setImageToSport(cx, Integer.valueOf(matchList.get(position).getIdSport())))
                 .memoryPolicy(MemoryPolicy.NO_CACHE).into(sport_icon);
