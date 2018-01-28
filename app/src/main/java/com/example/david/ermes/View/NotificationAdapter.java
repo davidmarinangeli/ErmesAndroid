@@ -21,17 +21,19 @@ import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Notification;
+import com.example.david.ermes.Model.models.Team;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.MatchRepository;
+import com.example.david.ermes.Model.repository.TeamRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.StyleUtils;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.AccountActivity;
 import com.example.david.ermes.View.activities.EventActivity;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
+import com.example.david.ermes.View.activities.TeamActivity;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -43,6 +45,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private List<Notification> notifications;
     private List<Match> matches;
     private List<User> users;
+    private List<Team> teams;
     private Context context;
 
     private User currentUser;
@@ -81,9 +84,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         this.matches = new ArrayList<>();
         this.users = new ArrayList<>();
+        this.teams = new ArrayList<>();
+
         for (int i = 0; i < notifications.size(); i++) {
             this.matches.add(null);
             this.users.add(null);
+            this.teams.add(null);
         }
 
         notifyDataSetChanged();
@@ -147,6 +153,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             if (notification.isRead()) {
                 layout.setBackgroundColor(Color.WHITE);
 //                setButtonsVisible(View.GONE);
+            } else {
+                layout.setBackgroundResource(R.color.notificationBackground);
             }
         }
 
@@ -188,6 +196,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     already_reply.setVisibility(View.GONE);
                     setButtonsVisible(View.GONE);
                     break;
+                case TEAM_ADDED:
+                case USER_LEAVE_TEAM:
+                    icon.setImageResource(R.drawable.ic_group_work_black_40dp);
+
+                    already_reply.setVisibility(View.GONE);
+                    setButtonsVisible(View.GONE);
+                    break;
             }
 
             if (notification.isRead()) {
@@ -212,10 +227,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                             if (object != null) {
                                 startMatchActivity(position);
-                            } else {
-                                Snackbar.make(item, "Qualcosa è andato storto!",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                            } else wrongSnackbar(item);
                         });
                     }
                     break;
@@ -232,10 +244,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                             if (object != null) {
                                 startUserActivity(position);
-                            } else {
-                                Snackbar.make(item, "Qualcosa è andato storto!",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                            } else wrongSnackbar(item);
                         });
                     }
                     break;
@@ -249,13 +258,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         fetchUser(notifications.get(position).getIdCreator(), position, object -> {
                             if (object != null) {
                                 readFriendshipAccepted(position);
-                            } else {
-                                Snackbar.make(item, "Qualcosa è andato storto!",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                            } else wrongSnackbar(item);
                         });
                     }
                     break;
+                case TEAM_ADDED:
+                case USER_LEAVE_TEAM:
+                    mDialog.show();
+                    item.setActivated(false);
+
+                    fetchTeam(notifications.get(position).getIdTeam(), position, object -> {
+                        if (object != null) {
+                            readTeamNotification(position);
+                        } else wrongSnackbar(item);
+                    });
             }
         };
 
@@ -275,10 +291,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                             if (object != null) {
                                 acceptMatchInvitation(position);
-                            } else {
-                                Snackbar.make(item, "Qualcosa è andato storto!",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                            } else wrongSnackbar(item);
                         });
                     }
                     break;
@@ -309,10 +322,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                             if (object != null) {
                                 declineMatchInvitation(position);
-                            } else {
-                                Snackbar.make(item, "Qualcosa è andato storto!",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                            } else wrongSnackbar(item);
                         });
                     }
                     break;
@@ -326,16 +336,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     break;
             }
         };
-
-        private void fetchMatch(String id, int position, FirebaseCallback firebaseCallback) {
-            MatchRepository.getInstance().fetchMatchById(id, object -> {
-                matches.set(position, (Match) object);
-
-                if (firebaseCallback != null) {
-                    firebaseCallback.callback(object);
-                }
-            });
-        }
 
         private void startMatchActivity(int position) {
             mDialog.dismiss();
@@ -414,6 +414,31 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             });
         }
 
+        private void fetchMatch(String id, int position, FirebaseCallback firebaseCallback) {
+            MatchRepository.getInstance().fetchMatchById(id, object -> {
+                matches.set(position, (Match) object);
+
+                if (firebaseCallback != null) {
+                    firebaseCallback.callback(object);
+                }
+            });
+        }
+
+        private void fetchTeam(String id, int position, FirebaseCallback firebaseCallback) {
+            if (teams.get(position) != null) {
+                firebaseCallback.callback(teams.get(position));
+            } else {
+                TeamRepository.getInstance().fetchTeamById(id, object -> {
+                    Team team = (Team) object;
+                    teams.set(position, team);
+
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(team);
+                    }
+                });
+            }
+        }
+
         private void startUserActivity(int position) {
             mDialog.dismiss();
             item.setActivated(true);
@@ -422,6 +447,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             extras.putParcelable("user", users.get(position));
             accountActivity.putExtras(extras);
             context.startActivity(accountActivity);
+        }
+
+        private void startTeamActivity(Team team) {
+            mDialog.dismiss();
+            item.setActivated(true);
+            Intent teamActivity = new Intent(context, TeamActivity.class);
+            Bundle extras = new Bundle();
+            extras.putParcelable(TeamActivity.ACTIVITY_TEAM_KEY, team);
+            extras.putString(TeamActivity.ACTIVITY_TYPE_KEY, TeamActivity.TEAM_VIEW);
+            teamActivity.putExtras(extras);
+            context.startActivity(teamActivity);
         }
 
         private void acceptFriendship(int position) {
@@ -464,6 +500,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             });
         }
 
+        private void readTeamNotification(int position) {
+            Team focusTeam = teams.get(position);
+
+            notifications.get(position).setRead(true);
+            notifications.get(position).save(object -> {
+                mDialog.dismiss();
+                item.setActivated(true);
+                notifyDataSetChanged();
+
+                startTeamActivity(focusTeam);
+            });
+        }
+
         private void setButtonsVisible(int visible) {
             right_button.setVisibility(visible);
             left_button.setVisibility(visible);
@@ -479,6 +528,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     layout.setPadding(PADDING, PADDING / 2, PADDING, PADDING_BOTTOM);
                     break;
             }
+        }
+
+        private void wrongSnackbar(View item) {
+            mDialog.dismiss();
+            item.setActivated(true);
+
+            Snackbar.make(item, "Qualcosa è andato storto!",
+                    Toast.LENGTH_SHORT).show();
         }
 
         private int matchInviteUserToken;

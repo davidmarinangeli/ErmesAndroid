@@ -92,7 +92,8 @@ dependencies {
     implementation 'com.github.AdityaAnand1:Morphing-Material-Dialogs:0.0.1-alpha8'
     compile 'com.afollestad.material-dialogs:core:0.9.3.0'
     compile 'com.github.tylersuehr7:chips-input-layout:1.3'
-    compile 'com.github.xmuSistone:VegaLayoutManager:master-SNAPSHOT'
+    compile 'com.stone.vega.library:VegaLayoutManager:1.0.6'
+
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.mikhaellopez:circularimageview:3.0.2'
     compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
