@@ -83,9 +83,10 @@ public class MatchesDatabaseRepository {
                 query = this.matchesRef.push();
             }
 
-            query.setValue(match).addOnCompleteListener(task -> {
+            query.setValue(match, (databaseError, databaseReference) -> {
                 if (firebaseCallback != null) {
-                    firebaseCallback.callback(null);
+                    match.setID(databaseReference.getKey());
+                    firebaseCallback.callback(match.convertToMatch());
                 }
             });
         }
@@ -209,6 +210,45 @@ public class MatchesDatabaseRepository {
         } else if (firebaseCallback != null) {
             firebaseCallback.callback(null);
         }
+    }
+
+    public void fetchByTimeLapse(long date, String locationId, FirebaseCallback firebaseCallback) {
+        final long TWO_HOURS_MILLISEC = 7200000;
+
+        this.matchesRef.orderByChild("date")
+                .startAt(date - TWO_HOURS_MILLISEC)
+                .endAt(date + TWO_HOURS_MILLISEC)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<_Match> result = null;
+
+                        for (DataSnapshot d : dataSnapshot.getChildren()) {
+                            _Match match = d.getValue(_Match.class);
+
+                            if (match != null && match.idLocation.equals(locationId)) {
+                                if (result == null) {
+                                    result = new ArrayList<>();
+                                }
+
+                                match.setID(d.getKey());
+
+                                result.add(match);
+                            }
+                        }
+
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(result);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(null);
+                        }
+                    }
+                });
     }
 
     public void deleteById(String id, FirebaseCallback firebaseCallback) {
