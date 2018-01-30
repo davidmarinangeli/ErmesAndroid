@@ -64,6 +64,21 @@ public class MatchRepository {
                 });
     }
 
+    public void fetchMatchesByTimeLapse(long date, String locationId, FirebaseCallback firebaseCallback) {
+        MatchesDatabaseRepository.getInstance().fetchByTimeLapse(date, locationId, object -> {
+            List<DbModels._Match> list = (List<DbModels._Match>) object;
+            List<Match> result = null;
+
+            if (list != null) {
+                result = DbModels._Match.convertToMatchList(list);
+            }
+
+            if (firebaseCallback != null) {
+                firebaseCallback.callback(result);
+            }
+        });
+    }
+
     public void saveMatch(Match match, FirebaseCallback firebaseCallback) {
         MatchesDatabaseRepository.getInstance().push(match.convertTo_Match(), firebaseCallback);
     }
