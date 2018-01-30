@@ -8,18 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Notification;
-import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
-import com.example.david.ermes.Model.repository.FriendshipRepository;
-import com.example.david.ermes.Model.repository.NotificationRepository;
-import com.example.david.ermes.Model.repository.SportRepository;
-import com.example.david.ermes.Model.repository.UserRepository;
-import com.example.david.ermes.Presenter.OnUserListFetchEnd;
 import com.example.david.ermes.Presenter.UserListPresenter;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
@@ -28,8 +24,9 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by nicol on 15/01/2018.
@@ -54,11 +51,14 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
 
     private User currentUser;
 
+    private int teamsSeparatorIndex;
+
     public UserListAdapter(Context context) {
         this.context = context;
         sportList = new ArrayList<>();
 
         presenter = new UserListPresenter();
+        teamsSeparatorIndex = 0;
     }
 
     @Override
@@ -95,7 +95,29 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
         toMeRequestList = toMeFriendshipRequests;
         sportList = sports;
 
+        teamsSeparatorIndex = 0;
+
         notifyDataSetChanged();
+    }
+
+    public void createRandomTeams() {
+        if (userList != null && !userList.isEmpty() && friendshipList != null && myRequestList != null
+                && toMeRequestList != null && sportList != null) {
+            long seed = System.nanoTime();
+
+            Collections.shuffle(userList, new Random(seed));
+            Collections.shuffle(friendshipList, new Random(seed));
+            Collections.shuffle(myRequestList, new Random(seed));
+            Collections.shuffle(toMeRequestList, new Random(seed));
+            Collections.shuffle(sportList, new Random(seed));
+
+            teamsSeparatorIndex = userList.size() / 2;
+
+            notifyDataSetChanged();
+        } else {
+            Toast.makeText(context, "Attendi lo scaricamento dei dati, riprova più tardi",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     private void setPresenterCallback(FirebaseCallback firebaseCallback) {
@@ -130,6 +152,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
         TextView friendshipDate;
         CircularImageView friendImage;
         Button friendshipRequestButton;
+        LinearLayout teamLabel;
+        TextView teamLabelText;
 
         View itemView;
         UserListPresenter.RelationType relationType;
@@ -143,6 +167,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
             friendshipDate = itemView.findViewById(R.id.friendship_date);
             friendImage = itemView.findViewById(R.id.friend_image);
             friendshipRequestButton = itemView.findViewById(R.id.friendship_request_button);
+            teamLabel = itemView.findViewById(R.id.random_team_label);
+            teamLabelText = itemView.findViewById(R.id.random_team_label_text);
 
             this.itemView = itemView;
             this.itemView.setOnClickListener(view -> {
@@ -183,6 +209,18 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
 
         public void bind(int position) {
             if (userList != null && userList.size() > 0) {
+                if (teamsSeparatorIndex > 0 && (position == teamsSeparatorIndex || position == 0)) {
+                    teamLabel.setVisibility(View.VISIBLE);
+
+                    if (position == 0) {
+                        teamLabelText.setText("Squadra 1");
+                    } else if (position == teamsSeparatorIndex) {
+                        teamLabelText.setText("Squadra 2");
+                    }
+                } else {
+                    teamLabel.setVisibility(View.GONE);
+                }
+
                 relationType = getRelationType(getAdapterPosition());
                 User user = userList.get(position);
                 String sport = sportList.get(position);
@@ -202,7 +240,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
                     String info = String.format("%s anni",
                             String.valueOf(TimeUtils.getAgeFromBirth(user.getBirthDate())));
                     if (sport != null && !sport.isEmpty()) {
-                        info += " | " + sport;
+                        info += ", " + sport;
                     }
                     friendInfo.setText(info);
 

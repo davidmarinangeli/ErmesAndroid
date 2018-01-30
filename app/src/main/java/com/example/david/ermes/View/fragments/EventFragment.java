@@ -314,7 +314,7 @@ public class EventFragment extends Fragment {
         // visualizzazione lista di partecipanti e invitati
         showInvited.setOnClickListener(view1 -> {
             if (match.getPending().size() > 0) {
-                startMatchUsersActivity("Invitati", match.getPending());
+                startMatchUsersActivity(MatchUsersActivity.INVITED_TYPES, match.getPending());
             } else {
                 Snackbar.make(view, "Non ci sono invitati.", Snackbar.LENGTH_SHORT).show();
             }
@@ -322,7 +322,7 @@ public class EventFragment extends Fragment {
 
         showPartecipants.setOnClickListener(view1 -> {
             if (match.getPartecipants().size() > 0) {
-                startMatchUsersActivity("Partecipanti", match.getPartecipants());
+                startMatchUsersActivity(MatchUsersActivity.PARTECIPANTS_TYPE, match.getPartecipants());
             } else {
                 Snackbar.make(view, "Non ci sono partecipanti.", Snackbar.LENGTH_SHORT).show();
             }
@@ -398,12 +398,12 @@ public class EventFragment extends Fragment {
         }
     }
 
-    private void startMatchUsersActivity(String title, List<String> list) {
+    private void startMatchUsersActivity(String activityType, List<String> list) {
         Intent intent = new Intent(getContext(), MatchUsersActivity.class);
 
         Bundle extras = new Bundle();
         extras.putStringArrayList("users", (ArrayList<String>) list);
-        extras.putString("title", title);
+        extras.putString(MatchUsersActivity.ACTIVITY_TYPE_KEY, activityType);
 
         if (currentUser != null) {
 
