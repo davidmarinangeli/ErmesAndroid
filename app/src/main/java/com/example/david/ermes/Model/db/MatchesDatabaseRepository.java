@@ -212,6 +212,49 @@ public class MatchesDatabaseRepository {
         }
     }
 
+    public void fetchFutureMatches(String idUser, FirebaseCallback firebaseCallback) {
+        if (idUser != null) {
+            Long now = System.currentTimeMillis();
+
+            this.matchesRef.orderByChild("date").startAt(now).addValueEventListener(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            List<_Match> list = null;
+
+                            for (DataSnapshot d : dataSnapshot.getChildren()) {
+                                _Match match = d.getValue(_Match.class);
+                                match.setID(d.getKey());
+
+                                if (match.idOwner.equals(idUser) ||
+                                        (match.pending != null &&
+                                                match.pending.contains(idUser)) ||
+                                        (match.partecipants != null &&
+                                                match.partecipants.contains(idUser))) {
+                                    if (list == null) {
+                                        list = new ArrayList<>();
+                                    }
+
+                                    list.add(match);
+                                }
+                            }
+
+                            firebaseCallback.callback(list);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            if (firebaseCallback != null) {
+                                firebaseCallback.callback(null);
+                            }
+                        }
+                    }
+            );
+        } else if (firebaseCallback != null) {
+            firebaseCallback.callback(null);
+        }
+    }
+
     public void fetchByTimeLapse(long date, String locationId, FirebaseCallback firebaseCallback) {
         final long TWO_HOURS_MILLISEC = 7200000;
 

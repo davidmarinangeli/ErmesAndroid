@@ -61,7 +61,6 @@
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme" />
         <activity android:name=".View.activities.NotificationsActivity" />
-        <activity android:name=".View.activities._MyMatchesActivity" />
         <activity android:name=".View.activities.FriendsActivity" />
         <activity android:name=".View.activities.MatchUsersActivity" />
 
@@ -73,6 +72,7 @@
         <activity android:name=".View.activities.SignUpActivity" />
         <activity android:name=".View.activities.PickFriendsActivity" />
         <activity android:name=".View.activities.CustomizeProfileActivity" />
+        <activity android:name=".View.activities.Dialogflow"/>
         <activity android:name=".View.activities.TeamActivity" />
         <activity android:name=".View.activities.TeamsActivity" />
         <activity

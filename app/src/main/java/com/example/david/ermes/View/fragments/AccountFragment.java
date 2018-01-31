@@ -25,7 +25,7 @@ import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.CustomizeProfileActivity;
 import com.example.david.ermes.View.activities.FriendsActivity;
 import com.example.david.ermes.View.activities.MainSignInActivity;
-import com.example.david.ermes.View.activities._MyMatchesActivity;
+import com.example.david.ermes.View.activities.MyMatchesActivity;
 import com.example.david.ermes.View.activities.TeamActivity;
 import com.example.david.ermes.View.activities.TeamsActivity;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -156,7 +156,7 @@ public class AccountFragment extends Fragment {
                 Bundle extras = new Bundle();
                 extras.putParcelable("user", currentUser);
 
-                Intent myMatchesActivity = new Intent(view1.getContext(), _MyMatchesActivity.class);
+                Intent myMatchesActivity = new Intent(view1.getContext(), MyMatchesActivity.class);
                 myMatchesActivity.putExtras(extras);
                 startActivity(myMatchesActivity);
             } else if (DatabaseManager.get().isLogged()) {

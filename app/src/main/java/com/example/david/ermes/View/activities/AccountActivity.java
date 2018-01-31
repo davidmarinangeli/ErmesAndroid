@@ -15,6 +15,10 @@ import com.example.david.ermes.View.fragments.AccountFragment;
 import com.example.david.ermes.View.fragments.EventFragment;
 
 import java.time.Duration;
+import com.example.david.ermes.View.fragments.AccountFragment;
+import com.example.david.ermes.View.fragments.EventFragment;
+
+import java.time.Duration;
 
 public class AccountActivity extends AppCompatActivity {
 
