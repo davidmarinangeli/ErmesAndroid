@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.david.ermes.Model.db.DatabaseManager;
+import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.MissingStuffElement;
@@ -37,6 +38,7 @@ import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.AccountActivity;
+import com.example.david.ermes.View.activities.Dialogflow;
 import com.example.david.ermes.View.activities.MatchUsersActivity;
 import com.example.david.ermes.View.activities.PickFriendsActivity;
 
