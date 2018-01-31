@@ -24,6 +24,7 @@ import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.CustomizeProfileActivity;
+import com.example.david.ermes.View.activities.Dialogflow;
 import com.example.david.ermes.View.activities.FriendsActivity;
 import com.example.david.ermes.View.activities.MainSignInActivity;
 import com.example.david.ermes.View.activities.MyMatchesActivity;
@@ -58,8 +59,6 @@ public class AccountFragment extends Fragment {
     private User currentUser;
 
     private ImageView cover;
-    private FloatingActionButton default_event_fab;
-    private FloatingActionButton add_place_fab;
 
     public AccountFragment() {
         // Required empty public constructor

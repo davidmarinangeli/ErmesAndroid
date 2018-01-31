@@ -36,12 +36,24 @@
                         android:id="@+id/buttonfine"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:layout_gravity="end"
                         android:layout_margin="4dp"
+                        android:layout_gravity="end"
                         android:background="@null"
                         android:padding="12dp"
                         android:src="@drawable/ic_done_white_24dp"
                         android:tint="@color/white" />
+
+                    <ImageButton
+                        android:layout_width="32dp"
+                        android:contentDescription="@string/dialogflow"
+                        android:layout_height="32dp"
+                        android:id="@+id/dialogflow_button"
+                        android:layout_gravity="end"
+                        android:background="@null"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/google_assistant"
+                        android:tint="@color/white" />
+
                 </android.support.v7.widget.Toolbar>
             </android.support.design.widget.AppBarLayout>
 
@@ -119,13 +131,11 @@
                 android:id="@+id/material_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
 
                 app:cardCornerRadius="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -354,7 +364,7 @@
 
                     <TextView
                         android:id="@+id/textTime"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="32dp"
                         android:gravity="center"
