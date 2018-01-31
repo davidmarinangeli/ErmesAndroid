@@ -1,15 +1,15 @@
 package com.example.david.ermes.View.activities;
 
+import android.Manifest;
 import android.app.Activity;
-import android.content.DialogInterface;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -19,10 +19,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,9 +28,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.MissingStuffElement;
-import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.Sport;
-import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.MatchRepository;
 import com.example.david.ermes.Model.repository.SportRepository;
@@ -42,7 +38,6 @@ import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.tylersuehr.chips.ChipsInputLayout;
 import com.tylersuehr.chips.data.Chip;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -63,6 +58,8 @@ public class CreateEventActivity extends AppCompatActivity {
     private Spinner location_selector;
 
     private ImageButton fine_creazione;
+    private ImageButton dialogflow_button;
+
     private Button num_players_button;
 
     private ChipsInputLayout missing_chips;
@@ -80,17 +77,20 @@ public class CreateEventActivity extends AppCompatActivity {
     private String selected_sport_string;
     private String selected_location_string;
 
-    private com.example.david.ermes.Model.models.Location selected_location;
+    private Dialogflow dialogflow;
 
+    private com.example.david.ermes.Model.models.Location selected_location;
     private Match currentMatch;
+
+
     final String SPORT_HINT = "Seleziona uno sport...";
 
     // mi salvo gli OGGETTI Location così da evitare una callback in più dopo per fetchare gli oggetti a partire dai nomi
     ArrayList<com.example.david.ermes.Model.models.Location> downloaded_locations;
-    Sport sport;
     Location user_location;
 
     private CreateEventPresenter createEventPresenter;
+    private int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +99,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
         event_orario_textview = findViewById(R.id.textTime);
         event_data_textview = findViewById(R.id.textDate);
-
         location_selector = findViewById(R.id.location_spinner);
         sport_selector = findViewById(R.id.sport_spinner);
 
@@ -107,13 +106,14 @@ public class CreateEventActivity extends AppCompatActivity {
 
         fine_creazione = findViewById(R.id.buttonfine);
         num_players_button = findViewById(R.id.choose_players_number);
+        dialogflow_button = findViewById(R.id.dialogflow_button);
 
         ispublic_switch = findViewById(R.id.ispublic_switch);
 
         match_calendar_time = Calendar.getInstance();
         toolbar = findViewById(R.id.create_event_toolbar);
 
-        sport = new Sport();
+        dialogflow = new Dialogflow(this);
         downloaded_locations = new ArrayList<>();
 
         toolbar.setTitle("Crea l'evento");
@@ -164,6 +164,70 @@ public class CreateEventActivity extends AppCompatActivity {
 
         //setto i parametri delle chips
         missing_chips.setShowChipAvatarEnabled(false);
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.RECORD_AUDIO)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        MY_PERMISSIONS_REQUEST_RECORD_AUDIO);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+
+            // SE HAI I PERMESSI... comincia ad ascoltare
+            dialogflow_button.setOnClickListener(view ->
+                    dialogflow.startListening());
+        }
+
+
+        // setto il comportamento a fine registrazione e vedo cosa mi ritorna
+        dialogflow.setOnFinishListening(object -> {
+            if (object != null) {
+                Match voice_match = (Match) object;
+                if ((voice_match.getDate() != null)) {
+                    Calendar hour = Calendar.getInstance();
+                    hour.setTime(voice_match.getDate());
+
+                    event_orario_textview.setText(TimeUtils.getFormattedHourMinute(hour));
+                    event_data_textview.setText(TimeUtils.fromMillistoYearMonthDay(voice_match.getDate().getTime()));
+                }
+
+                ispublic_switch.setChecked(voice_match.isPublic());
+                if (voice_match.getMaxPlayers() > 0) {
+                    num_players_button.setText(String.valueOf(voice_match.getMaxPlayers()));
+                }
+
+                if (voice_match.getIdSport() != null) {
+                    SportRepository.getInstance().fetchSportById(voice_match.getIdSport(), object1 -> {
+                        if (object1 != null) {
+                            Sport sportname = (Sport) object1;
+                            sport_selector.setSelection(Integer.valueOf(voice_match.getIdSport()));
+                            selected_sport_string = sportname.getName();
+                        }
+                    });
+                }
+            }
+
+        });
+
+
         fine_creazione.setOnClickListener(v -> {
             if (selected_sport_string != null && selected_location != null) {
                 getTimeLapseMatchDates(object -> {
@@ -184,6 +248,71 @@ public class CreateEventActivity extends AppCompatActivity {
 
         createEventPresenter = new CreateEventPresenter(this);
 
+    }
+
+    private AlertDialog getAlertDialog() {
+        MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(this)
+                .minValue(1)
+                .maxValue(30)
+                .backgroundColor(Color.WHITE)
+                .separatorColor(Color.TRANSPARENT)
+                .textColor(Color.BLACK)
+                .textSize(20)
+                .enableFocusability(false)
+                .wrapSelectorWheel(true)
+                .build();
+
+        return new AlertDialog.Builder(this)
+                .setTitle("Numero giocatori")
+                .setView(numberPicker)
+                .setPositiveButton(getString(android.R.string.ok),
+                        (dialogInterface, i) -> num_players_button.setText(String.valueOf(numberPicker.getValue()))).create();
+    }
+
+    private ArrayList<com.example.david.ermes.Model.models.Location> createLocationSpinner() {
+
+        //insieme ai nomi delle location, da inserire nello spinner
+        final ArrayList<String> locationSpinner = new ArrayList<>();
+
+        LocationRepository.getInstance().fetchLocationsByProximity(
+                LocationUtils.fromAndroidLocationtoErmesLocation(user_location),
+                object -> {
+                    for (com.example.david.ermes.Model.models.Location l : (ArrayList<com.example.david.ermes.Model.models.Location>) object) {
+                        locationSpinner.add(l.getName());
+                        downloaded_locations.add(l);
+                    }
+                    locationadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, locationSpinner);
+                    location_selector.setAdapter(locationadapter);
+
+
+                });
+        return downloaded_locations;
+    }
+
+    private void createSportSpinner() {
+
+        final ArrayList<String> arraySpinner = new ArrayList<>();
+
+        SportRepository.getInstance().fetchAll(object -> {
+            for (Sport s : (ArrayList<Sport>) object) {
+                arraySpinner.add(s.getName());
+            }
+            sportadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
+            sport_selector.setAdapter(sportadapter);
+
+
+        });
+    }
+
+    public void goToMainActivity(Match resultMatch) {
+        Intent result_intent = new Intent(CreateEventActivity.this, MainActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("new_event", resultMatch);
+        result_intent.putExtras(bundle);
+        setResult(Activity.RESULT_OK, result_intent);
+
+        finish();
     }
 
     private void getTimeLapseMatchDates(FirebaseCallback firebaseCallback) {
@@ -258,71 +387,6 @@ public class CreateEventActivity extends AppCompatActivity {
                 .positiveText("Si")
                 .onPositive((dialog, which) -> saveMatch())
                 .show();
-    }
-
-    private AlertDialog getAlertDialog() {
-        MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(this)
-                .minValue(1)
-                .maxValue(30)
-                .backgroundColor(Color.WHITE)
-                .separatorColor(Color.TRANSPARENT)
-                .textColor(Color.BLACK)
-                .textSize(20)
-                .enableFocusability(false)
-                .wrapSelectorWheel(true)
-                .build();
-
-        return new AlertDialog.Builder(this)
-                .setTitle("Numero giocatori")
-                .setView(numberPicker)
-                .setPositiveButton(getString(android.R.string.ok),
-                        (dialogInterface, i) -> num_players_button.setText(String.valueOf(numberPicker.getValue()))).create();
-    }
-
-    private ArrayList<com.example.david.ermes.Model.models.Location> createLocationSpinner() {
-
-        //insieme ai nomi delle location, da inserire nello spinner
-        final ArrayList<String> locationSpinner = new ArrayList<>();
-
-        LocationRepository.getInstance().fetchLocationsByProximity(
-                LocationUtils.fromAndroidLocationtoErmesLocation(user_location),
-                object -> {
-                    for (com.example.david.ermes.Model.models.Location l : (ArrayList<com.example.david.ermes.Model.models.Location>) object) {
-                        locationSpinner.add(l.getName());
-                        downloaded_locations.add(l);
-                    }
-                    locationadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, locationSpinner);
-                    location_selector.setAdapter(locationadapter);
-
-
-                });
-        return downloaded_locations;
-    }
-
-    private void createSportSpinner() {
-
-        final ArrayList<String> arraySpinner = new ArrayList<>();
-
-        SportRepository.getInstance().fetchAll(object -> {
-            for (Sport s : (ArrayList<Sport>) object) {
-                arraySpinner.add(s.getName());
-            }
-            sportadapter = new ArrayAdapter<String>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, arraySpinner);
-            sport_selector.setAdapter(sportadapter);
-
-
-        });
-    }
-
-    public void goToMainActivity(Match resultMatch) {
-        Intent result_intent = new Intent(CreateEventActivity.this, MainActivity.class);
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("new_event", resultMatch);
-        result_intent.putExtras(bundle);
-        setResult(Activity.RESULT_OK, result_intent);
-
-        finish();
     }
 
     // inizio abominio per i listener negli spinner

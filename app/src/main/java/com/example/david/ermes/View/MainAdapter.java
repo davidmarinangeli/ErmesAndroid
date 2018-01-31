@@ -3,7 +3,7 @@ package com.example.david.ermes.View;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Presenter.utils.StyleUtils;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.EventActivity;
 
@@ -29,10 +30,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     private int other_sports_match_index = 0;
     private String favSportName;
     private Context context;
-
+    private ProgressDialog progressDialog;
 
     public MainAdapter(Context c) {
         this.context = c;
+        this.progressDialog = new ProgressDialog(context);
     }
 
     @Override
@@ -88,7 +90,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
     public class MainViewHolder extends RecyclerView.ViewHolder {
 
-        ConstraintLayout user_fav_sport_label;
+        LinearLayout container;
+        CardView card;
+        LinearLayout user_fav_sport_label;
         TextView user_fav_sport_label_text;
 
         TextView date_of_event;
@@ -99,10 +103,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         public MainViewHolder(final View itemView) {
             super(itemView);
 
+            container = itemView.findViewById(R.id.default_event_container);
+            card = itemView.findViewById(R.id.default_event_card);
+
             // qui setto il costruttore del viewholder
             user_fav_sport_label = itemView.findViewById(R.id.user_fav_sport_label);
             user_fav_sport_label_text = itemView.findViewById(R.id.user_fav_sport_label_text);
             user_fav_sport_label_text.setVisibility(View.VISIBLE);
+
             date_of_event = itemView.findViewById(R.id.date_of_event);
             hour_of_event = itemView.findViewById(R.id.hour_of_event);
             sport_icon = itemView.findViewById(R.id.sport_icon_event);
@@ -110,8 +118,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
             //settare l'onclicklistener qui :)
             itemView.setOnClickListener(view -> {
-                itemView.setActivated(false);
-                
+                itemView.setEnabled(false);
+                progressDialog.show();
+
                 Intent i = new Intent(context, EventActivity.class);
 
                 Bundle bundle = new Bundle();
@@ -119,7 +128,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
                 i.putExtras(bundle);
                 context.startActivity(i);
 
-                itemView.setActivated(true);
+                progressDialog.dismiss();
+                itemView.setEnabled(true);
             });
         }
 
@@ -138,6 +148,15 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
                 }
             } else {
                 user_fav_sport_label.setVisibility(View.GONE);
+            }
+
+            // primo elemento --> aggiungo il margin top
+            if (position == 0) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, StyleUtils.getDpByPixels(context, 8), 0 ,0);
+
+                container.setLayoutParams(params);
             }
 
             MainAdapterViewHolder.bindElements(matchList, position, itemView, date_of_event, hour_of_event, sport_icon, place_of_event);

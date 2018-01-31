@@ -66,11 +66,11 @@ dependencies {
     })
 
     // android libraries
+    compile 'com.android.support:multidex:1.0.2'
     compile "com.android.support:cardview-v7:${support}"
     compile "com.android.support:appcompat-v7:${support}"
     compile "com.android.support:support-v13:${support}"
     compile "com.android.support:support-v4:${support}"
-    compile "com.android.support:design:${support}"
     compile "com.android.support:design:${support}"
     compile "com.android.support:appcompat-v7:${support}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -87,6 +87,10 @@ dependencies {
     compile "com.google.android.gms:play-services-maps:${firebase}"
 
     // ** END FIREBASE **
+
+    // dialogflow
+    compile 'ai.api:sdk:2.0.7@aar'
+    compile 'ai.api:libai:1.6.12'
 
     //custom libraries
     implementation 'com.github.AdityaAnand1:Morphing-Material-Dialogs:0.0.1-alpha8'
