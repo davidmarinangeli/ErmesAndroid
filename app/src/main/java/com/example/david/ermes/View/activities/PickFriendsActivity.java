@@ -23,6 +23,7 @@ import com.example.david.ermes.Model.repository.FriendshipRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.PickFriendsAdapter;
+import com.example.david.ermes.View.ProgressDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class PickFriendsActivity extends AppCompatActivity {
     private Match result_match;
     private Team result_team;
 
+    private ProgressDialog progressDialog;
     private boolean invite_match;
     private boolean invite_team;
     private int activity_request_code;
@@ -47,6 +49,8 @@ public class PickFriendsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_friends);
+
+        progressDialog = new ProgressDialog(this);
 
         max_players = findViewById(R.id.remaining_invitation);
         no_friends = findViewById(R.id.no_friends);
@@ -79,10 +83,13 @@ public class PickFriendsActivity extends AppCompatActivity {
         }
 
         spunta_done.setOnClickListener(view -> {
+            progressDialog.show();
+
             if (invite_match) {
                 pickFriendsAdapter.saveFriendsList(object -> {
                     if (object != null) {
                         List<User> invited_friends = (List<User>) object;
+
                         for (User user : invited_friends) {
                             if (!result_match.getPartecipants().contains(user.getUID()) &&
                                     !result_match.getPending().contains(user.getUID())) {
@@ -98,10 +105,13 @@ public class PickFriendsActivity extends AppCompatActivity {
                                 }
                             }
                         }
+
                         result_match.save(object1 -> {
                             Intent save_intent = new Intent();
                             save_intent.putExtra("new_match", result_match);
                             setResult(RESULT_OK, save_intent);
+
+                            progressDialog.dismiss();
                             finish();
                         });
                     }
@@ -115,6 +125,8 @@ public class PickFriendsActivity extends AppCompatActivity {
                 Intent returnIntent = new Intent();
                 returnIntent.putExtras(extras);
                 setResult(Activity.RESULT_OK, returnIntent);
+
+                progressDialog.dismiss();
                 finish();
             }
         });
@@ -126,6 +138,7 @@ public class PickFriendsActivity extends AppCompatActivity {
     }
 
     public void initList() {
+        progressDialog.show();
         FriendshipRepository.getInstance().fetchFriendshipsByUserId(User.getCurrentUserId(), object -> {
             if (object != null) {
                 List<Friendship> user_friends = (List<Friendship>) object;
@@ -152,6 +165,8 @@ public class PickFriendsActivity extends AppCompatActivity {
                             if (pickFriendsAdapter.getItemCount()>0){
                                 no_friends.setVisibility(View.GONE);
                             }
+
+                            progressDialog.dismiss();
                         }
                     });
                 }

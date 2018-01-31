@@ -17,6 +17,7 @@ import com.example.david.ermes.Model.models.Team;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.TeamRepository;
 import com.example.david.ermes.R;
+import com.example.david.ermes.View.ProgressDialog;
 import com.example.david.ermes.View.TeamsAdapter;
 
 import java.util.List;
@@ -35,11 +36,14 @@ public class TeamsActivity extends AppCompatActivity {
 
     private int code;
     private Match result_match;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teams);
+
+        progressDialog = new ProgressDialog(this);
 
         adapter = new TeamsAdapter(this);
         recyclerView = findViewById(R.id.teams_recycler_view);
@@ -99,6 +103,8 @@ public class TeamsActivity extends AppCompatActivity {
 
     private void initList() {
         if (DatabaseManager.get().isLogged()) {
+            progressDialog.show();
+
             TeamRepository.getInstance().fetchTeamsByUserId(User.getCurrentUserId(),
                     object -> {
                         List<Team> list = (List<Team>) object;
@@ -109,6 +115,8 @@ public class TeamsActivity extends AppCompatActivity {
                         } else {
                             no_teams.setVisibility(View.VISIBLE);
                         }
+
+                        progressDialog.dismiss();
                     });
         }
     }
@@ -123,10 +131,14 @@ public class TeamsActivity extends AppCompatActivity {
     }
 
     private void successfullyTeamInvited(Match match) {
+        progressDialog.show();
+
         match.save(object -> {
             Intent save_intent = new Intent();
             save_intent.putExtra("new_match", match);
             setResult(RESULT_OK, save_intent);
+
+            progressDialog.dismiss();
             finish();
         });
     }

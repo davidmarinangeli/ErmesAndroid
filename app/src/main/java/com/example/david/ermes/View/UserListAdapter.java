@@ -39,6 +39,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
     }
 
     private int refreshCount = 0;
+    private ProgressDialog progressDialog;
 
     private List<User> userList;
     private List<Notification> myRequestList;
@@ -59,6 +60,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
 
         presenter = new UserListPresenter();
         teamsSeparatorIndex = 0;
+        progressDialog = new ProgressDialog(context);
     }
 
     @Override
@@ -132,15 +134,19 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
                     firebaseCallback.callback(0);
                 }
             }
+
+            progressDialog.dismiss();
         });
     }
 
     public void refreshFriendList(FirebaseCallback firebaseCallback) {
+        progressDialog.show();
         setPresenterCallback(firebaseCallback);
         presenter.prepareFriendList();
     }
 
     public void refreshUserList(List<String> userIdList, FirebaseCallback firebaseCallback) {
+        progressDialog.show();
         setPresenterCallback(firebaseCallback);
         presenter.prepareList(userIdList);
     }
@@ -186,18 +192,26 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
 
                 switch (relationType) {
                     case NO_RELATION:
+                        progressDialog.show();
+
                         User user = userList.get(getAdapterPosition());
                         Friendship.requestFriendshipTo(currentUser, user.getUID(), object -> {
                             presenter.updateMyFriendhipRequest(getAdapterPosition(),
                                     (Notification) object);
+
+                            progressDialog.dismiss();
                             notifyDataSetChanged();
                         });
                         break;
                     case REPLY_REQUEST:
+                        progressDialog.show();
+
                         Notification request = toMeRequestList.get(getAdapterPosition());
                         Friendship.acceptRequest(currentUser, request, object -> {
                             presenter.updateFriendship(getAdapterPosition(),
                                     (Friendship) object);
+
+                            progressDialog.dismiss();
                             notifyDataSetChanged();
                         });
                         break;

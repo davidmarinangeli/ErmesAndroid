@@ -23,6 +23,7 @@ import com.example.david.ermes.Model.models.Team;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
+import com.example.david.ermes.View.ProgressDialog;
 import com.example.david.ermes.View.UserListAdapter;
 
 public class TeamActivity extends AppCompatActivity {
@@ -39,6 +40,7 @@ public class TeamActivity extends AppCompatActivity {
     private Team currentTeam;
     private String activityType;
     private UserListAdapter adapter;
+    private ProgressDialog progressDialog;
 
     private Toolbar toolbar;
 
@@ -57,6 +59,7 @@ public class TeamActivity extends AppCompatActivity {
         setContentView(R.layout.activity_team);
 
         initGlobalValues();
+        progressDialog = new ProgressDialog(this);
 
         toolbar = findViewById(R.id.team_toolbar);
         create_team_container = findViewById(R.id.create_team_container);
@@ -142,6 +145,8 @@ public class TeamActivity extends AppCompatActivity {
                 Toast.makeText(this, "Inserisci un nome", Toast.LENGTH_LONG).show();
                 action_btn.setEnabled(true);
             } else {
+                progressDialog.show();
+
                 fetchCurrentUser(object -> {
                     currentTeam.setName(team_name);
                     currentTeam.addUser(User.getCurrentUserId());
@@ -156,6 +161,7 @@ public class TeamActivity extends AppCompatActivity {
                         }
 
                         action_btn.setEnabled(true);
+                        progressDialog.dismiss();
                         finish();
                     });
                 });

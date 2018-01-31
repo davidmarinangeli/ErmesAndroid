@@ -18,6 +18,7 @@ import com.example.david.ermes.Model.repository.NotificationRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.NotificationAdapter;
+import com.example.david.ermes.View.ProgressDialog;
 
 import java.util.List;
 
@@ -31,11 +32,14 @@ public class NotificationsActivity extends AppCompatActivity {
     private TextView no_notifications;
 
     private User currentUser;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
+
+        progressDialog = new ProgressDialog(this);
 
         adapter = new NotificationAdapter(this);
         layoutManager = new LinearLayoutManager(this);
@@ -77,34 +81,35 @@ public class NotificationsActivity extends AppCompatActivity {
 
     private void fetchNotifications(User user) {
         if (user != null) {
+            progressDialog.show();
+
             NotificationRepository.getInstance().fetchNotificationsByIdOwner(user.getUID(),
-                    new FirebaseCallback() {
-                        @Override
-                        public void callback(Object object) {
-                            if (object != null) {
-                                adapter.refreshList((List<Notification>) object);
-                                
-                                if (adapter.getItemCount() <= 0) {
-                                    no_notifications.setText("Nessuna notifica");
-                                    no_notifications.setVisibility(View.VISIBLE);
-                                } else {
-                                    no_notifications.setVisibility(View.GONE);
+                    object -> {
+                        if (object != null) {
+                            adapter.refreshList((List<Notification>) object);
 
-                                    List<Notification> list = (List<Notification>) object;
-                                    int unreadCount = Notification.getUnreadNotificationsFromList(list)
-                                                    .size();
+                            if (adapter.getItemCount() <= 0) {
+                                no_notifications.setText("Nessuna notifica");
+                                no_notifications.setVisibility(View.VISIBLE);
+                            } else {
+                                no_notifications.setVisibility(View.GONE);
 
-                                    String toolbar_title = unreadCount > 0 ?
-                                            "Notifiche (" + String.valueOf(unreadCount) + ")"
-                                            : "Notifiche";
+                                List<Notification> list = (List<Notification>) object;
+                                int unreadCount = Notification.getUnreadNotificationsFromList(list)
+                                                .size();
 
-                                    toolbar.setTitle(toolbar_title);
-                                }
+                                String toolbar_title = unreadCount > 0 ?
+                                        "Notifiche (" + String.valueOf(unreadCount) + ")"
+                                        : "Notifiche";
+
+                                toolbar.setTitle(toolbar_title);
                             }
                         }
+
+                        progressDialog.dismiss();
                     });
         } else {
-            Toast.makeText(getApplicationContext(), "Devi effettuare il login!",
+            Toast.makeText(getApplicationContext(), "Nessun utente loggato",
                     Toast.LENGTH_LONG).show();
         }
     }
