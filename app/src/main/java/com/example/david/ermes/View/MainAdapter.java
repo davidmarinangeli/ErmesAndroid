@@ -139,6 +139,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             // se l'utente è loggato e ci sono match del suo sport preferito
             if (other_sports_match_index > 0) {
                 if (position == 0) {
+
                     user_fav_sport_label_text.setText(favSportName);
                     user_fav_sport_label.setVisibility(View.VISIBLE);
                 } else if (position == other_sports_match_index) {

@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.app_name);
 
         menu = findViewById(R.id.main_fab_menu);
         menu.setAnimated(true);
