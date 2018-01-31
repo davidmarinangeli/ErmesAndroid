@@ -1,7 +1,5 @@
 package com.example.david.ermes.Model.db;
 
-import android.util.Log;
-
 import com.example.david.ermes.Model.db.DbModels._Sport;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,7 +41,9 @@ public class SportDatabaseRepository {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(null);
+                    }
                 }
             });
         } else {
@@ -69,7 +69,9 @@ public class SportDatabaseRepository {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(null);
+                    }
                 }
             });
         } else {
@@ -98,8 +100,9 @@ public class SportDatabaseRepository {
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("FIREBASE", "Failed to read value.", error.toException());
+                if (fc != null) {
+                    fc.callback(null);
+                }
             }
         });
     }

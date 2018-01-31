@@ -39,17 +39,14 @@ public class UserDatabaseRepository {
 
     public void getCurrentUser(final FirebaseCallback firebaseCallback){
         if (currentUser == null) {
-            DatabaseManager.get().getCurrentUser(new FirebaseCallback() {
-                @Override
-                public void callback(Object object) {
-                    if (object != null) {
-                        _User user = (_User) object;
-                        currentUser = user.convertToUser();
+            DatabaseManager.get().getCurrentUser(object -> {
+                if (object != null) {
+                    _User user = (_User) object;
+                    currentUser = user.convertToUser();
 
-                        firebaseCallback.callback(currentUser);
-                    } else {
-                        firebaseCallback.callback(null);
-                    }
+                    firebaseCallback.callback(currentUser);
+                } else {
+                    firebaseCallback.callback(null);
                 }
             });
         } else {
@@ -79,12 +76,9 @@ public class UserDatabaseRepository {
 
     public void save(String id, _User user, FirebaseCallback firebaseCallback) {
         this.usersRef.child(id).setValue(user).addOnCompleteListener(
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (firebaseCallback != null) {
-                            firebaseCallback.callback(null);
-                        }
+                task -> {
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(null);
                     }
                 }
         );
@@ -131,7 +125,7 @@ public class UserDatabaseRepository {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                fc.callback(null);
             }
         });
     }

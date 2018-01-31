@@ -23,6 +23,7 @@ import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
+import com.example.david.ermes.View.ProgressDialog;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -61,6 +62,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private Place place_selected;
 
     private String photoURL = "";
+    private ProgressDialog progressDialog;
 
     private final int PLACE_AUTOCOMPLETE_CODE = 1;
 
@@ -68,6 +70,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        progressDialog = new ProgressDialog(this);
 
         result_intent = getIntent();
 
@@ -168,6 +172,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void signUpNormal(final String name, final String email, final String password, final String city) {
+        progressDialog.show();
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -189,8 +195,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             } else {
                                 Snackbar.make(getWindow().getDecorView(), "Errore nella ricerca dello sport", Snackbar.LENGTH_LONG)
                                         .setAction(":(", null);
-
                             }
+
+                            progressDialog.dismiss();
                         });
 
                     } else {
@@ -198,6 +205,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
                         Toast.makeText(SignUpActivity.this, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
+
+                        progressDialog.dismiss();
                     }
 
                     // ...
@@ -251,6 +260,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void manageNewGoogleUser() {
         if (isAllFilled(2)) {
+            progressDialog.show();
 
             SportRepository.getInstance().fetchSportByName(selected_sport, object -> {
                 Sport found_sport = (Sport) object;
@@ -262,7 +272,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         found_sport.getID(),
                         photoURL,
                         born_date_calendar.getTimeInMillis()
-                ).save(object1 -> finish());
+                ).save(object1 -> {
+                    progressDialog.dismiss();
+                    finish();
+                });
             });
         } else {
 
