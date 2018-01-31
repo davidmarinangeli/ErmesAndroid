@@ -57,7 +57,7 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.signintoolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle("Accedi o Registrati");
 
