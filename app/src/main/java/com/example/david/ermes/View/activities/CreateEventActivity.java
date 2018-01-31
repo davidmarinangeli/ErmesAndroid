@@ -2,6 +2,7 @@ package com.example.david.ermes.View.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -9,7 +10,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -22,11 +22,15 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.MissingStuffElement;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.repository.LocationRepository;
+import com.example.david.ermes.Model.repository.MatchRepository;
 import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Presenter.CreateEventPresenter;
 import com.example.david.ermes.Presenter.utils.LocationUtils;
@@ -34,15 +38,14 @@ import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.squareup.picasso.Picasso;
 import com.tylersuehr.chips.ChipsInputLayout;
 import com.tylersuehr.chips.data.Chip;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 
@@ -77,6 +80,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private Dialogflow dialogflow;
 
     private com.example.david.ermes.Model.models.Location selected_location;
+    private Match currentMatch;
 
 
     final String SPORT_HINT = "Seleziona uno sport...";
@@ -225,18 +229,20 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
         fine_creazione.setOnClickListener(v -> {
-            ArrayList<MissingStuffElement> chips_title_list = new ArrayList<>();
-            for (Chip chip : missing_chips.getSelectedChips()) {
-                chips_title_list.add(new MissingStuffElement(chip.getTitle(), false, ""));
-            }
-
             if (selected_sport_string != null && selected_location != null) {
-                createEventPresenter.saveMatch(match_calendar_time.getTimeInMillis(),
-                        selected_sport_string,
-                        selected_location,
-                        chips_title_list,
-                        ispublic_switch.isChecked(),
-                        String.valueOf(num_players_button.getText()));
+                getTimeLapseMatchDates(object -> {
+                    List<Long> dates = (List<Long>) object;
+
+                    if (currentMatch != null) {
+                        finish();
+                    } else if (dates == null) {
+                        saveMatch();
+                    } else {
+                        showMatchesTimeLapseDialog(dates);
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Riempi tutti i campi", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -307,6 +313,80 @@ public class CreateEventActivity extends AppCompatActivity {
         setResult(Activity.RESULT_OK, result_intent);
 
         finish();
+    }
+
+    private void getTimeLapseMatchDates(FirebaseCallback firebaseCallback) {
+        MatchRepository.getInstance().fetchMatchesByTimeLapse(match_calendar_time.getTimeInMillis(),
+                selected_location.getId(), object1 -> {
+                    List<Match> list = (List<Match>) object1;
+                    List<Long> dates = null;
+
+                    if (list != null && !list.isEmpty()) {
+                        dates = new ArrayList<>();
+
+                        for (Match m : list) {
+                            dates.add(m.getDate().getTime());
+                        }
+                    }
+
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(dates);
+                    }
+                });
+    }
+
+    private void saveMatch() {
+        ArrayList<MissingStuffElement> chips_title_list = new ArrayList<>();
+        for (Chip chip : missing_chips.getSelectedChips()) {
+            chips_title_list.add(new MissingStuffElement(chip.getTitle(), false, ""));
+        }
+
+        if (selected_sport_string != null && selected_location != null) {
+            createEventPresenter.getMatch(match_calendar_time.getTimeInMillis(),
+                    selected_sport_string,
+                    selected_location,
+                    chips_title_list,
+                    ispublic_switch.isChecked(),
+                    String.valueOf(num_players_button.getText()),
+                    object -> {
+                        currentMatch = (Match) object;
+                        currentMatch.save();
+                    });
+        }
+    }
+
+    private void showMatchesTimeLapseDialog(List<Long> dates) {
+        String num_matches = dates.size() > 1 ?
+                dates.size() + " partite" : "1 partita";
+
+        String formatted_dates = "";
+        Calendar c = Calendar.getInstance();
+        for (int i = 0; i < dates.size(); i++) {
+            c.setTimeInMillis(dates.get(i));
+
+            formatted_dates += TimeUtils.getFormattedHourMinute(c);
+
+            if (i < dates.size() - 2) {
+                formatted_dates += ", ";
+            } else if (i == dates.size() - 2) {
+                formatted_dates += " e alle ";
+            }
+        }
+
+        String title = "Sovrapposizione partite";
+        String text = "Ci sono altre " + num_matches + " alle " + formatted_dates
+                + " nel campo scelto.\n"
+                + "Vuoi comunque organizzare la tua partita?";
+
+        new MaterialDialog.Builder(CreateEventActivity.this)
+                .title(title)
+                .content(text)
+                .negativeText("No")
+                .negativeColor(getResources().getColor(R.color.red))
+                .onNegative((dialog, which) -> dialog.dismiss())
+                .positiveText("Si")
+                .onPositive((dialog, which) -> saveMatch())
+                .show();
     }
 
     // inizio abominio per i listener negli spinner

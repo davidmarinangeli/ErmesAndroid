@@ -25,12 +25,12 @@ public class CreateEventPresenter {
         this.createEventActivity = createEventActivity;
     }
 
-    public void saveMatch(final long timeInMillis,
+    public void getMatch(final long timeInMillis,
                           final String sport,
                           final Location selected_location,
                           final ArrayList<MissingStuffElement> chips_title_list,
                           final boolean checked,
-                          String maxplayers) {
+                          String maxplayers, FirebaseCallback firebaseCallback) {
 
         UserRepository.getInstance().getUser(object -> {
             if (object != null) {
@@ -63,9 +63,10 @@ public class CreateEventPresenter {
 
 
                         result_match.addPartecipant(current_user.getUID());
-                        result_match.save();
 
-                        createEventActivity.goToMainActivity(result_match);
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(result_match);
+                        }
                     }
                 });
             }

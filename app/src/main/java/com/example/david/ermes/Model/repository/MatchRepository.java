@@ -24,15 +24,21 @@ public class MatchRepository {
     }
 
     public void fetchMatches(final FirebaseCallback firebaseCallback) {
-        MatchesDatabaseRepository.getInstance().fetchAllMatches(object -> firebaseCallback.callback(DbModels._Match.convertToMatchList((List<DbModels._Match>) object)));
+        MatchesDatabaseRepository.getInstance().fetchAllMatches(object ->
+                firebaseCallback.callback(
+                        DbModels._Match.convertToMatchList((List<DbModels._Match>) object)));
     }
 
     public void fetchMatchesByOwner(User user, final FirebaseCallback firebaseCallback) {
-        MatchesDatabaseRepository.getInstance().fetchMatchesByIdOwner(user.getUID(), object -> firebaseCallback.callback(DbModels._Match.convertToMatchList((List<DbModels._Match>) object)));
+        MatchesDatabaseRepository.getInstance().fetchMatchesByIdOwner(user.getUID(), object ->
+                firebaseCallback.callback(
+                        DbModels._Match.convertToMatchList((List<DbModels._Match>) object)));
     }
 
     public void fetchOrderedMatchesByDate(long date, final FirebaseCallback firebaseCallback) {
-        MatchesDatabaseRepository.getInstance().orderMatchesByDate(date, object -> firebaseCallback.callback(DbModels._Match.convertToMatchList((List<DbModels._Match>) object)));
+        MatchesDatabaseRepository.getInstance().orderMatchesByDate(date, object ->
+                firebaseCallback.callback(
+                        DbModels._Match.convertToMatchList((List<DbModels._Match>) object)));
     }
 
     public void fetchMatchById(String id, final FirebaseCallback firebaseCallback) {
@@ -56,6 +62,21 @@ public class MatchRepository {
                         firebaseCallback.callback(null);
                     }
                 });
+    }
+
+    public void fetchMatchesByTimeLapse(long date, String locationId, FirebaseCallback firebaseCallback) {
+        MatchesDatabaseRepository.getInstance().fetchByTimeLapse(date, locationId, object -> {
+            List<DbModels._Match> list = (List<DbModels._Match>) object;
+            List<Match> result = null;
+
+            if (list != null) {
+                result = DbModels._Match.convertToMatchList(list);
+            }
+
+            if (firebaseCallback != null) {
+                firebaseCallback.callback(result);
+            }
+        });
     }
 
     public void saveMatch(Match match, FirebaseCallback firebaseCallback) {

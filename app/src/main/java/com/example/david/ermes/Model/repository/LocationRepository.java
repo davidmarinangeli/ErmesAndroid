@@ -31,31 +31,25 @@ public class LocationRepository {
     }
 
     public void fetchLocationById(String id, final FirebaseCallback firebaseCallback) {
-        LocationDatabaseRepository.getInstance().fetchLocationById(id, new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                Location location = null;
-                if (object != null) {
-                    location = ((_Location) object).convertToLocation();
-                }
-
-                firebaseCallback.callback(location);
+        LocationDatabaseRepository.getInstance().fetchLocationById(id, object -> {
+            Location location = null;
+            if (object != null) {
+                location = ((_Location) object).convertToLocation();
             }
+
+            firebaseCallback.callback(location);
         });
     }
 
 
     public void fetchAllLocations(final FirebaseCallback firebaseCallback){
-        LocationDatabaseRepository.getInstance().fetchAllLocations(new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null){
-                    firebaseCallback.callback(DbModels._Location.convertToLocationList(
-                            (List<DbModels._Location>) object
-                    ));
-                } else {
-                    firebaseCallback.callback(null);
-                }
+        LocationDatabaseRepository.getInstance().fetchAllLocations(object -> {
+            if (object != null){
+                firebaseCallback.callback(_Location.convertToLocationList(
+                        (List<_Location>) object
+                ));
+            } else {
+                firebaseCallback.callback(null);
             }
         });
     }
@@ -66,14 +60,11 @@ public class LocationRepository {
                 location.getLatitude(),
                 location.getLongitude(),
                 range,
-                new FirebaseCallback() {
-                    @Override
-                    public void callback(Object object) {
-                        if (object != null) {
-                            firebaseCallback.callback(DbModels._Location.convertToLocationList(
-                                    (List<DbModels._Location>) object
-                            ));
-                        }
+                object -> {
+                    if (object != null) {
+                        firebaseCallback.callback(_Location.convertToLocationList(
+                                (List<_Location>) object
+                        ));
                     }
                 }
         );
