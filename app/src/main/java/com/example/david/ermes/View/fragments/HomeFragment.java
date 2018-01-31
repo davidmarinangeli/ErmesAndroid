@@ -20,6 +20,7 @@ import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.MainAdapter;
+import com.example.david.ermes.View.ProgressDialog;
 
 import java.util.Calendar;
 import java.util.List;
@@ -33,6 +34,7 @@ public class HomeFragment extends Fragment {
     private MainAdapter adapter;
     private RecyclerView recyclerView;
     private Match match;
+    private ProgressDialog progressDialog;
 
     public HomeFragment() {
     }
@@ -45,6 +47,8 @@ public class HomeFragment extends Fragment {
         if (args != null) {
             match = (Match) args.getSerializable("event");
         }
+
+        progressDialog = new ProgressDialog(getContext());
     }
 
     @Nullable
@@ -71,6 +75,8 @@ public class HomeFragment extends Fragment {
     }
 
     public void initList() {
+        progressDialog.show();
+
         if (DatabaseManager.get().isLogged()) {
             UserRepository.getInstance().getUser(object -> {
                 User user = (User) object;
@@ -82,6 +88,8 @@ public class HomeFragment extends Fragment {
                             } else {
                                 adapter.refreshList((List<Match>) object1);
                             }
+
+                            progressDialog.dismiss();
                         });
 
                 if (user != null) {
@@ -96,7 +104,10 @@ public class HomeFragment extends Fragment {
             });
         } else {
             MatchRepository.getInstance().fetchOrderedMatchesByDate(System.currentTimeMillis(),
-                    object -> adapter.refreshList((List<Match>) object));
+                    object -> {
+                        adapter.refreshList((List<Match>) object);
+                        progressDialog.dismiss();
+                    });
         }
     }
 }

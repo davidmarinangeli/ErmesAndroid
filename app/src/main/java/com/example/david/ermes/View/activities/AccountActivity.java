@@ -10,6 +10,11 @@ import android.widget.Toast;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
+import com.example.david.ermes.View.ProgressDialog;
+import com.example.david.ermes.View.fragments.AccountFragment;
+import com.example.david.ermes.View.fragments.EventFragment;
+
+import java.time.Duration;
 import com.example.david.ermes.View.fragments.AccountFragment;
 import com.example.david.ermes.View.fragments.EventFragment;
 
@@ -18,12 +23,16 @@ import java.time.Duration;
 public class AccountActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
+
     private User currentUser;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+
+        progressDialog = new ProgressDialog(this);
 
         toolbar = findViewById(R.id.account_toolbar);
 
@@ -32,6 +41,8 @@ public class AccountActivity extends AppCompatActivity {
         if (currentUser != null) {
             init(savedInstanceState);
         } else {
+            progressDialog.show();
+
             UserRepository.getInstance().getUser(object -> {
                 currentUser = (User) object;
 
@@ -41,6 +52,8 @@ public class AccountActivity extends AppCompatActivity {
                     Toast.makeText(this,"Errore nello scaricamento dei dati",
                             Toast.LENGTH_LONG).show();
                 }
+
+                progressDialog.dismiss();
             });
         }
 

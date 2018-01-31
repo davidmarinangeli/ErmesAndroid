@@ -1,11 +1,7 @@
 package com.example.david.ermes.Model.db;
 
-import android.support.annotation.NonNull;
-
 import com.example.david.ermes.Model.db.DbModels._Friendship;
 import com.example.david.ermes.Model.models.Friendship;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
