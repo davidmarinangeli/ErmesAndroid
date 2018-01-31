@@ -3,6 +3,7 @@ package com.example.david.ermes.View;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -92,7 +93,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
         LinearLayout container;
         CardView card;
-        LinearLayout user_fav_sport_label;
+        ConstraintLayout user_fav_sport_label;
         TextView user_fav_sport_label_text;
 
         TextView date_of_event;
