@@ -3,6 +3,7 @@ package com.example.david.ermes.View;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,7 +88,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
     public class MainViewHolder extends RecyclerView.ViewHolder {
 
-        LinearLayout user_fav_sport_label;
+        ConstraintLayout user_fav_sport_label;
         TextView user_fav_sport_label_text;
 
         TextView date_of_event;
@@ -102,7 +103,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             user_fav_sport_label = itemView.findViewById(R.id.user_fav_sport_label);
             user_fav_sport_label_text = itemView.findViewById(R.id.user_fav_sport_label_text);
             user_fav_sport_label_text.setVisibility(View.VISIBLE);
-
             date_of_event = itemView.findViewById(R.id.date_of_event);
             hour_of_event = itemView.findViewById(R.id.hour_of_event);
             sport_icon = itemView.findViewById(R.id.sport_icon_event);
