@@ -10,13 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.david.ermes.Model.db.DatabaseManager;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.MatchRepository;
+import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.MainAdapter;
+import com.example.david.ermes.View.ProgressDialog;
 
 import java.util.Calendar;
 import java.util.List;
@@ -30,6 +34,7 @@ public class HomeFragment extends Fragment {
     private MainAdapter adapter;
     private RecyclerView recyclerView;
     private Match match;
+    private ProgressDialog progressDialog;
 
     public HomeFragment() {
     }
@@ -42,6 +47,8 @@ public class HomeFragment extends Fragment {
         if (args != null) {
             match = (Match) args.getSerializable("event");
         }
+
+        progressDialog = new ProgressDialog(getContext());
     }
 
     @Nullable
@@ -68,7 +75,44 @@ public class HomeFragment extends Fragment {
     }
 
     public void initList() {
+<<<<<<< HEAD
         MatchRepository.getInstance().fetchOrderedMatchesByDate(Calendar.getInstance().getTimeInMillis(), object ->
                 adapter.refreshList((List<Match>) object));
+=======
+        progressDialog.show();
+
+        if (DatabaseManager.get().isLogged()) {
+            UserRepository.getInstance().getUser(object -> {
+                User user = (User) object;
+
+                MatchRepository.getInstance().fetchOrderedMatchesByDate(System.currentTimeMillis(),
+                        object1 -> {
+                            if (user != null) {
+                                adapter.refreshList((List<Match>) object1, user.getIdFavSport());
+                            } else {
+                                adapter.refreshList((List<Match>) object1);
+                            }
+
+                            progressDialog.dismiss();
+                        });
+
+                if (user != null) {
+                    SportRepository.getInstance().fetchSportById(user.getIdFavSport(), object1 -> {
+                        Sport sport = (Sport) object1;
+
+                        if (sport != null) {
+                            adapter.setFavSportName(sport.getName());
+                        }
+                    });
+                }
+            });
+        } else {
+            MatchRepository.getInstance().fetchOrderedMatchesByDate(System.currentTimeMillis(),
+                    object -> {
+                        adapter.refreshList((List<Match>) object);
+                        progressDialog.dismiss();
+                    });
+        }
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     }
 }

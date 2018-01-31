@@ -27,6 +27,11 @@ import com.example.david.ermes.View.activities.CustomizeProfileActivity;
 import com.example.david.ermes.View.activities.FriendsActivity;
 import com.example.david.ermes.View.activities.MainSignInActivity;
 import com.example.david.ermes.View.activities.MyMatchesActivity;
+<<<<<<< HEAD
+=======
+import com.example.david.ermes.View.activities.TeamActivity;
+import com.example.david.ermes.View.activities.TeamsActivity;
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 import com.github.clans.fab.FloatingActionButton;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
@@ -36,8 +41,11 @@ import com.squareup.picasso.Picasso;
  */
 public class AccountFragment extends Fragment {
 
+<<<<<<< HEAD
     private Toolbar toolbar;
 
+=======
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     private TextView name;
     private TextView age;
     private TextView sport;
@@ -48,10 +56,15 @@ public class AccountFragment extends Fragment {
     private CardView myMatchesCard;
     private CardView friendsCard;
     private CardView customizeProfileCard;
+<<<<<<< HEAD
+=======
+    private CardView teamsCard;
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     private ImageView appIcon;
     private TextView welcomeDescription;
 
     private Button welcome_button;
+<<<<<<< HEAD
 
     private ScrollView main_scrollview;
 
@@ -60,6 +73,16 @@ public class AccountFragment extends Fragment {
     private ImageView cover;
     private FloatingActionButton default_event_fab;
     private FloatingActionButton add_place_fab;
+=======
+
+    private ScrollView main_scrollview;
+
+    private User currentUser;
+
+    private ImageView cover;
+
+    private Button team_create_btn;
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
     public AccountFragment() {
         // Required empty public constructor
@@ -126,6 +149,13 @@ public class AccountFragment extends Fragment {
 
         myMatchesCard = view.findViewById(R.id.myMatchesCard);
         friendsCard = view.findViewById(R.id.cardViewFriends);
+<<<<<<< HEAD
+=======
+        teamsCard = view.findViewById(R.id.cardViewTeams);
+        customizeProfileCard = view.findViewById(R.id.myProfileCard);
+
+        team_create_btn = view.findViewById(R.id.teamCreateButton);
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
         main_scrollview = view.findViewById(R.id.account_nested_scrollview);
 
@@ -139,10 +169,18 @@ public class AccountFragment extends Fragment {
             UserRepository.getInstance().getUser(object -> {
                 currentUser = (User) object;
 
+<<<<<<< HEAD
+=======
+                team_create_btn.setVisibility(View.VISIBLE);
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                 initComponents();
             });
         } else {
             // se sto vedendo l'account di altri
+<<<<<<< HEAD
+=======
+            team_create_btn.setVisibility(View.GONE);
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
             initComponents();
         }
 
@@ -163,6 +201,7 @@ public class AccountFragment extends Fragment {
 
         if (currentUser != null && !currentUser.getUID().equals(User.getCurrentUserId())) {
             friendsCard.setVisibility(View.GONE);
+<<<<<<< HEAD
         }
         friendsCard.setOnClickListener(view13 -> {
             if (currentUser != null) {
@@ -197,6 +236,56 @@ public class AccountFragment extends Fragment {
             } else {
                 Toast.makeText(view12.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
             }
+=======
+            customizeProfileCard.setVisibility(View.GONE);
+        } else {
+            friendsCard.setOnClickListener(view13 -> {
+                if (currentUser != null) {
+                    Bundle extras = new Bundle();
+                    extras.putParcelable("user", currentUser);
+
+                    Intent friendsActivity = new Intent(view13.getContext(), FriendsActivity.class);
+                    friendsActivity.putExtras(extras);
+                    startActivity(friendsActivity);
+                } else if (DatabaseManager.get().isLogged()) {
+                    Toast.makeText(view13.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(view13.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            customizeProfileCard.setOnClickListener(view12 -> {
+                if (currentUser != null) {
+                    Bundle extras = new Bundle();
+                    extras.putParcelable("user", currentUser);
+
+                    Intent profileAcitivty = new Intent(view12.getContext(), CustomizeProfileActivity.class);
+                    profileAcitivty.putExtras(extras);
+                    startActivity(profileAcitivty);
+
+
+                } else if (User.getCurrentUserId() != null) {
+                    Toast.makeText(view12.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(view12.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        teamsCard.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), TeamsActivity.class);
+            i.putExtra(TeamsActivity.ACTIVITY_CODE_KEY, TeamsActivity.VIEW_CODE);
+            startActivity(i);
+        });
+
+        team_create_btn.setOnClickListener(view14 -> {
+            Bundle extras = new Bundle();
+            extras.putString(TeamActivity.ACTIVITY_TYPE_KEY, TeamActivity.CREATE_TEAM);
+
+            Intent teamActivity = new Intent(view14.getContext(), TeamActivity.class);
+            teamActivity.putExtras(extras);
+            startActivity(teamActivity);
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         });
 
     }

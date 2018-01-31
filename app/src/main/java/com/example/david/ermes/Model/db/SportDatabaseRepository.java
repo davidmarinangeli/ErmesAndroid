@@ -43,7 +43,37 @@ public class SportDatabaseRepository {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(null);
+                    }
+                }
+            });
+        } else {
+            firebaseCallback.callback(null);
+        }
+    }
 
+    public void fetchSportByName(final String name, final FirebaseCallback firebaseCallback) {
+        if (name != null && name.length() > 0) {
+
+            Query query = this.ref.orderByChild("name").equalTo(name);
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        _Sport sport = d.getValue(_Sport.class);
+
+                        sport.setID(d.getKey());
+                        firebaseCallback.callback(sport);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(null);
+                    }
                 }
             });
         } else {
@@ -99,8 +129,9 @@ public class SportDatabaseRepository {
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("FIREBASE", "Failed to read value.", error.toException());
+                if (fc != null) {
+                    fc.callback(null);
+                }
             }
         });
     }

@@ -18,6 +18,10 @@ import com.example.david.ermes.Model.repository.NotificationRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.NotificationAdapter;
+<<<<<<< HEAD
+=======
+import com.example.david.ermes.View.ProgressDialog;
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
 import java.util.List;
 
@@ -31,12 +35,21 @@ public class NotificationsActivity extends AppCompatActivity {
     private TextView no_notifications;
 
     private User currentUser;
+<<<<<<< HEAD
+=======
+    private ProgressDialog progressDialog;
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
 
+<<<<<<< HEAD
+=======
+        progressDialog = new ProgressDialog(this);
+
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         adapter = new NotificationAdapter(this);
         layoutManager = new LinearLayoutManager(this);
         no_notifications = findViewById(R.id.no_notifications_label);
@@ -77,6 +90,7 @@ public class NotificationsActivity extends AppCompatActivity {
 
     private void fetchNotifications(User user) {
         if (user != null) {
+<<<<<<< HEAD
             NotificationRepository.getInstance().fetchNotificationsByIdOwner(user.getUID(),
                     new FirebaseCallback() {
                         @Override
@@ -105,6 +119,37 @@ public class NotificationsActivity extends AppCompatActivity {
                     });
         } else {
             Toast.makeText(getApplicationContext(), "Devi effettuare il login!",
+=======
+            progressDialog.show();
+
+            NotificationRepository.getInstance().fetchNotificationsByIdOwner(user.getUID(),
+                    object -> {
+                        if (object != null) {
+                            adapter.refreshList((List<Notification>) object);
+
+                            if (adapter.getItemCount() <= 0) {
+                                no_notifications.setText("Nessuna notifica");
+                                no_notifications.setVisibility(View.VISIBLE);
+                            } else {
+                                no_notifications.setVisibility(View.GONE);
+
+                                List<Notification> list = (List<Notification>) object;
+                                int unreadCount = Notification.getUnreadNotificationsFromList(list)
+                                                .size();
+
+                                String toolbar_title = unreadCount > 0 ?
+                                        "Notifiche (" + String.valueOf(unreadCount) + ")"
+                                        : "Notifiche";
+
+                                toolbar.setTitle(toolbar_title);
+                            }
+                        }
+
+                        progressDialog.dismiss();
+                    });
+        } else {
+            Toast.makeText(getApplicationContext(), "Nessun utente loggato",
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     Toast.LENGTH_LONG).show();
         }
     }
