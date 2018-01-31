@@ -1,13 +1,13 @@
 package com.example.david.ermes.View.activities;
 
+import android.Manifest;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,14 +19,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.MissingStuffElement;
 import com.example.david.ermes.Model.models.Sport;
@@ -38,12 +34,13 @@ import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.squareup.picasso.Picasso;
 import com.tylersuehr.chips.ChipsInputLayout;
 import com.tylersuehr.chips.data.Chip;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -58,6 +55,8 @@ public class CreateEventActivity extends AppCompatActivity {
     private Spinner location_selector;
 
     private ImageButton fine_creazione;
+    private ImageButton dialogflow_button;
+
     private Button num_players_button;
 
     private ChipsInputLayout missing_chips;
@@ -75,6 +74,8 @@ public class CreateEventActivity extends AppCompatActivity {
     private String selected_sport_string;
     private String selected_location_string;
 
+    private Dialogflow dialogflow;
+
     private com.example.david.ermes.Model.models.Location selected_location;
 
 
@@ -82,10 +83,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
     // mi salvo gli OGGETTI Location così da evitare una callback in più dopo per fetchare gli oggetti a partire dai nomi
     ArrayList<com.example.david.ermes.Model.models.Location> downloaded_locations;
-    Sport sport;
     Location user_location;
 
     private CreateEventPresenter createEventPresenter;
+    private int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +95,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
         event_orario_textview = findViewById(R.id.textTime);
         event_data_textview = findViewById(R.id.textDate);
-
         location_selector = findViewById(R.id.location_spinner);
         sport_selector = findViewById(R.id.sport_spinner);
 
@@ -102,13 +102,14 @@ public class CreateEventActivity extends AppCompatActivity {
 
         fine_creazione = findViewById(R.id.buttonfine);
         num_players_button = findViewById(R.id.choose_players_number);
+        dialogflow_button = findViewById(R.id.dialogflow_button);
 
         ispublic_switch = findViewById(R.id.ispublic_switch);
 
         match_calendar_time = Calendar.getInstance();
         toolbar = findViewById(R.id.create_event_toolbar);
 
-        sport = new Sport();
+        dialogflow = new Dialogflow(this);
         downloaded_locations = new ArrayList<>();
 
         toolbar.setTitle("Crea l'evento");
@@ -159,6 +160,70 @@ public class CreateEventActivity extends AppCompatActivity {
 
         //setto i parametri delle chips
         missing_chips.setShowChipAvatarEnabled(false);
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.RECORD_AUDIO)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        MY_PERMISSIONS_REQUEST_RECORD_AUDIO);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+
+            // SE HAI I PERMESSI... comincia ad ascoltare
+            dialogflow_button.setOnClickListener(view ->
+                    dialogflow.startListening());
+        }
+
+
+        // setto il comportamento a fine registrazione e vedo cosa mi ritorna
+        dialogflow.setOnFinishListening(object -> {
+            if (object != null) {
+                Match voice_match = (Match) object;
+                if ((voice_match.getDate() != null)) {
+                    Calendar hour = Calendar.getInstance();
+                    hour.setTime(voice_match.getDate());
+
+                    event_orario_textview.setText(TimeUtils.getFormattedHourMinute(hour));
+                    event_data_textview.setText(TimeUtils.fromMillistoYearMonthDay(voice_match.getDate().getTime()));
+                }
+
+                ispublic_switch.setChecked(voice_match.isPublic());
+                if (voice_match.getMaxPlayers() > 0) {
+                    num_players_button.setText(String.valueOf(voice_match.getMaxPlayers()));
+                }
+
+                if (voice_match.getIdSport() != null) {
+                    SportRepository.getInstance().fetchSportById(voice_match.getIdSport(), object1 -> {
+                        if (object1 != null) {
+                            Sport sportname = (Sport) object1;
+                            sport_selector.setSelection(Integer.valueOf(voice_match.getIdSport()));
+                            selected_sport_string = sportname.getName();
+                        }
+                    });
+                }
+            }
+
+        });
+
+
         fine_creazione.setOnClickListener(v -> {
             ArrayList<MissingStuffElement> chips_title_list = new ArrayList<>();
             for (Chip chip : missing_chips.getSelectedChips()) {
@@ -273,6 +338,7 @@ public class CreateEventActivity extends AppCompatActivity {
         public void onNothingSelected(AdapterView<?> adapterView) {
 
         }
+
     }
     // fine abominio per gli spinner
 
