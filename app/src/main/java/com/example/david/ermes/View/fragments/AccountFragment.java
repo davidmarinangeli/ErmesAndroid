@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +25,9 @@ import com.example.david.ermes.R;
 import com.example.david.ermes.View.activities.CustomizeProfileActivity;
 import com.example.david.ermes.View.activities.FriendsActivity;
 import com.example.david.ermes.View.activities.MainSignInActivity;
-import com.example.david.ermes.View.activities.MyMatchesActivity;
+import com.example.david.ermes.View.activities._MyMatchesActivity;
 import com.example.david.ermes.View.activities.TeamActivity;
 import com.example.david.ermes.View.activities.TeamsActivity;
-import com.github.clans.fab.FloatingActionButton;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -158,7 +156,7 @@ public class AccountFragment extends Fragment {
                 Bundle extras = new Bundle();
                 extras.putParcelable("user", currentUser);
 
-                Intent myMatchesActivity = new Intent(view1.getContext(), MyMatchesActivity.class);
+                Intent myMatchesActivity = new Intent(view1.getContext(), _MyMatchesActivity.class);
                 myMatchesActivity.putExtras(extras);
                 startActivity(myMatchesActivity);
             } else if (DatabaseManager.get().isLogged()) {
