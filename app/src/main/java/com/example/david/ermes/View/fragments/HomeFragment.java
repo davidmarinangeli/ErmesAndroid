@@ -75,10 +75,6 @@ public class HomeFragment extends Fragment {
     }
 
     public void initList() {
-<<<<<<< HEAD
-        MatchRepository.getInstance().fetchOrderedMatchesByDate(Calendar.getInstance().getTimeInMillis(), object ->
-                adapter.refreshList((List<Match>) object));
-=======
         progressDialog.show();
 
         if (DatabaseManager.get().isLogged()) {
@@ -113,6 +109,5 @@ public class HomeFragment extends Fragment {
                         progressDialog.dismiss();
                     });
         }
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     }
 }

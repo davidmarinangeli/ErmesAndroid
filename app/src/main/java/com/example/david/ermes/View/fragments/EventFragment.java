@@ -42,10 +42,7 @@ import com.example.david.ermes.View.activities.PickFriendsActivity;
 
 import android.support.design.widget.FloatingActionButton;
 
-<<<<<<< HEAD
-=======
 import com.example.david.ermes.View.activities.TeamsActivity;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -95,14 +92,9 @@ public class EventFragment extends Fragment {
     private User matchCreator;
 
     private Toolbar toolbar;
-<<<<<<< HEAD
-    private ImageButton invite;
-    private FloatingActionButton join;
-=======
     private FloatingActionButton join;
     private ImageButton invite;
     private ImageButton invite_team;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     private ImageButton delete_match;
     private ImageButton missing_stuff_button;
 
@@ -186,10 +178,7 @@ public class EventFragment extends Fragment {
         missing_stuff_button = view.findViewById(R.id.missing_stuff_button);
         join = view.findViewById(R.id.buttonPartecipa);
         invite = view.findViewById(R.id.buttonInvita);
-<<<<<<< HEAD
-=======
         invite_team = view.findViewById(R.id.buttonInvitaTeam);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         delete_match = view.findViewById(R.id.elimina_evento);
 
         profileCardView = view.findViewById(R.id.profileCard);
@@ -267,8 +256,6 @@ public class EventFragment extends Fragment {
             getActivity().startActivityForResult(invite_friends, INVITE_FRIEND_CODE);
         });
 
-<<<<<<< HEAD
-=======
         invite_team.setOnClickListener(v -> {
             Intent invite_teams = new Intent(getContext(), TeamsActivity.class);
             invite_teams.putExtra("match", match);
@@ -276,7 +263,6 @@ public class EventFragment extends Fragment {
             getActivity().startActivityForResult(invite_teams, TeamsActivity.PICK_CODE);
         });
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         delete_match.setOnClickListener(view1 -> new MaterialDialog.Builder(this.getContext())
                 .title("Sei sicuro di voler eliminare l'evento?")
                 .negativeText("No")
@@ -328,11 +314,7 @@ public class EventFragment extends Fragment {
         // visualizzazione lista di partecipanti e invitati
         showInvited.setOnClickListener(view1 -> {
             if (match.getPending().size() > 0) {
-<<<<<<< HEAD
-                startMatchUsersActivity("Invitati", match.getPending());
-=======
                 startMatchUsersActivity(MatchUsersActivity.INVITED_TYPES, match.getPending());
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
             } else {
                 Snackbar.make(view, "Non ci sono invitati.", Snackbar.LENGTH_SHORT).show();
             }
@@ -340,11 +322,7 @@ public class EventFragment extends Fragment {
 
         showPartecipants.setOnClickListener(view1 -> {
             if (match.getPartecipants().size() > 0) {
-<<<<<<< HEAD
-                startMatchUsersActivity("Partecipanti", match.getPartecipants());
-=======
                 startMatchUsersActivity(MatchUsersActivity.PARTECIPANTS_TYPE, match.getPartecipants());
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
             } else {
                 Snackbar.make(view, "Non ci sono partecipanti.", Snackbar.LENGTH_SHORT).show();
             }
@@ -397,59 +375,6 @@ public class EventFragment extends Fragment {
                         }
                     });
         }
-<<<<<<< HEAD
-    }
-
-    private void setMissingStuffParagraph() {
-        boolean at_least_an_unchecked = false;
-        StringBuilder missing_stuff_text = new StringBuilder();
-        for (int index = 0; index < match.getMissingStuff().size(); index++) {
-            if (!match.getMissingStuff().get(index).isChecked()) {
-                missing_stuff_text.append("- ");
-                missing_stuff_text.append(match.getMissingStuff().get(index).getName());
-                if (index < match.getMissingStuff().size() - 1) {
-                    missing_stuff_text.append("\n");
-                }
-                at_least_an_unchecked = true;
-            }
-        }
-
-        if (at_least_an_unchecked) {
-            missing_stuff_paragraph.setText(missing_stuff_text);
-        } else {
-            missing_stuff_paragraph.setText("Nessun materiale mancante");
-        }
-    }
-
-    private void startMatchUsersActivity(String title, List<String> list) {
-        Intent intent = new Intent(getContext(), MatchUsersActivity.class);
-
-        Bundle extras = new Bundle();
-        extras.putStringArrayList("users", (ArrayList<String>) list);
-        extras.putString("title", title);
-
-        if (currentUser != null) {
-
-            extras.putParcelable("user", currentUser);
-            intent.putExtras(extras);
-            startActivity(intent);
-        } else {
-            UserRepository.getInstance().getUser(object -> {
-                currentUser = (User) object;
-
-                if (currentUser != null) {
-                    extras.putParcelable("user", currentUser);
-                    intent.putExtras(extras);
-                    startActivity(intent);
-                } else {
-                    Snackbar.make(getView(), "Errore nello scaricamento dei dati",
-                            Snackbar.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-=======
     }
 
     private void setMissingStuffParagraph() {
@@ -501,7 +426,6 @@ public class EventFragment extends Fragment {
         }
     }
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     private void updateLabels() {
         participant.setText(String.valueOf(match.getPartecipants().size()));
         freeslots.setText(String.valueOf(match.getMaxPlayers() - match.getPending().size()
@@ -514,65 +438,43 @@ public class EventFragment extends Fragment {
         switch (userCase) {
             case CREATOR:
                 invite.setVisibility(View.VISIBLE);
-<<<<<<< HEAD
-=======
                 invite_team.setVisibility(View.VISIBLE);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                 missing_stuff_button.setVisibility(View.VISIBLE);
                 break;
             case PRIVATE_PARTECIPANT:
                 join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_busy_white_24dp));
                 invite.setVisibility(View.GONE);
-<<<<<<< HEAD
-=======
                 invite_team.setVisibility(View.GONE);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                 missing_stuff_button.setVisibility(View.VISIBLE);
                 break;
             case PRIVATE_GUEST:
                 join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_available_white_24dp));
                 invite.setVisibility(View.GONE);
-<<<<<<< HEAD
-=======
                 invite_team.setVisibility(View.GONE);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
             case PUBLIC_PARTECIPANT:
                 join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_busy_white_24dp));
                 invite.setVisibility(View.VISIBLE);
-<<<<<<< HEAD
-=======
                 invite_team.setVisibility(View.VISIBLE);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                 missing_stuff_button.setVisibility(View.VISIBLE);
                 break;
             case PUBLIC_GUEST:
                 join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_available_white_24dp));
                 invite.setVisibility(View.VISIBLE);
-<<<<<<< HEAD
-=======
                 invite_team.setVisibility(View.VISIBLE);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
             case NOT_PARTECIPANT:
                 join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_available_white_24dp));
-<<<<<<< HEAD
-                invite.setVisibility(View.VISIBLE);
-=======
                 invite.setVisibility(View.GONE);
                 invite_team.setVisibility(View.GONE);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
             case UNAVAILABLE:
                 join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.inactive)));
                 invite.setVisibility(View.GONE);
-<<<<<<< HEAD
-=======
                 invite_team.setVisibility(View.GONE);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
             default:

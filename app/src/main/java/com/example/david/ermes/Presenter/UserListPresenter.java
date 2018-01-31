@@ -11,13 +11,7 @@ import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
 import java.util.List;
-=======
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
 /**
  * Created by nicol on 19/01/2018.

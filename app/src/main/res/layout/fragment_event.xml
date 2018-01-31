@@ -51,8 +51,6 @@
                     android:tint="@color/white" />
 
                 <ImageButton
-<<<<<<< HEAD
-=======
                     android:id="@+id/buttonInvitaTeam"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
@@ -64,7 +62,6 @@
                     android:tint="@color/white" />
 
                 <ImageButton
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     android:id="@+id/buttonInvita"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
