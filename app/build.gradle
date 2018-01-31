@@ -21,7 +21,6 @@ android {
     buildToolsVersion "26.0.2"
     defaultConfig {
 
-        multiDexEnabled true
         applicationId "com.example.david.ermes"
         minSdkVersion 21
         targetSdkVersion 26
