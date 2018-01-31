@@ -47,11 +47,6 @@ public class EventActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-<<<<<<< HEAD
-        if (requestCode == INVITE_FRIEND_CODE && resultCode == RESULT_OK) {
-            Match saved_match = data.getParcelableExtra("new_match");
-            eventFragment.updateMatch(saved_match);
-=======
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case INVITE_FRIEND_CODE:
@@ -60,7 +55,6 @@ public class EventActivity extends AppCompatActivity {
                     eventFragment.updateMatch(saved_match);
                     break;
             }
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         }
     }
 

@@ -9,17 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.MatchRepository;
-import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.MainAdapter;
-<<<<<<< HEAD
-=======
 import com.example.david.ermes.View.ProgressDialog;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
 import java.util.List;
 
@@ -35,21 +30,15 @@ public class MyMatchesActivity extends AppCompatActivity {
 
     private MainAdapter adapter;
     private User currentUser;
-<<<<<<< HEAD
-=======
     private ProgressDialog progressDialog;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_matches);
 
-<<<<<<< HEAD
-=======
         progressDialog = new ProgressDialog(this);
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         no_matches_label = findViewById(R.id.no_matches_label);
 
         toolbar = findViewById(R.id.my_matches_toolbar);
@@ -72,36 +61,12 @@ public class MyMatchesActivity extends AppCompatActivity {
         super.onResume();
 
         if (currentUser != null) {
-<<<<<<< HEAD
-=======
             progressDialog.show();
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
             no_matches_label.setText("Nessuna partita");
             toolbar.setSubtitle(currentUser.getName());
 
             MatchRepository.getInstance().fetchFinishedJoinedMatchesByUserId(currentUser.getUID(),
-<<<<<<< HEAD
-                    new FirebaseCallback() {
-                        @Override
-                        public void callback(Object object) {
-                            List<Match> matches = (List<Match>) object;
-
-                            if (matches != null) {
-                                no_matches_label.setVisibility(View.GONE);
-
-                                if (matches.size() == 1) {
-                                    toolbar.setTitle(matches.size() + " partita giocata");
-                                } else {
-                                    toolbar.setTitle(matches.size() + " partite giocate");
-                                }
-
-                                adapter.refreshList(matches);
-                            } else {
-                                no_matches_label.setVisibility(View.VISIBLE);
-                            }
-                        }
-=======
                     object -> {
                         List<Match> matches = (List<Match>) object;
 
@@ -120,7 +85,6 @@ public class MyMatchesActivity extends AppCompatActivity {
                         }
 
                         progressDialog.dismiss();
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     });
         } else {
             no_matches_label.setText("Nessun utente loggato");

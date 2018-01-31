@@ -79,47 +79,6 @@ public class MatchRepository {
         });
     }
 
-<<<<<<< HEAD
-    public void fetchOrderedMatchesByDate(long date, final FirebaseCallback firebaseCallback) {
-        MatchesDatabaseRepository.getInstance().orderMatchesByDate(date, new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                firebaseCallback.callback(DbModels._Match.convertToMatchList((List<DbModels._Match>) object));
-            }
-        });
-    }
-
-    public void fetchMatchById(String id, final FirebaseCallback firebaseCallback) {
-        MatchesDatabaseRepository.getInstance().fetchMatchById(id, new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null) {
-                    firebaseCallback.callback(((DbModels._Match) object).convertToMatch());
-                } else {
-                    firebaseCallback.callback(null);
-                }
-            }
-        });
-    }
-
-    public void fetchFinishedJoinedMatchesByUserId(String idUser, FirebaseCallback firebaseCallback) {
-        MatchesDatabaseRepository.getInstance().fetchFinishedJoinedMatches(idUser,
-                new FirebaseCallback() {
-                    @Override
-                    public void callback(Object object) {
-                        List<DbModels._Match> list = (List<DbModels._Match>) object;
-
-                        if (list != null && firebaseCallback != null) {
-                            firebaseCallback.callback(DbModels._Match.convertToMatchList(list));
-                        } else if (firebaseCallback != null) {
-                            firebaseCallback.callback(null);
-                        }
-                    }
-                });
-    }
-
-=======
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     public void saveMatch(Match match, FirebaseCallback firebaseCallback) {
         MatchesDatabaseRepository.getInstance().push(match.convertTo_Match(), firebaseCallback);
     }

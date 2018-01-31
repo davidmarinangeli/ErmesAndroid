@@ -63,39 +63,6 @@ public class MatchesDatabaseRepository {
     }
 
     public void fetchMatchById(String id, final FirebaseCallback firebaseCallback) {
-<<<<<<< HEAD
-        fetchMatches("key", id, new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null) {
-                    List<_Match> list = (List<_Match>) object;
-                    firebaseCallback.callback(list.get(0));
-                } else {
-                    firebaseCallback.callback(null);
-                }
-            }
-        });
-    }
-
-    public void push(_Match match, FirebaseCallback firebaseCallback) {
-        DatabaseReference query;
-
-        if (match != null) {
-            if (match.getID() != null && !match.getID().isEmpty()) {
-                query = this.matchesRef.child(match.getID());
-            } else {
-                query = this.matchesRef.push();
-            }
-
-            query.setValue(match).addOnCompleteListener(task -> {
-                if (firebaseCallback != null) {
-                    firebaseCallback.callback(null);
-                }
-            });
-        }
-    }
-
-=======
         fetchMatches("key", id, object -> {
             if (object != null) {
                 List<_Match> list = (List<_Match>) object;
@@ -125,7 +92,6 @@ public class MatchesDatabaseRepository {
         }
     }
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     private void fetchMatches(final String param, String value, final FirebaseCallback fc) {
         Query queryRef;
 
@@ -195,13 +161,9 @@ public class MatchesDatabaseRepository {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-<<<<<<< HEAD
-                            firebaseCallback.callback(null);
-=======
                             if (firebaseCallback != null) {
                                 firebaseCallback.callback(null);
                             }
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                         }
                     });
         } else if (firebaseCallback != null) {
@@ -239,13 +201,9 @@ public class MatchesDatabaseRepository {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-<<<<<<< HEAD
-                            firebaseCallback.callback(null);
-=======
                             if (firebaseCallback != null) {
                                 firebaseCallback.callback(null);
                             }
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                         }
                     }
             );
@@ -254,16 +212,6 @@ public class MatchesDatabaseRepository {
         }
     }
 
-<<<<<<< HEAD
-    public void deleteById(String id, FirebaseCallback firebaseCallback) {
-        if (id != null && !id.isEmpty()) {
-            this.matchesRef.child(id).removeValue(new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    if (firebaseCallback != null) {
-                        firebaseCallback.callback(null);
-                    }
-=======
     public void fetchByTimeLapse(long date, String locationId, FirebaseCallback firebaseCallback) {
         final long TWO_HOURS_MILLISEC = 7200000;
 
@@ -308,7 +256,6 @@ public class MatchesDatabaseRepository {
             this.matchesRef.child(id).removeValue((databaseError, databaseReference) -> {
                 if (firebaseCallback != null) {
                     firebaseCallback.callback(null);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                 }
             });
         }

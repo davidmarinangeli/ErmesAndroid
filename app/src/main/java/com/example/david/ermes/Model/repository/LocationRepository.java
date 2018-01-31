@@ -55,46 +55,16 @@ public class LocationRepository {
     }
 
 
-<<<<<<< HEAD
-    public void fetchAllLocations(final FirebaseCallback firebaseCallback){
-        LocationDatabaseRepository.getInstance().fetchAllLocations(new FirebaseCallback() {
-            @Override
-            public void callback(Object object) {
-                if (object != null){
-                    firebaseCallback.callback(DbModels._Location.convertToLocationList(
-                            (List<DbModels._Location>) object
-                    ));
-                } else {
-                    firebaseCallback.callback(null);
-                }
-            }
-        });
-    }
-
-
-=======
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     public void fetchLocationsByRange(Location location, double range, final FirebaseCallback firebaseCallback) {
         LocationDatabaseRepository.getInstance().fetchLocationsByRange(
                 location.getLatitude(),
                 location.getLongitude(),
                 range,
-<<<<<<< HEAD
-                new FirebaseCallback() {
-                    @Override
-                    public void callback(Object object) {
-                        if (object != null) {
-                            firebaseCallback.callback(DbModels._Location.convertToLocationList(
-                                    (List<DbModels._Location>) object
-                            ));
-                        }
-=======
                 object -> {
                     if (object != null) {
                         firebaseCallback.callback(_Location.convertToLocationList(
                                 (List<_Location>) object
                         ));
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     }
                 }
         );

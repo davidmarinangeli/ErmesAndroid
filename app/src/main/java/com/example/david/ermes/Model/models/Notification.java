@@ -12,10 +12,6 @@ import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.repository.NotificationRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-<<<<<<< HEAD
-import com.google.firebase.database.FirebaseDatabase;
-=======
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +22,7 @@ public class Notification implements Parcelable {
     private String idCreator;
     private String idOwner;
     private String idMatch;
-<<<<<<< HEAD
-=======
     private String idTeam;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     private String title;
     private String text;
     private NotificationType type;
@@ -39,21 +32,13 @@ public class Notification implements Parcelable {
     public Notification() {
     }
 
-<<<<<<< HEAD
-    public Notification(String id, String idCreator, String idOwner, String idMatch, String title,
-                        String text, NotificationType type, boolean read, long date) {
-=======
     public Notification(String id, String idCreator, String idOwner, String idMatch, String idTeam,
                         String title, String text, NotificationType type, boolean read, long date) {
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         this.id = id;
         this.idCreator = idCreator;
         this.idOwner = idOwner;
         this.idMatch = idMatch;
-<<<<<<< HEAD
-=======
         this.idTeam = idTeam;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         this.title = title;
         this.text = text;
         this.type = type;
@@ -61,20 +46,12 @@ public class Notification implements Parcelable {
         this.date = date;
     }
 
-<<<<<<< HEAD
-    public Notification(String idCreator, String idOwner, String idMatch, String title, String text,
-                        NotificationType type, boolean read, long date) {
-        this.idCreator = idCreator;
-        this.idOwner = idOwner;
-        this.idMatch = idMatch;
-=======
     public Notification(String idCreator, String idOwner, String idMatch, String idTeam,
                         String title, String text, NotificationType type, boolean read, long date) {
         this.idCreator = idCreator;
         this.idOwner = idOwner;
         this.idMatch = idMatch;
         this.idTeam = idTeam;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         this.title = title;
         this.text = text;
         this.type = type;
@@ -87,10 +64,7 @@ public class Notification implements Parcelable {
         idCreator = in.readString();
         idOwner = in.readString();
         idMatch = in.readString();
-<<<<<<< HEAD
-=======
         idTeam = in.readString();
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         title = in.readString();
         text = in.readString();
         type = NotificationType.getNotificationTypeFromString(in.readString());
@@ -129,10 +103,7 @@ public class Notification implements Parcelable {
                 this.idCreator,
                 this.idOwner,
                 this.idMatch,
-<<<<<<< HEAD
-=======
                 this.idTeam,
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                 this.title,
                 this.text,
                 this.type.toString(),
@@ -147,11 +118,7 @@ public class Notification implements Parcelable {
         if (idGuestUser != null && !idGuestUser.isEmpty() &&
                 idMatch != null && !idMatch.isEmpty() && user != null) {
 
-<<<<<<< HEAD
-            return new Notification(user.getUid(), idGuestUser, idMatch, "Nuovo invito",
-=======
             return new Notification(user.getUid(), idGuestUser, idMatch, "", "Nuovo invito",
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     user.getDisplayName() + " ti ha invitato ad una nuova partita!",
                     NotificationType.MATCH_INVITE_USER, false, System.currentTimeMillis());
         }
@@ -161,11 +128,7 @@ public class Notification implements Parcelable {
 
     public static Notification createFriendshipRequest(User creator, String idUser) {
         if (idUser != null && !idUser.isEmpty() && creator != null) {
-<<<<<<< HEAD
-            return new Notification(creator.getUID(), idUser, "", "Nuova richiesta di amicizia",
-=======
             return new Notification(creator.getUID(), idUser, "", "", "Nuova richiesta di amicizia",
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     creator.getName() + " ti ha inviato una richiesta di amicizia.\n" +
                             "Rispondi subito o visita il suo profilo!",
                     NotificationType.FRIENDSHIP_REQUEST, false, System.currentTimeMillis());
@@ -176,11 +139,7 @@ public class Notification implements Parcelable {
 
     public static Notification createFriendshipAccepted(User creator, String idUser) {
         if (idUser != null && !idUser.isEmpty() && creator != null) {
-<<<<<<< HEAD
-            return new Notification(creator.getUID(), idUser, "", "Richiesta di amicizia",
-=======
             return new Notification(creator.getUID(), idUser, "", "", "Richiesta di amicizia",
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     creator.getName() + " ha accettato la tua richiesta di amicizia, visita" +
                             " il suo profilo!", NotificationType.FRIENDSHIP_ACCEPTED, false,
                     System.currentTimeMillis());
@@ -189,8 +148,6 @@ public class Notification implements Parcelable {
         return null;
     }
 
-<<<<<<< HEAD
-=======
     public static Notification createTeamAdded(User creator, String userId, Team team) {
         if (creator != null && team != null && userId != null && !userId.isEmpty()) {
             return new Notification(creator.getUID(), userId, "", team.getId(), "Nuovo team",
@@ -211,7 +168,6 @@ public class Notification implements Parcelable {
         return null;
     }
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     public static List<_Notification> convertTo_NotificationList(List<Notification> list) {
         List<_Notification> l = new ArrayList<>();
 
@@ -270,8 +226,6 @@ public class Notification implements Parcelable {
         this.idMatch = idMatch;
     }
 
-<<<<<<< HEAD
-=======
     public String getIdTeam() {
         return idTeam;
     }
@@ -280,7 +234,6 @@ public class Notification implements Parcelable {
         this.idTeam = idTeam;
     }
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     public String getTitle() {
         return title;
     }
@@ -338,10 +291,7 @@ public class Notification implements Parcelable {
         parcel.writeString(idCreator);
         parcel.writeString(idOwner);
         parcel.writeString(idMatch);
-<<<<<<< HEAD
-=======
         parcel.writeString(idTeam);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         parcel.writeString(title);
         parcel.writeString(text);
         parcel.writeString(type.toString());

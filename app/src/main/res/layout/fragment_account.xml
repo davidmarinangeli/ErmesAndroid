@@ -269,20 +269,12 @@
                     android:id="@+id/cardViewFriends"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-<<<<<<< HEAD
-                    android:layout_marginBottom="8dp"
-=======
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:clickable="true"
                     card_view:cardCornerRadius="2dp"
                     card_view:cardElevation="2dp"
-<<<<<<< HEAD
-                    card_view:layout_constraintBottom_toBottomOf="parent"
-=======
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     card_view:layout_constraintEnd_toEndOf="parent"
                     card_view:layout_constraintStart_toStartOf="parent"
                     card_view:layout_constraintTop_toBottomOf="@+id/myMatchesCard">
@@ -337,8 +329,6 @@
 
                 </android.support.v7.widget.CardView>
 
-<<<<<<< HEAD
-=======
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     xmlns:tools="http://schemas.android.com/tools"
                     android:id="@+id/cardViewTeams"
@@ -380,7 +370,7 @@
                             android:layout_marginBottom="8dp"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
-                            android:text="Team"
+                            android:text="@string/team"
                             android:textSize="20sp"
                             card_view:layout_constraintBottom_toBottomOf="parent"
                             card_view:layout_constraintRight_toLeftOf="@+id/imageArrow4"
@@ -416,7 +406,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardViewTeams" />
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
             </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>

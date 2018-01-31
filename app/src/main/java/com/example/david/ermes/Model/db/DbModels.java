@@ -321,10 +321,7 @@ public class DbModels {
         public String idCreator;
         public String idOwner;
         public String idMatch;
-<<<<<<< HEAD
-=======
         public String idTeam;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         public String title;
         public String text;
         public String type;
@@ -335,20 +332,13 @@ public class DbModels {
 
         public _Notification() {}
 
-<<<<<<< HEAD
-        public _Notification(String id, String idCreator, String idOwner, String idMatch,
-=======
         public _Notification(String id, String idCreator, String idOwner, String idMatch, String idTeam,
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                              String title, String text, String type, boolean read, long date) {
             this.id = id;
             this.idCreator = idCreator;
             this.idOwner = idOwner;
             this.idMatch = idMatch;
-<<<<<<< HEAD
-=======
             this.idTeam = idTeam;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
             this.title = title;
             this.text = text;
             this.type = type;
@@ -368,10 +358,7 @@ public class DbModels {
                     this.idCreator,
                     this.idOwner,
                     this.idMatch,
-<<<<<<< HEAD
-=======
                     this.idTeam,
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     this.title,
                     this.text,
                     NotificationType.getNotificationTypeFromString(this.type),
@@ -389,8 +376,6 @@ public class DbModels {
 
             return l;
         }
-<<<<<<< HEAD
-=======
     }
 
     public static class _Team {
@@ -430,6 +415,5 @@ public class DbModels {
 
             return result;
         }
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     }
 }

@@ -27,11 +27,8 @@ import java.util.List;
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
 
     private List<Match> matchList = new ArrayList<>();
-<<<<<<< HEAD
-=======
     private int other_sports_match_index = 0;
     private String favSportName;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     private Context context;
     private ProgressDialog progressDialog;
 
@@ -106,12 +103,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         public MainViewHolder(final View itemView) {
             super(itemView);
 
-<<<<<<< HEAD
-=======
             container = itemView.findViewById(R.id.default_event_container);
             card = itemView.findViewById(R.id.default_event_card);
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
             // qui setto il costruttore del viewholder
             user_fav_sport_label = itemView.findViewById(R.id.user_fav_sport_label);
             user_fav_sport_label_text = itemView.findViewById(R.id.user_fav_sport_label_text);
@@ -124,18 +118,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
             //settare l'onclicklistener qui :)
             itemView.setOnClickListener(view -> {
-<<<<<<< HEAD
-                itemView.setActivated(false);
-                
-                Intent i = new Intent(context, EventActivity.class);
-
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("event", matchList.get(getAdapterPosition()));
-                i.putExtras(bundle);
-                context.startActivity(i);
-
-                itemView.setActivated(true);
-=======
                 itemView.setEnabled(false);
                 progressDialog.show();
 
@@ -148,7 +130,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
                 progressDialog.dismiss();
                 itemView.setEnabled(true);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
             });
         }
 

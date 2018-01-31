@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-=======
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -28,25 +20,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-<<<<<<< HEAD
-    <TextView
-        android:id="@+id/no_friends_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="italic"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:layout_marginVertical="16dp"
-        android:text="Nessun amico" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/friends_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical" />
-
-</LinearLayout>
-=======
     <LinearLayout
         android:id="@+id/activity_friends_container"
         android:layout_width="match_parent"
@@ -86,4 +59,3 @@
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f

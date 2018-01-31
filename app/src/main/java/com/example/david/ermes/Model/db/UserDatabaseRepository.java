@@ -76,18 +76,9 @@ public class UserDatabaseRepository {
 
     public void save(String id, _User user, FirebaseCallback firebaseCallback) {
         this.usersRef.child(id).setValue(user).addOnCompleteListener(
-<<<<<<< HEAD
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (firebaseCallback != null) {
-                            firebaseCallback.callback(null);
-                        }
-=======
                 task -> {
                     if (firebaseCallback != null) {
                         firebaseCallback.callback(null);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     }
                 }
         );

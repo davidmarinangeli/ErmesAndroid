@@ -8,28 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-<<<<<<< HEAD
-import android.widget.TextView;
-=======
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Notification;
-<<<<<<< HEAD
-import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
-import com.example.david.ermes.Model.repository.FriendshipRepository;
-import com.example.david.ermes.Model.repository.NotificationRepository;
-import com.example.david.ermes.Model.repository.SportRepository;
-import com.example.david.ermes.Model.repository.UserRepository;
-import com.example.david.ermes.Presenter.OnUserListFetchEnd;
-=======
-import com.example.david.ermes.Model.models.User;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 import com.example.david.ermes.Presenter.UserListPresenter;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
@@ -38,14 +24,9 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
-import java.util.List;
-import java.util.Map;
-=======
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
 /**
  * Created by nicol on 15/01/2018.
@@ -58,10 +39,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
     }
 
     private int refreshCount = 0;
-<<<<<<< HEAD
-=======
     private ProgressDialog progressDialog;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
     private List<User> userList;
     private List<Notification> myRequestList;
@@ -74,21 +52,15 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
 
     private User currentUser;
 
-<<<<<<< HEAD
-=======
     private int teamsSeparatorIndex;
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     public UserListAdapter(Context context) {
         this.context = context;
         sportList = new ArrayList<>();
 
         presenter = new UserListPresenter();
-<<<<<<< HEAD
-=======
         teamsSeparatorIndex = 0;
         progressDialog = new ProgressDialog(context);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     }
 
     @Override
@@ -125,11 +97,6 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
         toMeRequestList = toMeFriendshipRequests;
         sportList = sports;
 
-<<<<<<< HEAD
-        notifyDataSetChanged();
-    }
-
-=======
         teamsSeparatorIndex = 0;
 
         notifyDataSetChanged();
@@ -155,7 +122,6 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
         }
     }
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     private void setPresenterCallback(FirebaseCallback firebaseCallback) {
         presenter.setOnUserListFetchEnd((users, friendships, myFriendshipRequests,
                                          toMeFriendshipRequests, sports) -> {
@@ -168,28 +134,19 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
                     firebaseCallback.callback(0);
                 }
             }
-<<<<<<< HEAD
-=======
 
             progressDialog.dismiss();
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         });
     }
 
     public void refreshFriendList(FirebaseCallback firebaseCallback) {
-<<<<<<< HEAD
-=======
         progressDialog.show();
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         setPresenterCallback(firebaseCallback);
         presenter.prepareFriendList();
     }
 
     public void refreshUserList(List<String> userIdList, FirebaseCallback firebaseCallback) {
-<<<<<<< HEAD
-=======
         progressDialog.show();
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         setPresenterCallback(firebaseCallback);
         presenter.prepareList(userIdList);
     }
@@ -201,11 +158,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
         TextView friendshipDate;
         CircularImageView friendImage;
         Button friendshipRequestButton;
-<<<<<<< HEAD
-=======
         LinearLayout teamLabel;
         TextView teamLabelText;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
         View itemView;
         UserListPresenter.RelationType relationType;
@@ -219,11 +173,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
             friendshipDate = itemView.findViewById(R.id.friendship_date);
             friendImage = itemView.findViewById(R.id.friend_image);
             friendshipRequestButton = itemView.findViewById(R.id.friendship_request_button);
-<<<<<<< HEAD
-=======
             teamLabel = itemView.findViewById(R.id.random_team_label);
             teamLabelText = itemView.findViewById(R.id.random_team_label_text);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
             this.itemView = itemView;
             this.itemView.setOnClickListener(view -> {
@@ -241,38 +192,26 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
 
                 switch (relationType) {
                     case NO_RELATION:
-<<<<<<< HEAD
-=======
                         progressDialog.show();
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                         User user = userList.get(getAdapterPosition());
                         Friendship.requestFriendshipTo(currentUser, user.getUID(), object -> {
                             presenter.updateMyFriendhipRequest(getAdapterPosition(),
                                     (Notification) object);
-<<<<<<< HEAD
-=======
 
                             progressDialog.dismiss();
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                             notifyDataSetChanged();
                         });
                         break;
                     case REPLY_REQUEST:
-<<<<<<< HEAD
-=======
                         progressDialog.show();
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                         Notification request = toMeRequestList.get(getAdapterPosition());
                         Friendship.acceptRequest(currentUser, request, object -> {
                             presenter.updateFriendship(getAdapterPosition(),
                                     (Friendship) object);
-<<<<<<< HEAD
-=======
 
                             progressDialog.dismiss();
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                             notifyDataSetChanged();
                         });
                         break;
@@ -284,8 +223,6 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
 
         public void bind(int position) {
             if (userList != null && userList.size() > 0) {
-<<<<<<< HEAD
-=======
                 if (teamsSeparatorIndex > 0 && (position == teamsSeparatorIndex || position == 0)) {
                     teamLabel.setVisibility(View.VISIBLE);
 
@@ -298,7 +235,6 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
                     teamLabel.setVisibility(View.GONE);
                 }
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                 relationType = getRelationType(getAdapterPosition());
                 User user = userList.get(position);
                 String sport = sportList.get(position);
@@ -318,11 +254,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
                     String info = String.format("%s anni",
                             String.valueOf(TimeUtils.getAgeFromBirth(user.getBirthDate())));
                     if (sport != null && !sport.isEmpty()) {
-<<<<<<< HEAD
-                        info += " | " + sport;
-=======
                         info += ", " + sport;
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     }
                     friendInfo.setText(info);
 

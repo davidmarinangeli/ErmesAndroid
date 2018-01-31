@@ -31,10 +31,7 @@ public class FriendsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
-<<<<<<< HEAD
-=======
         findViewById(R.id.create_random_teams_button).setVisibility(View.GONE);
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
         currentUser = getIntent().getExtras().getParcelable("user");
 

@@ -73,7 +73,6 @@ dependencies {
     compile "com.android.support:support-v13:${support}"
     compile "com.android.support:support-v4:${support}"
     compile "com.android.support:design:${support}"
-    compile "com.android.support:design:${support}"
     compile "com.android.support:appcompat-v7:${support}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
@@ -90,16 +89,16 @@ dependencies {
 
     // ** END FIREBASE **
 
+    // dialogflow
+    compile 'ai.api:sdk:2.0.7@aar'
+    compile 'ai.api:libai:1.6.12'
+
     //custom libraries
     implementation 'com.github.AdityaAnand1:Morphing-Material-Dialogs:0.0.1-alpha8'
     compile 'com.afollestad.material-dialogs:core:0.9.3.0'
     compile 'com.github.tylersuehr7:chips-input-layout:1.3'
-<<<<<<< HEAD
-    compile 'com.github.xmuSistone:VegaLayoutManager:master-SNAPSHOT'
-=======
     compile 'com.stone.vega.library:VegaLayoutManager:1.0.6'
 
->>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.mikhaellopez:circularimageview:3.0.2'
     compile 'com.aurelhubert:ahbottomnavigation:2.0.6'

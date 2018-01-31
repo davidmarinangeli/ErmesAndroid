@@ -1,7 +1,5 @@
 package com.example.david.ermes.Model.db;
 
-import android.util.Log;
-
 import com.example.david.ermes.Model.db.DbModels._Sport;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -81,32 +79,6 @@ public class SportDatabaseRepository {
         }
     }
 
-    public void fetchSportByName(final String name, final FirebaseCallback firebaseCallback) {
-        if (name != null && name.length() > 0) {
-
-            Query query = this.ref.orderByChild("name").equalTo(name);
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot d : dataSnapshot.getChildren()) {
-                        _Sport sport = d.getValue(_Sport.class);
-
-                        sport.setID(d.getKey());
-                        firebaseCallback.callback(sport);
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        } else {
-            firebaseCallback.callback(null);
-        }
-    }
-
     public void fetchAllSports(final FirebaseCallback fc) {
         final List<_Sport> list = new ArrayList<>();
         this.ref.addValueEventListener(new ValueEventListener() {
@@ -117,7 +89,6 @@ public class SportDatabaseRepository {
                 // DbModels._User value = dataSnapshot.getValue(DbModels._User.class);
                 list.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    Log.d("DATASNAPSHOT", d.toString());
                     _Sport sport = d.getValue(_Sport.class);
                     sport.setID(d.getKey());
 
