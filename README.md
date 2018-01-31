@@ -1,10 +1,10 @@
 # Ermes
 
-Ermes è un'app Android che permette di organizzare partite amatoriali e di aggiungere nuovi campi da gioco pubblici per diversi sport. 
+Ermes Ã¨ un'app Android che permette di organizzare partite amatoriali e di aggiungere nuovi campi da gioco pubblici per diversi sport.
 
-## Getting Started
+## Cosa fa Ermes? 
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+ommunity di sportivi tramite l'organizzazione di partite, creazione di team, richieste di amicizia e 
 
 ### Prerequisites
 
