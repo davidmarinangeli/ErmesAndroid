@@ -1,4 +1,4 @@
-package com.example.david.ermes.View.activities;
+package com.example.david.ermes.Presenter;
 
 import android.Manifest;
 import android.app.Activity;
@@ -126,6 +126,7 @@ public class Dialogflow implements AIListener {
                         }
                         break;
                     case VISIBILITY_KEY:
+                        match.setPublic(entry.getValue().getAsString().equals("Pubblica"));
                         break;
                     default:
                         break;
@@ -133,7 +134,7 @@ public class Dialogflow implements AIListener {
                 }
             }
         }
-        Toast.makeText(activity.getBaseContext(),results,Toast.LENGTH_LONG).show();
+        Toast.makeText(activity.getBaseContext(), results, Toast.LENGTH_LONG).show();
 
         if (result.getParameters().get("Sport") != null) {
             String sport = result.getParameters().get("Sport").getAsString();

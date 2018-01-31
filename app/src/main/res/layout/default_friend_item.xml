@@ -12,28 +12,21 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorPrimaryDarker"/>
-
         <TextView
             android:id="@+id/random_team_label_text"
-            android:layout_width="match_parent"
+            android:fontFamily="@font/alfaslab"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/mainLabelBackground"
-            android:padding="8dp"
-            android:text="Il tuo sport"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
             android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Il tuo sport" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorPrimaryDarker"/>
 
     </LinearLayout>
 

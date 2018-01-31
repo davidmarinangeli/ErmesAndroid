@@ -4,6 +4,7 @@ package com.example.david.ermes.View.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.david.ermes.Model.db.DatabaseManager;
+import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Sport;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.SportRepository;
@@ -99,14 +101,14 @@ public class AccountFragment extends Fragment {
 
             });
         } else {
-
             main_scrollview.setVisibility(View.VISIBLE);
             welcome_button.setVisibility(View.GONE);
             welcome_text.setVisibility(View.GONE);
             appIcon.setVisibility(View.GONE);
             welcomeDescription.setVisibility(View.GONE);
 
-            onViewCreated(getView(),null);
+            initComponents();
+            onViewCreated(getView(), null);
         }
 
     }
@@ -194,25 +196,47 @@ public class AccountFragment extends Fragment {
     }
 
     private void initComponents() {
-        if (currentUser != null) {
-            name.setText(currentUser.getName());
-            age.setText(String.valueOf(TimeUtils.getAgeFromBirth(currentUser.getBirthDate())));
+        if (DatabaseManager.get().isLogged()) {
+            fetchUser(object -> {
+                if (currentUser != null){
+                    init();
+                } else {
+                    Snackbar.make(getView(),"Errore nello scaricamento dati Account",Snackbar.LENGTH_LONG).show();
+                }
+            });
 
-            if (currentUser.getPhotoURL() != null && !currentUser.getPhotoURL().isEmpty()) {
-                Picasso.with(getContext()).load(currentUser.getPhotoURL()).into(image_account);
-            } else {
-                Picasso.with(getContext()).load(R.drawable.user_placeholder).into(image_account);
-            }
+        }
+    }
 
-            cover.setImageResource(User.getSportCoverForFavouriteSport(Integer.valueOf(currentUser.getIdFavSport()),getContext()));
-            SportRepository.getInstance().fetchSportById(currentUser.getIdFavSport(),
-                    object -> {
-                        Sport fetch_sport = (Sport) object;
+    private void init() {
+        name.setText(currentUser.getName());
+        age.setText(String.valueOf(TimeUtils.getAgeFromBirth(currentUser.getBirthDate())));
 
-                        if (fetch_sport != null) {
-                            sport.setText(fetch_sport.getName());
-                        }
-                    });
+        if (currentUser.getPhotoURL() != null && !currentUser.getPhotoURL().isEmpty()) {
+            Picasso.with(getContext()).load(currentUser.getPhotoURL()).into(image_account);
+        } else {
+            Picasso.with(getContext()).load(R.drawable.user_placeholder).into(image_account);
+        }
+
+        cover.setImageResource(User.getSportCoverForFavouriteSport(Integer.valueOf(currentUser.getIdFavSport()), getContext()));
+        SportRepository.getInstance().fetchSportById(currentUser.getIdFavSport(),
+                object -> {
+                    Sport fetch_sport = (Sport) object;
+
+                    if (fetch_sport != null) {
+                        sport.setText(fetch_sport.getName());
+                    }
+                });
+    }
+
+    private void fetchUser(FirebaseCallback cl) {
+        if (currentUser == null) {
+            UserRepository.getInstance().getUser(object -> {
+                currentUser = (User) object;
+                cl.callback(currentUser);
+            });
+        } else {
+            cl.callback(currentUser);
         }
     }
 
