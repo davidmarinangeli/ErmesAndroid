@@ -72,7 +72,7 @@
         <activity android:name=".View.activities.SignUpActivity" />
         <activity android:name=".View.activities.PickFriendsActivity" />
         <activity android:name=".View.activities.CustomizeProfileActivity" />
-        <activity android:name=".View.activities.Dialogflow"/>
+        <activity android:name=".Presenter.Dialogflow"/>
         <activity android:name=".View.activities.TeamActivity" />
         <activity android:name=".View.activities.TeamsActivity" />
         <activity

@@ -14,6 +14,9 @@ L'unico requisito per poter installare l'applicazione è avere uno smartphone co
 
 ### Installazione
 
+Si può scaricare l'APK sul proprio dispositivo attraverso 
+ [questo link](https://drive.google.com/file/d/1r_BN19eDrULXr4I1pwZAl1fveYB3W2oz/view?usp=sharing) oppure clonare il progetto
+
 ```
 git clone https://github.com/davidmarinangeli/ErmesAndroid.git
 ```
@@ -61,13 +64,11 @@ l'applicazione riempirà i campi con quello che avrà ascoltato.
 Esempio
 
 ```
-Crea una partita privata di calcetto domani alle 18:00 per 10 persone
+_Crea una partita privata di calcetto domani alle 18:00 per 10 persone_
 ```
-
 oppure
-
 ```
-Aggiungi un evento pubblico di basket il 28 ottobre alle 20 con 5 giocatori
+_Aggiungi un evento pubblico di basket il 28 ottobre alle 20 con 5 giocatori_
 ```
 
 Altri campi come il luogo e gli oggetti mancanti sono ancora in fase di sviluppo/test e per il momento vanno riempiti a mano.

@@ -60,7 +60,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initRecycler(view);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initRecycler(getView());
     }
 
     private void initRecycler(final View rootView) {

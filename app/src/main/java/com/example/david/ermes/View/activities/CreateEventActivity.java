@@ -33,6 +33,7 @@ import com.example.david.ermes.Model.repository.LocationRepository;
 import com.example.david.ermes.Model.repository.MatchRepository;
 import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Presenter.CreateEventPresenter;
+import com.example.david.ermes.Presenter.Dialogflow;
 import com.example.david.ermes.Presenter.utils.LocationUtils;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
@@ -205,6 +206,7 @@ public class CreateEventActivity extends AppCompatActivity {
                     Calendar hour = Calendar.getInstance();
                     hour.setTime(voice_match.getDate());
 
+                    match_calendar_time.setTime(voice_match.getDate());
                     event_orario_textview.setText(TimeUtils.getFormattedHourMinute(hour));
                     event_data_textview.setText(TimeUtils.fromMillistoYearMonthDay(voice_match.getDate().getTime()));
                 }
@@ -342,7 +344,8 @@ public class CreateEventActivity extends AppCompatActivity {
         }
 
         if (selected_sport_string != null && selected_location != null) {
-            createEventPresenter.getMatch(match_calendar_time.getTimeInMillis(),
+            createEventPresenter.getMatch(
+                    match_calendar_time.getTimeInMillis(),
                     selected_sport_string,
                     selected_location,
                     chips_title_list,
