@@ -58,8 +58,6 @@ public class AccountFragment extends Fragment {
 
     private ImageView cover;
 
-    private Button team_create_btn;
-
     public AccountFragment() {
         // Required empty public constructor
     }
@@ -128,28 +126,12 @@ public class AccountFragment extends Fragment {
         teamsCard = view.findViewById(R.id.cardViewTeams);
         customizeProfileCard = view.findViewById(R.id.myProfileCard);
 
-        team_create_btn = view.findViewById(R.id.teamCreateButton);
-
         main_scrollview = view.findViewById(R.id.account_nested_scrollview);
 
         welcome_button = view.findViewById(R.id.open_login);
-        welcome_text = view.findViewById(R.id.welcome_button);
+        welcome_text = view.findViewById(R.id.welcome_title_welcome_ancora);
         appIcon = view.findViewById(R.id.welcome_icon);
         welcomeDescription = view.findViewById(R.id.welcome_descrption);
-
-        if (currentUser == null) {
-            // se sto vedendo il mio account
-            UserRepository.getInstance().getUser(object -> {
-                currentUser = (User) object;
-
-                team_create_btn.setVisibility(View.VISIBLE);
-                initComponents();
-            });
-        } else {
-            // se sto vedendo l'account di altri
-            team_create_btn.setVisibility(View.GONE);
-            initComponents();
-        }
 
         myMatchesCard.setOnClickListener(view1 -> {
             if (currentUser != null) {
@@ -207,15 +189,6 @@ public class AccountFragment extends Fragment {
             Intent i = new Intent(getContext(), TeamsActivity.class);
             i.putExtra(TeamsActivity.ACTIVITY_CODE_KEY, TeamsActivity.VIEW_CODE);
             startActivity(i);
-        });
-
-        team_create_btn.setOnClickListener(view14 -> {
-            Bundle extras = new Bundle();
-            extras.putString(TeamActivity.ACTIVITY_TYPE_KEY, TeamActivity.CREATE_TEAM);
-
-            Intent teamActivity = new Intent(view14.getContext(), TeamActivity.class);
-            teamActivity.putExtras(extras);
-            startActivity(teamActivity);
         });
 
     }

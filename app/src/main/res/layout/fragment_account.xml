@@ -396,17 +396,6 @@
 
                 </android.support.v7.widget.CardView>
 
-                <Button
-                    android:id="@+id/teamCreateButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:text="Crea un team"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cardViewTeams" />
-
             </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
@@ -428,17 +417,18 @@
             app:layout_constraintBottom_toTopOf="@+id/welcome_descrption"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_button"
+            app:layout_constraintTop_toBottomOf="@+id/welcome_title_welcome_ancora"
             app:srcCompat="@drawable/welcome_icon" />
 
         <TextView
-            android:id="@+id/welcome_button"
+            android:id="@+id/welcome_title_welcome_ancora"
+            android:fontFamily="@font/alfaslab"
             android:layout_width="252dp"
             android:layout_height="38dp"
             android:layout_marginTop="24dp"
             android:text="Benvenuto in Ermes"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="28sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

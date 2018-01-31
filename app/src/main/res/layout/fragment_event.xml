@@ -58,7 +58,7 @@
                     android:layout_marginEnd="4dp"
                     android:background="@null"
                     android:padding="12dp"
-                    android:src="@drawable/ic_group_add_black_24dp"
+                    android:src="@drawable/ic_group_add_white_24dp"
                     android:tint="@color/white" />
 
                 <ImageButton

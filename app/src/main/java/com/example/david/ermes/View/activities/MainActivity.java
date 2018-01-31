@@ -42,10 +42,15 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private CoolViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
+
     private FloatingActionMenu menu;
+
     private AHBottomNavigation bottomNavigation;
+
     private FloatingActionButton default_event_fab;
     private FloatingActionButton add_place_fab;
+    private FloatingActionButton create_team_fab;
+
     private ImageButton notificationsButton;
 
     AHBottomNavigationItem left_item;
@@ -66,14 +71,15 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.app_name);
 
         menu = findViewById(R.id.main_fab_menu);
         menu.setAnimated(true);
         menu.setClosedOnTouchOutside(true);
 
         default_event_fab = findViewById(R.id.addefaultevent);
+
         add_place_fab = findViewById(R.id.addplace);
+        create_team_fab = findViewById(R.id.teamCreateButton);
 
         notificationsButton = findViewById(R.id.toolbar_notifications_button);
         notification_anim = new ValueAnimator();
@@ -100,22 +106,45 @@ public class MainActivity extends AppCompatActivity {
 
             default_event_fab.setLabelVisibility(View.INVISIBLE);
             add_place_fab.setLabelVisibility(View.INVISIBLE);
+            create_team_fab.setLabelVisibility(View.INVISIBLE);
+
+            create_team_fab.setColorNormal(create_team_fab.getColorDisabled());
+            create_team_fab.setColorPressed(R.color.inactive_pressed);
 
             default_event_fab.setColorNormal(default_event_fab.getColorDisabled());
             default_event_fab.setColorPressed(R.color.inactive_pressed);
+
             add_place_fab.setColorNormal(add_place_fab.getColorDisabled());
             add_place_fab.setColorPressed(R.color.inactive_pressed);
 
         } else {
 
+            create_team_fab.setColorNormal(getResources().getColor(R.color.colorPrimary));
+            create_team_fab.setColorPressed(getResources().getColor(R.color.colorPrimaryDark));
+
             default_event_fab.setColorNormal(getResources().getColor(R.color.colorPrimary));
             default_event_fab.setColorPressed(getResources().getColor(R.color.colorPrimaryDark));
+
             add_place_fab.setColorNormal(getResources().getColor(R.color.colorPrimary));
             add_place_fab.setColorPressed(getResources().getColor(R.color.colorPrimaryDark));
         }
 
 
         default_event_fab.setColorFilter(R.color.white);
+
+        create_team_fab.setOnClickListener(view -> {
+            if (!DatabaseManager.get().isLogged()) {
+                Snackbar.make(add_place_fab, "Registrati per aggiungere un luogo", Snackbar.LENGTH_LONG).show();
+            } else {
+                Bundle extras = new Bundle();
+                extras.putString(TeamActivity.ACTIVITY_TYPE_KEY, TeamActivity.CREATE_TEAM);
+
+                Intent teamActivity = new Intent(this, TeamActivity.class);
+                teamActivity.putExtras(extras);
+                startActivity(teamActivity);
+            }
+        });
+
         default_event_fab.setOnClickListener(view1 -> {
             if (!DatabaseManager.get().isLogged()) {
                 Snackbar.make(default_event_fab, "Registrati per creare una partita",
