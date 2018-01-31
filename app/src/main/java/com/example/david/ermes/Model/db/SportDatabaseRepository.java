@@ -1,7 +1,5 @@
 package com.example.david.ermes.Model.db;
 
-import android.util.Log;
-
 import com.example.david.ermes.Model.db.DbModels._Sport;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -91,7 +89,6 @@ public class SportDatabaseRepository {
                 // DbModels._User value = dataSnapshot.getValue(DbModels._User.class);
                 list.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    Log.d("DATASNAPSHOT", d.toString());
                     _Sport sport = d.getValue(_Sport.class);
                     sport.setID(d.getKey());
 
