@@ -88,6 +88,10 @@ dependencies {
 
     // ** END FIREBASE **
 
+    // dialogflow
+    compile 'ai.api:sdk:2.0.7@aar'
+    compile 'ai.api:libai:1.6.12'
+
     //custom libraries
     implementation 'com.github.AdityaAnand1:Morphing-Material-Dialogs:0.0.1-alpha8'
     compile 'com.afollestad.material-dialogs:core:0.9.3.0'
