@@ -16,20 +16,18 @@
 
         <TextView
             android:id="@+id/user_fav_sport_label_text"
+            android:fontFamily="@font/alfaslab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:padding="8dp"
-            android:text="Il tuo sport"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="22sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Il tuo sport" />
 
     </android.support.constraint.ConstraintLayout
      >

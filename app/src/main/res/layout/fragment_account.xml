@@ -417,17 +417,18 @@
             app:layout_constraintBottom_toTopOf="@+id/welcome_descrption"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_button"
+            app:layout_constraintTop_toBottomOf="@+id/welcome_title_welcome_ancora"
             app:srcCompat="@drawable/welcome_icon" />
 
         <TextView
-            android:id="@+id/welcome_button"
+            android:id="@+id/welcome_title_welcome_ancora"
+            android:fontFamily="@font/alfaslab"
             android:layout_width="252dp"
             android:layout_height="38dp"
             android:layout_marginTop="24dp"
             android:text="Benvenuto in Ermes"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="28sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

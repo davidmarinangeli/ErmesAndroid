@@ -129,7 +129,7 @@ public class AccountFragment extends Fragment {
         main_scrollview = view.findViewById(R.id.account_nested_scrollview);
 
         welcome_button = view.findViewById(R.id.open_login);
-        welcome_text = view.findViewById(R.id.welcome_button);
+        welcome_text = view.findViewById(R.id.welcome_title_welcome_ancora);
         appIcon = view.findViewById(R.id.welcome_icon);
         welcomeDescription = view.findViewById(R.id.welcome_descrption);
 
