@@ -3,6 +3,7 @@ package com.example.david.ermes.View;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -92,7 +93,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
         LinearLayout container;
         CardView card;
-        LinearLayout user_fav_sport_label;
+        ConstraintLayout user_fav_sport_label;
         TextView user_fav_sport_label_text;
 
         TextView date_of_event;
@@ -138,6 +139,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
             // se l'utente è loggato e ci sono match del suo sport preferito
             if (other_sports_match_index > 0) {
                 if (position == 0) {
+
                     user_fav_sport_label_text.setText(favSportName);
                     user_fav_sport_label.setVisibility(View.VISIBLE);
                 } else if (position == other_sports_match_index) {
