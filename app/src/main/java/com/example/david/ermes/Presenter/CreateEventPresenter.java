@@ -25,12 +25,20 @@ public class CreateEventPresenter {
         this.createEventActivity = createEventActivity;
     }
 
+<<<<<<< HEAD
     public void saveMatch(final long timeInMillis,
+=======
+    public void getMatch(final long timeInMillis,
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                           final String sport,
                           final Location selected_location,
                           final ArrayList<MissingStuffElement> chips_title_list,
                           final boolean checked,
+<<<<<<< HEAD
                           String maxplayers) {
+=======
+                          String maxplayers, FirebaseCallback firebaseCallback) {
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
         UserRepository.getInstance().getUser(object -> {
             if (object != null) {
@@ -63,9 +71,16 @@ public class CreateEventPresenter {
 
 
                         result_match.addPartecipant(current_user.getUID());
+<<<<<<< HEAD
                         result_match.save();
 
                         createEventActivity.goToMainActivity(result_match);
+=======
+
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(result_match);
+                        }
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     }
                 });
             }

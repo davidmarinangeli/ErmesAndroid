@@ -23,6 +23,10 @@ import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.SportRepository;
 import com.example.david.ermes.Presenter.utils.TimeUtils;
 import com.example.david.ermes.R;
+<<<<<<< HEAD
+=======
+import com.example.david.ermes.View.ProgressDialog;
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -61,6 +65,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private Place place_selected;
 
     private String photoURL = "";
+<<<<<<< HEAD
+=======
+    private ProgressDialog progressDialog;
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
     private final int PLACE_AUTOCOMPLETE_CODE = 1;
 
@@ -69,6 +77,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+<<<<<<< HEAD
+=======
+        progressDialog = new ProgressDialog(this);
+
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         result_intent = getIntent();
 
         // prendo l'istanza del FBAuth
@@ -168,6 +181,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void signUpNormal(final String name, final String email, final String password, final String city) {
+<<<<<<< HEAD
+=======
+        progressDialog.show();
+
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -189,8 +207,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             } else {
                                 Snackbar.make(getWindow().getDecorView(), "Errore nella ricerca dello sport", Snackbar.LENGTH_LONG)
                                         .setAction(":(", null);
+<<<<<<< HEAD
 
                             }
+=======
+                            }
+
+                            progressDialog.dismiss();
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                         });
 
                     } else {
@@ -198,6 +222,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
                         Toast.makeText(SignUpActivity.this, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
+<<<<<<< HEAD
+=======
+
+                        progressDialog.dismiss();
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                     }
 
                     // ...
@@ -251,6 +280,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void manageNewGoogleUser() {
         if (isAllFilled(2)) {
+<<<<<<< HEAD
+=======
+            progressDialog.show();
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
 
             SportRepository.getInstance().fetchSportByName(selected_sport, object -> {
                 Sport found_sport = (Sport) object;
@@ -262,7 +295,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         found_sport.getID(),
                         photoURL,
                         born_date_calendar.getTimeInMillis()
+<<<<<<< HEAD
                 ).save(object1 -> finish());
+=======
+                ).save(object1 -> {
+                    progressDialog.dismiss();
+                    finish();
+                });
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
             });
         } else {
 

@@ -15,7 +15,10 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+<<<<<<< HEAD
     <uses-permission android:name="android.permission.NFC" />
+=======
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-permission
@@ -54,9 +57,13 @@
             android:name=".View.activities.CreateEventActivity"
             android:exported="true"
             android:windowSoftInputMode="stateHidden" />
+<<<<<<< HEAD
         <activity
             android:name=".View.activities.EventActivity"/>
 
+=======
+        <activity android:name=".View.activities.EventActivity" />
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
         <activity android:name=".View.activities.AccountActivity" />
         <activity
             android:name=".View.activities.MapsActivity"
@@ -77,8 +84,14 @@
         <activity android:name=".View.activities.PickPlaceActivity" />
         <activity android:name=".View.activities.SignUpActivity" />
         <activity android:name=".View.activities.PickFriendsActivity" />
+<<<<<<< HEAD
         <activity android:name=".View.fragments.FirstOpenLoginFragment" />
         <activity android:name=".View.activities.CustomizeProfileActivity" />
+=======
+        <activity android:name=".View.activities.CustomizeProfileActivity" />
+        <activity android:name=".View.activities.TeamActivity" />
+        <activity android:name=".View.activities.TeamsActivity"></activity>
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     </application>
 
 </manifest>

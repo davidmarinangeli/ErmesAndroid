@@ -6,6 +6,40 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+<<<<<<< HEAD
+=======
+    <LinearLayout
+        android:id="@+id/random_team_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDarker"/>
+
+        <TextView
+            android:id="@+id/random_team_label_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/mainLabelBackground"
+            android:padding="8dp"
+            android:text="Il tuo sport"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDarker"/>
+
+    </LinearLayout>
+
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

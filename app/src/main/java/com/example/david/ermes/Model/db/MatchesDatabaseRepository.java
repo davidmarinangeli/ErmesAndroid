@@ -63,6 +63,7 @@ public class MatchesDatabaseRepository {
     }
 
     public void fetchMatchById(String id, final FirebaseCallback firebaseCallback) {
+<<<<<<< HEAD
         fetchMatches("key", id, new FirebaseCallback() {
             @Override
             public void callback(Object object) {
@@ -94,6 +95,37 @@ public class MatchesDatabaseRepository {
         }
     }
 
+=======
+        fetchMatches("key", id, object -> {
+            if (object != null) {
+                List<_Match> list = (List<_Match>) object;
+                firebaseCallback.callback(list.get(0));
+            } else {
+                firebaseCallback.callback(null);
+            }
+        });
+    }
+
+    public void push(_Match match, FirebaseCallback firebaseCallback) {
+        DatabaseReference query;
+
+        if (match != null) {
+            if (match.getID() != null && !match.getID().isEmpty()) {
+                query = this.matchesRef.child(match.getID());
+            } else {
+                query = this.matchesRef.push();
+            }
+
+            query.setValue(match, (databaseError, databaseReference) -> {
+                if (firebaseCallback != null) {
+                    match.setID(databaseReference.getKey());
+                    firebaseCallback.callback(match.convertToMatch());
+                }
+            });
+        }
+    }
+
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
     private void fetchMatches(final String param, String value, final FirebaseCallback fc) {
         Query queryRef;
 
@@ -134,9 +166,9 @@ public class MatchesDatabaseRepository {
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("FIREBASE", "Failed to read value.", error.toException());
-                fc.callback(null);
+                if (fc != null) {
+                    fc.callback(null);
+                }
             }
         });
     }
@@ -163,7 +195,13 @@ public class MatchesDatabaseRepository {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
+<<<<<<< HEAD
                             firebaseCallback.callback(null);
+=======
+                            if (firebaseCallback != null) {
+                                firebaseCallback.callback(null);
+                            }
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                         }
                     });
         } else if (firebaseCallback != null) {
@@ -201,7 +239,13 @@ public class MatchesDatabaseRepository {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
+<<<<<<< HEAD
                             firebaseCallback.callback(null);
+=======
+                            if (firebaseCallback != null) {
+                                firebaseCallback.callback(null);
+                            }
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                         }
                     }
             );
@@ -210,6 +254,7 @@ public class MatchesDatabaseRepository {
         }
     }
 
+<<<<<<< HEAD
     public void deleteById(String id, FirebaseCallback firebaseCallback) {
         if (id != null && !id.isEmpty()) {
             this.matchesRef.child(id).removeValue(new DatabaseReference.CompletionListener() {
@@ -218,6 +263,52 @@ public class MatchesDatabaseRepository {
                     if (firebaseCallback != null) {
                         firebaseCallback.callback(null);
                     }
+=======
+    public void fetchByTimeLapse(long date, String locationId, FirebaseCallback firebaseCallback) {
+        final long TWO_HOURS_MILLISEC = 7200000;
+
+        this.matchesRef.orderByChild("date")
+                .startAt(date - TWO_HOURS_MILLISEC)
+                .endAt(date + TWO_HOURS_MILLISEC)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<_Match> result = null;
+
+                        for (DataSnapshot d : dataSnapshot.getChildren()) {
+                            _Match match = d.getValue(_Match.class);
+
+                            if (match != null && match.idLocation.equals(locationId)) {
+                                if (result == null) {
+                                    result = new ArrayList<>();
+                                }
+
+                                match.setID(d.getKey());
+
+                                result.add(match);
+                            }
+                        }
+
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(result);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        if (firebaseCallback != null) {
+                            firebaseCallback.callback(null);
+                        }
+                    }
+                });
+    }
+
+    public void deleteById(String id, FirebaseCallback firebaseCallback) {
+        if (id != null && !id.isEmpty()) {
+            this.matchesRef.child(id).removeValue((databaseError, databaseReference) -> {
+                if (firebaseCallback != null) {
+                    firebaseCallback.callback(null);
+>>>>>>> 7d6df54de0d2ab5df3ce1d6cecfc83157612ce0f
                 }
             });
         }
