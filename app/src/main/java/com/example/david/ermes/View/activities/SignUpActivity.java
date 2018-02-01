@@ -197,10 +197,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                         .setAction(":(", null);
                             }
 
+                            DatabaseManager.get().setLogged(true);
                             progressDialog.dismiss();
                         });
 
                     } else {
+                        DatabaseManager.get().setLogged(false);
+
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
                         Toast.makeText(SignUpActivity.this, "Authentication failed.",
@@ -274,10 +277,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         born_date_calendar.getTimeInMillis()
                 ).save(object1 -> {
                     progressDialog.dismiss();
+                    DatabaseManager.get().setLogged(true);
                     finish();
                 });
             });
         } else {
+            DatabaseManager.get().setLogged(false);
 
             if (TextUtils.isEmpty(mail_editText.getText().toString()))
                 mail_editText.setError("Inserisci una mail");

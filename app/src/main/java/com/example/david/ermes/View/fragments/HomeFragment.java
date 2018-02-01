@@ -86,6 +86,7 @@ public class HomeFragment extends Fragment {
                                 adapter.refreshList((List<Match>) object1, user.getIdFavSport());
                             } else {
                                 adapter.refreshList((List<Match>) object1);
+                                DatabaseManager.get().setLogged(false);
                             }
 
                             progressDialog.dismiss();

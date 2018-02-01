@@ -111,6 +111,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment implements 
     public void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(status -> {
             mAuth.signOut();
+            DatabaseManager.get().setLogged(false);
             getActivity().finish();
         });
     }
