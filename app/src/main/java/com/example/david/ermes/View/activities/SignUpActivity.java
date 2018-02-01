@@ -191,7 +191,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                         found_sport.getID(),
                                         photoURL,
                                         born_date_calendar.getTimeInMillis()
-                                ).save(object1 -> finish());
+                                ).save(object1 -> {
+                                    setResult(RESULT_OK);
+                                    finish();
+                                });
                             } else {
                                 Snackbar.make(getWindow().getDecorView(), "Errore nella ricerca dello sport", Snackbar.LENGTH_LONG)
                                         .setAction(":(", null);
@@ -278,6 +281,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 ).save(object1 -> {
                     progressDialog.dismiss();
                     DatabaseManager.get().setLogged(true);
+
+                    setResult(RESULT_OK);
                     finish();
                 });
             });
@@ -318,7 +323,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     };
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        onBackPressed();
+        setResult(RESULT_CANCELED);
+        finish();
         return true;
     }
 }
