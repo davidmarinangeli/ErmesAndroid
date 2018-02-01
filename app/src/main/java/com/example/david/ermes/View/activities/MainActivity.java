@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
         create_team_fab.setOnClickListener(view -> {
             if (!DatabaseManager.get().isLogged()) {
-                Snackbar.make(add_place_fab, "Registrati per aggiungere un team", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(add_place_fab, "Registrati per aggiungere un luogo", Snackbar.LENGTH_LONG).show();
             } else {
                 Bundle extras = new Bundle();
                 extras.putString(TeamActivity.ACTIVITY_TYPE_KEY, TeamActivity.CREATE_TEAM);
