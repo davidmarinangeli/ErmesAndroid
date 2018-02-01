@@ -60,15 +60,18 @@ Una delle caratteristiche delle partite è la lista degli oggetti mancanti.
 Il creatore della partita può aggiungerli al momento della creazione della partita e ogni partecipante potrà poi specificare, se può, quali può
 portare.
 
+Prima di concludere la creazione, l'app controlla la *sovrapposizione con altre partite* nello stesso intervallo di tempo nello stesso luogo.
+
 ### DialogFlow
 
-Una funzione aggiuntiva di Ermes, ancora in **beta**, è la possibilità di creare una partita semplicemente dettando alcuni campi necessari vocalmente.
+Una funzione aggiuntiva di Ermes, ancora in **beta**, è la possibilità di creare una partita semplicemente dettando alcuni campi vocalmente.
 I campi attualmente supportati sono: 
 * Sport
 * Data
 * Ora
 * Numero giocatori
 * Visibilità partita
+* _in aggiornamento_
 
 Per utilizzare questa funzione si può cliccare il bottone di Google Assistant blu in alto nella schermata di "Creazione partita" e aspettare il feedback "Sto ascoltando".
 
