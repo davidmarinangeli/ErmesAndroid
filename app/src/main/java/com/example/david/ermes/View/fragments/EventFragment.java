@@ -101,6 +101,8 @@ public class EventFragment extends Fragment {
     private User currentUser;
     private Notification inviteNotification;
 
+    private boolean finished;
+
     public EventFragment() {
     }
 
@@ -110,6 +112,8 @@ public class EventFragment extends Fragment {
 
         Bundle args = getArguments();
         match = args.getParcelable("event");
+
+        finished = System.currentTimeMillis() > match.getDate().getTime();
 
         manageUserCase();
     }
@@ -198,10 +202,13 @@ public class EventFragment extends Fragment {
         });
 
         profileCardView.setOnClickListener(view1 -> {
-            if (matchCreator != null) {
-                startAccountActivity(matchCreator);
-            } else {
+            if (!DatabaseManager.get().isLogged()) {
+                Snackbar.make(view1, "Registrati per navigare tra i profili degli utenti",
+                        Snackbar.LENGTH_SHORT).show();
+            } else if (matchCreator == null) {
                 Snackbar.make(view1, "Attendi...", Snackbar.LENGTH_SHORT).show();
+            } else {
+                startAccountActivity(matchCreator);
             }
         });
 
@@ -277,7 +284,10 @@ public class EventFragment extends Fragment {
 
 
         join.setOnClickListener(view1 -> {
-            if (userCase.equals(PRIVATE_PARTECIPANT) ||
+            if (finished) {
+                Snackbar.make(view, "La partita è già cominciata o terminata",
+                        Snackbar.LENGTH_LONG).show();
+            } else if (userCase.equals(PRIVATE_PARTECIPANT) ||
                     userCase.equals(PUBLIC_PARTECIPANT)) {
                 new MaterialDialog.Builder(this.getContext())
                         .title("Sei sicuro di voler abbandonare la partita?")
@@ -419,7 +429,7 @@ public class EventFragment extends Fragment {
                     intent.putExtras(extras);
                     startActivity(intent);
                 } else {
-                    Snackbar.make(getView(), "Errore nello scaricamento dei dati",
+                    Snackbar.make(getView(), "Registrati per visualizzare questo contenuto",
                             Snackbar.LENGTH_SHORT).show();
                 }
             });
@@ -487,6 +497,12 @@ public class EventFragment extends Fragment {
         } else {
             join.setVisibility(View.VISIBLE);
             delete_match.setVisibility(View.GONE);
+        }
+
+        if (finished) {
+            join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.inactive)));
+            invite.setVisibility(View.GONE);
+            invite_team.setVisibility(View.GONE);
         }
     }
 

@@ -135,8 +135,9 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
+                        DatabaseManager.get().setLogged(true);
                     } else {
+                        DatabaseManager.get().setLogged(false);
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         Toast.makeText(MainSignInActivity.this, "Authentication failed.",
@@ -164,6 +165,7 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
+                DatabaseManager.get().setLogged(false);
                 // Google Sign In failed, update UI appropriately
                 // ...
                 Log.d("errore", result.getStatus().getStatusMessage() + "");
@@ -202,6 +204,7 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                                 current.setPhotoURL(String.valueOf(user.getPhotoUrl()));
 
                                 current.save(object1 -> finish());
+                                DatabaseManager.get().setLogged(true);
                             }
                         });
 

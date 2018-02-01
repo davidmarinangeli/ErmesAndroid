@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.david.ermes.Model.db.DatabaseManager;
 import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Friendship;
 import com.example.david.ermes.Model.models.Match;
@@ -45,21 +46,26 @@ public class PickFriendsActivity extends AppCompatActivity {
     private boolean invite_team;
     private int activity_request_code;
 
+    private TextView can_invite_label;
+    private TextView people_label;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_friends);
 
         progressDialog = new ProgressDialog(this);
+        can_invite_label = findViewById(R.id.can_invite_label);
+        people_label = findViewById(R.id.people_players);
 
         max_players = findViewById(R.id.remaining_invitation);
         no_friends = findViewById(R.id.no_friends);
         toolbar = findViewById(R.id.create_event_toolbar);
         spunta_done = findViewById(R.id.spunta_done);
 
+        toolbar.setTitle("Invita amici");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle("Invita amici");
 
         Intent intent = getIntent();
         activity_request_code = intent.getIntExtra(TeamActivity.ACTIVITY_REQUEST_CODE_KEY, 0);
@@ -131,6 +137,8 @@ public class PickFriendsActivity extends AppCompatActivity {
             }
         });
 
+        setNoFriendsState();
+
     }
 
     public void editFreeSlot(FirebaseCallback firebaseCallback) {
@@ -138,41 +146,48 @@ public class PickFriendsActivity extends AppCompatActivity {
     }
 
     public void initList() {
-        progressDialog.show();
-        FriendshipRepository.getInstance().fetchFriendshipsByUserId(User.getCurrentUserId(), object -> {
-            if (object != null) {
-                List<Friendship> user_friends = (List<Friendship>) object;
-                List<User> my_friends = new ArrayList<>();
+        if (DatabaseManager.get().isLogged()) {
+            progressDialog.show();
 
-                resetFetchFriendsCount();
-                for (Friendship f : user_friends) {
-                    String id = f.getId1().equals(User.getCurrentUserId()) ? f.getId2() : f.getId1();
-                    UserRepository.getInstance().fetchUserById(id,object1 -> {
-                        incrementFetchFriendsCount();
+            FriendshipRepository.getInstance().fetchFriendshipsByUserId(User.getCurrentUserId(), object -> {
+                if (object != null) {
+                    List<Friendship> user_friends = (List<Friendship>) object;
+                    List<User> my_friends = new ArrayList<>();
 
-                        if (object1 != null){
-                            my_friends.add((User) object1);
+                    resetFetchFriendsCount();
+
+                    if (!user_friends.isEmpty()) {
+                        setMoreThanZeroFriendsState();
+
+                        for (Friendship f : user_friends) {
+                            String id = f.getId1().equals(User.getCurrentUserId()) ? f.getId2() : f.getId1();
+                            UserRepository.getInstance().fetchUserById(id, object1 -> {
+                                incrementFetchFriendsCount();
+
+                                if (object1 != null) {
+                                    my_friends.add((User) object1);
+                                }
+
+                                if (getFetchFriendsCount() == user_friends.size()) {
+                                    if (invite_match) {
+                                        pickFriendsAdapter.refreshList(my_friends, result_match);
+                                    } else if (invite_team) {
+                                        pickFriendsAdapter.refreshList(my_friends, result_team,
+                                                activity_request_code);
+                                    }
+
+                                    if (pickFriendsAdapter.getItemCount() > 0) {
+                                        no_friends.setVisibility(View.GONE);
+                                    }
+
+                                    progressDialog.dismiss();
+                                }
+                            });
                         }
-
-                        if (getFetchFriendsCount() == user_friends.size()) {
-                            if (invite_match) {
-                                pickFriendsAdapter.refreshList(my_friends, result_match);
-                            } else if (invite_team) {
-                                pickFriendsAdapter.refreshList(my_friends, result_team,
-                                        activity_request_code);
-                            }
-
-                            if (pickFriendsAdapter.getItemCount()>0){
-                                no_friends.setVisibility(View.GONE);
-                            }
-
-                            progressDialog.dismiss();
-                        }
-                    });
-                }
-
-            }
-        });
+                    } else setNoFriendsState();
+                } else setNoFriendsState();
+            });
+        } else setNoLoggedUserState();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -180,6 +195,35 @@ public class PickFriendsActivity extends AppCompatActivity {
         return true;
     }
 
+    private void setMoreThanZeroFriendsState() {
+        spunta_done.setVisibility(View.VISIBLE);
+        can_invite_label.setVisibility(View.VISIBLE);
+        max_players.setVisibility(View.VISIBLE);
+        people_label.setVisibility(View.VISIBLE);
+
+        no_friends.setVisibility(View.GONE);
+
+        progressDialog.dismiss();
+    }
+
+    private void setNoFriendsState() {
+        spunta_done.setVisibility(View.GONE);
+        can_invite_label.setVisibility(View.GONE);
+        max_players.setVisibility(View.GONE);
+        people_label.setVisibility(View.GONE);
+
+        no_friends.setText("Nessun amico");
+        no_friends.setVisibility(View.VISIBLE);
+
+        progressDialog.dismiss();
+    }
+
+    private void setNoLoggedUserState() {
+        setNoFriendsState();
+
+        no_friends.setText("Nessun utente loggato");
+        no_friends.setVisibility(View.VISIBLE);
+    }
 
     public static int peopleICanInvite(Match result_match) {
         return (result_match.getMaxPlayers())-(result_match.getPartecipants().size())-(result_match.getPending().size());

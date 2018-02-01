@@ -97,8 +97,6 @@ public class AccountFragment extends Fragment {
             welcome_button.setOnClickListener(view12 -> {
                 Intent i = new Intent(view12.getContext(), MainSignInActivity.class);
                 startActivity(i);
-
-
             });
         } else {
             main_scrollview.setVisibility(View.VISIBLE);
@@ -204,7 +202,6 @@ public class AccountFragment extends Fragment {
                     Snackbar.make(getView(),"Errore nello scaricamento dati Account",Snackbar.LENGTH_LONG).show();
                 }
             });
-
         }
     }
 

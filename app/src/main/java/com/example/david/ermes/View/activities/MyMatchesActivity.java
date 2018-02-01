@@ -12,12 +12,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.fragments.FutureMatchesFragment;
 import com.example.david.ermes.View.fragments.MyOwnMatchesFragment;
 import com.example.david.ermes.View.fragments.PassedMatchesFragment;
 
 public class MyMatchesActivity extends AppCompatActivity {
+
+    private User currentUser;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -38,6 +41,8 @@ public class MyMatchesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_matches);
+
+        currentUser = getIntent().getExtras().getParcelable("user");
 
         Toolbar toolbar = findViewById(R.id.my_matches_toolbar);
         toolbar.setTitle("Partite");
@@ -77,9 +82,18 @@ public class MyMatchesActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0: return new FutureMatchesFragment();
-                case 1: return new PassedMatchesFragment();
-                case 2: return new MyOwnMatchesFragment();
+                case 0:
+                    FutureMatchesFragment fmfragment = new FutureMatchesFragment();
+                    fmfragment.setUser(currentUser);
+                    return fmfragment;
+                case 1:
+                    PassedMatchesFragment pmfragment = new PassedMatchesFragment();
+                    pmfragment.setUser(currentUser);
+                    return pmfragment;
+                case 2:
+                    MyOwnMatchesFragment momfragment = new MyOwnMatchesFragment();
+                    momfragment.setUser(currentUser);
+                    return momfragment;
             }
 
             return null;

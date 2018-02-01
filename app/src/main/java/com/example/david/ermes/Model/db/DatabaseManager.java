@@ -32,6 +32,8 @@ public class DatabaseManager {
     private DatabaseReference usersRef, matchesRef, sportsRef, locationsRef, notificationsRef,
         friendshipRef, teamRef;
 
+    private boolean logged;
+
     private DatabaseManager() {
 
         this.database = FirebaseDatabase.getInstance();
@@ -43,21 +45,37 @@ public class DatabaseManager {
         this.notificationsRef = database.getReference("notifications");
         this.friendshipRef = database.getReference("friendships");
         this.teamRef = database.getReference("teams");
+
+        logged = true;
     }
 
     public boolean isLogged(){
-        return FirebaseAuth.getInstance().getCurrentUser() != null;
+        return FirebaseAuth.getInstance().getCurrentUser() != null && logged &&
+                FirebaseAuth.getInstance().getCurrentUser().getUid() != null &&
+                !FirebaseAuth.getInstance().getCurrentUser().getUid().isEmpty();
+    }
+
+    public void setLogged(boolean logged) {
+        this.logged = logged;
     }
 
     public void getCurrentUser(final FirebaseCallback firebaseCallback) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null && !user.getUid().isEmpty() && isLogged()) {
-            this.usersRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+        if (isLogged()) {
+            this.usersRef.orderByKey().equalTo(user.getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    DbModels._User u = dataSnapshot.getValue(DbModels._User.class);
-                    if ((dataSnapshot.getKey() != null) && (u != null))
-                        u.setUID(dataSnapshot.getKey());
+                    DbModels._User u = null;
+
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        u = d.getValue(DbModels._User.class);
+
+                        if (u != null) {
+                            u.setUID(d.getKey());
+                        } else {
+                            logged = false;
+                        }
+                    }
 
                     firebaseCallback.callback(u);
                 }
