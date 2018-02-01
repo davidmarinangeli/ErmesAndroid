@@ -31,6 +31,7 @@ public class FutureMatchesFragment extends Fragment {
 
     private MainAdapter adapter;
     private ProgressDialog progressDialog;
+    private User currentUser;
 
     public FutureMatchesFragment() {
     }
@@ -58,12 +59,16 @@ public class FutureMatchesFragment extends Fragment {
         init();
     }
 
+    public void setUser(User user) {
+        currentUser = user;
+    }
+
     private void init() {
-        if (DatabaseManager.get().isLogged()) {
+        if (currentUser != null) {
             progressDialog.show();
             no_matches_label.setText("Nessuna partita");
 
-            MatchRepository.getInstance().fetchFutureMatchesByUserId(User.getCurrentUserId(),
+            MatchRepository.getInstance().fetchFutureMatchesByUserId(currentUser.getUID(),
                     object -> {
                         List<Match> matches = (List<Match>) object;
 
@@ -78,7 +83,7 @@ public class FutureMatchesFragment extends Fragment {
                         progressDialog.dismiss();
                     });
         } else {
-            no_matches_label.setText("Nessun utente loggato");
+            no_matches_label.setText("Nessun utente");
             no_matches_label.setVisibility(View.VISIBLE);
         }
     }

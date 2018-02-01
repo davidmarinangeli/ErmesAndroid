@@ -29,6 +29,7 @@ public class MyOwnMatchesFragment extends Fragment {
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     private MainAdapter adapter;
+    private User currentUser;
 
     private TextView no_matches_label;
 
@@ -58,12 +59,16 @@ public class MyOwnMatchesFragment extends Fragment {
         init();
     }
 
+    public void setUser(User user) {
+        currentUser = user;
+    }
+
     private void init() {
-        if (DatabaseManager.get().isLogged()) {
+        if (currentUser != null) {
             progressDialog.show();
             no_matches_label.setText("Nessuna partita");
 
-            MatchRepository.getInstance().fetchMatchesByOwnerId(User.getCurrentUserId(),
+            MatchRepository.getInstance().fetchMatchesByOwnerId(currentUser.getUID(),
                     object -> {
                         List<Match> matches = (List<Match>) object;
 
@@ -78,7 +83,7 @@ public class MyOwnMatchesFragment extends Fragment {
                         progressDialog.dismiss();
                     });
         } else {
-            no_matches_label.setText("Nessun utente loggato");
+            no_matches_label.setText("Nessun utente");
             no_matches_label.setVisibility(View.VISIBLE);
         }
     }

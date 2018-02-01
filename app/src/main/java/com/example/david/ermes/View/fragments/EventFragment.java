@@ -198,10 +198,13 @@ public class EventFragment extends Fragment {
         });
 
         profileCardView.setOnClickListener(view1 -> {
-            if (matchCreator != null) {
-                startAccountActivity(matchCreator);
-            } else {
+            if (!DatabaseManager.get().isLogged()) {
+                Snackbar.make(view1, "Registrati per navigare tra i profili degli utenti",
+                        Snackbar.LENGTH_SHORT).show();
+            } else if (matchCreator == null) {
                 Snackbar.make(view1, "Attendi...", Snackbar.LENGTH_SHORT).show();
+            } else {
+                startAccountActivity(matchCreator);
             }
         });
 
@@ -419,7 +422,7 @@ public class EventFragment extends Fragment {
                     intent.putExtras(extras);
                     startActivity(intent);
                 } else {
-                    Snackbar.make(getView(), "Errore nello scaricamento dei dati",
+                    Snackbar.make(getView(), "Registrati per visualizzare questo contenuto",
                             Snackbar.LENGTH_SHORT).show();
                 }
             });
