@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="460" height="300" src="https://raw.githubusercontent.com/davidmarinangeli/ErmesAndroid/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png">
+  <img width="300" height="300" src="https://raw.githubusercontent.com/davidmarinangeli/ErmesAndroid/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png">
 </p>
 
 # Ermes
