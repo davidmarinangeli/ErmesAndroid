@@ -32,6 +32,8 @@ public class DatabaseManager {
     private DatabaseReference usersRef, matchesRef, sportsRef, locationsRef, notificationsRef,
         friendshipRef, teamRef;
 
+    private boolean logged;
+
     private DatabaseManager() {
 
         this.database = FirebaseDatabase.getInstance();
@@ -43,10 +45,16 @@ public class DatabaseManager {
         this.notificationsRef = database.getReference("notifications");
         this.friendshipRef = database.getReference("friendships");
         this.teamRef = database.getReference("teams");
+
+        logged = false;
     }
 
     public boolean isLogged(){
-        return FirebaseAuth.getInstance().getCurrentUser() != null;
+        return FirebaseAuth.getInstance().getCurrentUser() != null && logged;
+    }
+
+    public void setLogged(boolean logged) {
+        this.logged = logged;
     }
 
     public void getCurrentUser(final FirebaseCallback firebaseCallback) {
