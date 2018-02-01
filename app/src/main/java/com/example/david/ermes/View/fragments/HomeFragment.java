@@ -33,7 +33,6 @@ public class HomeFragment extends Fragment {
 
     private MainAdapter adapter;
     private RecyclerView recyclerView;
-    private Match match;
     private ProgressDialog progressDialog;
 
     public HomeFragment() {
@@ -42,11 +41,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Bundle args = getArguments();
-        if (args != null) {
-            match = (Match) args.getSerializable("event");
-        }
 
         progressDialog = new ProgressDialog(getContext());
     }
@@ -60,12 +54,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initRecycler(view);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        initRecycler(getView());
+        initList();
     }
 
     private void initRecycler(final View rootView) {
@@ -76,7 +71,6 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);
-        initList();
     }
 
     public void initList() {
@@ -105,6 +99,7 @@ public class HomeFragment extends Fragment {
                             adapter.setFavSportName(sport.getName());
                         }
                     });
+                } else {
                 }
             });
         } else {
