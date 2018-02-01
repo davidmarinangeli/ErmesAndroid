@@ -148,25 +148,33 @@ public class AccountFragment extends Fragment {
             }
         });
 
+        friendsCard.setOnClickListener(view13 -> {
+            if (currentUser != null) {
+                Bundle extras = new Bundle();
+                extras.putParcelable("user", currentUser);
+
+                Intent friendsActivity = new Intent(view13.getContext(), FriendsActivity.class);
+                friendsActivity.putExtras(extras);
+                startActivity(friendsActivity);
+            } else if (DatabaseManager.get().isLogged()) {
+                Toast.makeText(view13.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(view13.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         if (currentUser != null && !currentUser.getUID().equals(User.getCurrentUserId())) {
-            friendsCard.setVisibility(View.GONE);
+            teamsCard.setVisibility(View.GONE);
             customizeProfileCard.setVisibility(View.GONE);
         } else {
-            friendsCard.setOnClickListener(view13 -> {
-                if (currentUser != null) {
-                    Bundle extras = new Bundle();
-                    extras.putParcelable("user", currentUser);
-
-                    Intent friendsActivity = new Intent(view13.getContext(), FriendsActivity.class);
-                    friendsActivity.putExtras(extras);
-                    startActivity(friendsActivity);
-                } else if (DatabaseManager.get().isLogged()) {
-                    Toast.makeText(view13.getContext(), "Attendi...", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(view13.getContext(), "Nessun utente loggato", Toast.LENGTH_SHORT).show();
-                }
+            teamsCard.setVisibility(View.VISIBLE);
+            teamsCard.setOnClickListener(v -> {
+                Intent i = new Intent(getContext(), TeamsActivity.class);
+                i.putExtra(TeamsActivity.ACTIVITY_CODE_KEY, TeamsActivity.VIEW_CODE);
+                startActivity(i);
             });
 
+            customizeProfileCard.setVisibility(View.VISIBLE);
             customizeProfileCard.setOnClickListener(view12 -> {
                 if (currentUser != null) {
                     Bundle extras = new Bundle();
@@ -184,13 +192,6 @@ public class AccountFragment extends Fragment {
                 }
             });
         }
-
-        teamsCard.setOnClickListener(v -> {
-            Intent i = new Intent(getContext(), TeamsActivity.class);
-            i.putExtra(TeamsActivity.ACTIVITY_CODE_KEY, TeamsActivity.VIEW_CODE);
-            startActivity(i);
-        });
-
     }
 
     private void initComponents() {

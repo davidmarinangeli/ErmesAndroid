@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -39,6 +40,9 @@ import static android.animation.ValueAnimator.INFINITE;
 
 public class MainActivity extends AppCompatActivity {
 
+    private View unread_notifications_shape;
+    private TextView num_notifications_label;
+
     private Toolbar toolbar;
     private CoolViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
@@ -57,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
     AHBottomNavigationItem right_item;
     AHBottomNavigationItem central_item;
 
-    private ValueAnimator notification_anim;
     private Integer num_locations;
 
     public static final int PICKACTIVITY_CODE = 42;
@@ -82,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         create_team_fab = findViewById(R.id.teamCreateButton);
 
         notificationsButton = findViewById(R.id.toolbar_notifications_button);
-        notification_anim = new ValueAnimator();
 
         LocationRepository.getInstance().fetchAllLocations(
                 object -> {
@@ -93,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         initBottomNavigationView();
+
+        unread_notifications_shape = findViewById(R.id.unread_notifications_shape);
+        num_notifications_label = findViewById(R.id.num_notifications_label);
+        unread_notifications_shape.setVisibility(View.GONE);
+        num_notifications_label.setVisibility(View.GONE);
     }
 
     @Override
@@ -187,40 +194,18 @@ public class MainActivity extends AppCompatActivity {
                         List<Notification> list = (List<Notification>) object;
 
                         if (list == null) {
+                            notificationsButton.setColorFilter(Color.argb(255, 255, 255, 255));
+                            unread_notifications_shape.setVisibility(View.GONE);
+                            num_notifications_label.setVisibility(View.GONE);
                             list = new ArrayList<>();
                         } else if (Notification.getUnreadNotificationsFromList(list).size() > 0) {
-
-                            // icon animation
-                            if (notification_anim != null) {
-                                if (notification_anim.isPaused()) {
-                                    notification_anim.resume();
-                                } else {
-//                                        notification_anim.setIntValues(Color.WHITE, R.color.colorAccent,
-//                                                R.color.colorAccent, Color.WHITE);
-                                    notification_anim.setIntValues(
-                                            Color.argb(255, 255, 255, 255),
-                                            Color.argb(255, 68, 138, 255),
-                                            Color.argb(255, 68, 138, 255),
-                                            Color.argb(255, 255, 255, 255)
-                                    );
-                                    notification_anim.setEvaluator(new ArgbEvaluator());
-
-                                    notification_anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                        @Override
-                                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                            notificationsButton.setColorFilter(
-                                                    (Integer) valueAnimator.getAnimatedValue(),
-                                                    PorterDuff.Mode.SRC_ATOP);
-                                        }
-                                    });
-
-                                    notification_anim.setRepeatCount(INFINITE);
-                                    notification_anim.setDuration(4000);
-                                    notification_anim.start();
-                                }
-                            }
+                            unread_notifications_shape.setVisibility(View.VISIBLE);
+                            num_notifications_label.setVisibility(View.VISIBLE);
+                            num_notifications_label.setText(String.valueOf(Notification.getUnreadNotificationsFromList(list).size()));
                         } else {
                             notificationsButton.setColorFilter(Color.argb(255, 255, 255, 255));
+                            unread_notifications_shape.setVisibility(View.GONE);
+                            num_notifications_label.setVisibility(View.GONE);
                         }
 
                         List<Notification> finalList = list;
@@ -240,19 +225,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
-        if (notification_anim != null) {
-            notification_anim.pause();
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-        if (notification_anim != null) {
-            notification_anim.pause();
-        }
     }
 
     @Override
