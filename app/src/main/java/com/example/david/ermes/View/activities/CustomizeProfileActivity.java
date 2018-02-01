@@ -17,20 +17,15 @@ public class CustomizeProfileActivity extends AppCompatActivity {
 
 
     private Toolbar toolbar;
-    private ImageButton done_profile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        done_profile= findViewById(R.id.spunta_done_profile);
         toolbar = findViewById(R.id.my_profile_toolbar);
         toolbar.setTitle("Modifica il tuo account");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        done_profile.setOnClickListener(v -> {
-
-        });
 
         ProfileFragment customizeProfileFragment = new ProfileFragment();
         Bundle args = new Bundle();
