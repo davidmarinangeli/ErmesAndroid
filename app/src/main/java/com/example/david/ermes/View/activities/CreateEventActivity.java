@@ -166,37 +166,13 @@ public class CreateEventActivity extends AppCompatActivity {
         //setto i parametri delle chips
         missing_chips.setShowChipAvatarEnabled(false);
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
+        checkPermissionForRecord();
 
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.RECORD_AUDIO)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.RECORD_AUDIO},
-                        MY_PERMISSIONS_REQUEST_RECORD_AUDIO);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+        dialogflow_button.setOnClickListener(view -> {
+            if (checkPermissionForRecord()) {
+                dialogflow.startListening();
             }
-        } else {
-
-            // SE HAI I PERMESSI... comincia ad ascoltare
-            dialogflow_button.setOnClickListener(view ->
-                    dialogflow.startListening());
-        }
-
+        });
 
         // setto il comportamento a fine registrazione e vedo cosa mi ritorna
         dialogflow.setOnFinishListening(object -> {
@@ -250,6 +226,37 @@ public class CreateEventActivity extends AppCompatActivity {
 
         createEventPresenter = new CreateEventPresenter(this);
 
+    }
+
+    private boolean checkPermissionForRecord() {
+        boolean granted = false;
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.RECORD_AUDIO)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        MY_PERMISSIONS_REQUEST_RECORD_AUDIO);
+
+
+            }
+        } else {
+            granted = true;
+            // SE HAI I PERMESSI... comincia ad ascoltare
+
+        }
+        return granted;
     }
 
     private AlertDialog getAlertDialog() {
