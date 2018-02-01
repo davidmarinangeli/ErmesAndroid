@@ -145,8 +145,9 @@ public class PickFriendsAdapter extends RecyclerView.Adapter<PickFriendsAdapter.
 
         public void bind(int pos) {
             friend_name.setText(friendship_list.get(pos).getName());
-            Picasso.with(context).load(friendship_list.get(pos).getPhotoURL()).memoryPolicy(MemoryPolicy.NO_CACHE).into(friend_image);
-
+            if (!friendship_list.get(pos).getPhotoURL().isEmpty()) {
+                Picasso.with(context).load(friendship_list.get(pos).getPhotoURL()).memoryPolicy(MemoryPolicy.NO_CACHE).into(friend_image);
+            }
             if (result_match != null && result_match.getPartecipants().contains(friendship_list.get(pos).getUID())) {
                 // se è già tra gli invitati disattivo la checkbox
                 invite_checkbox.setChecked(true);

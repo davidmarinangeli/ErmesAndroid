@@ -195,7 +195,9 @@ public class EventFragment extends Fragment {
             if (object != null) {
                 matchCreator = (User) object;
                 usercreator.setText(matchCreator.getName());
-                Picasso.with(getContext()).load(matchCreator.getPhotoURL()).into(imageCreator);
+                if (!matchCreator.getPhotoURL().isEmpty()) {
+                    Picasso.with(getContext()).load(matchCreator.getPhotoURL()).into(imageCreator);
+                }
             } else {
 
             }
