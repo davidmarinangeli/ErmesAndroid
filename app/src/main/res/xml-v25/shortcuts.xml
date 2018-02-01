@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- <shortcut
+     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_shortcut_videocam"
-        android:shortcutId="webcam"
-        android:shortcutLongLabel="@string/open_webcam_shortcuts"
-        android:shortcutShortLabel="@string/open_webcam_shortcuts">
+        android:icon="@drawable/ic_shortcut_icona_aggiungi_evento"
+        android:shortcutId="addplace"
+        android:shortcutLongLabel="@string/aggiungiluogo"
+        android:shortcutShortLabel="@string/aggiungiluogo">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="it.davidmari.appmensa.unitn.ui.activities.WebcamActivity"
-            android:targetPackage="it.davidmari.appmensa.unitn" />
+            android:targetClass="com.example.david.ermes.View.activities.PickPlaceActivity"
+            android:targetPackage="com.example.david.ermes" />
     </shortcut>
+    <!--<shortcut-->
+        <!--android:enabled="true"-->
+        <!--android:icon="@drawable/ic_shortcut_place"-->
+        <!--android:shortcutId="maps"-->
+        <!--android:shortcutLongLabel="Apri le Mappe"-->
+        <!--android:shortcutShortLabel="Apri le Mappe">-->
+        <!--<intent-->
+            <!--android:action="android.intent.action.VIEW"-->
+            <!--android:targetClass="com.example.david.ermes.View.fragments.MapsFragment"-->
+            <!--android:targetPackage="com.example.david.ermes" />-->
+    <!--</shortcut>-->
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_shortcut_map"
-        android:shortcutId="maps"
-        android:shortcutLongLabel="@string/open_maps_shortcut"
-        android:shortcutShortLabel="@string/open_maps_shortcut">
+        android:icon="@drawable/ic_shortcut_icona_aggiungi_partita"
+        android:shortcutId="addmatch"
+        android:shortcutLongLabel="@string/creapartita"
+        android:shortcutShortLabel="@string/creapartita">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="it.davidmari.appmensa.unitn.ui.activities.MapsActivity"
-            android:targetPackage="it.davidmari.appmensa.unitn" />
+            android:targetClass="com.example.david.ermes.View.activities.CreateEventActivity"
+            android:targetPackage="com.example.david.ermes" />
     </shortcut>
-    <shortcut
-        android:enabled="true"
-        android:icon="@drawable/ic_shortcut_restaurant_menu"
-        android:shortcutId="restaurant"
-        android:shortcutLongLabel="@string/open_restaurant_picker"
-        android:shortcutShortLabel="@string/open_restaurant_picker">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetClass="it.davidmari.appmensa.unitn.ui.activities.TipologiaPastiActivity"
-            android:targetPackage="it.davidmari.appmensa.unitn" />
-    </shortcut>
-    -->
 </shortcuts>

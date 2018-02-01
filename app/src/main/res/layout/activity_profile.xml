@@ -21,17 +21,6 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" >
-
-            <ImageButton
-                android:id="@+id/spunta_done_profile"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="end"
-                android:layout_margin="4dp"
-                android:background="@null"
-                android:padding="12dp"
-                android:src="@drawable/ic_done_white_24dp"
-                android:tint="@color/white" />
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 

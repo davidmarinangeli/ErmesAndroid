@@ -46,15 +46,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts"/>
         </activity>
         <activity
             android:name=".View.activities.CreateEventActivity"
             android:exported="true"
             android:windowSoftInputMode="stateHidden">
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts"/>
         </activity>
         <activity android:name=".View.activities.EventActivity" />
         <activity android:name=".View.activities.AccountActivity" />
@@ -73,7 +73,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCUFlWr5eEaU7NR4F38DvT7enmTMf_oeqk" />
 
-        <activity android:name=".View.activities.PickPlaceActivity" />
+        <activity android:name=".View.activities.PickPlaceActivity">
+        </activity>
         <activity android:name=".View.activities.SignUpActivity" />
         <activity android:name=".View.activities.PickFriendsActivity" />
         <activity android:name=".View.activities.CustomizeProfileActivity" />
