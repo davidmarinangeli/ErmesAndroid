@@ -50,7 +50,12 @@
         <activity
             android:name=".View.activities.CreateEventActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden">
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts"/>
+        </activity>
         <activity android:name=".View.activities.EventActivity" />
         <activity android:name=".View.activities.AccountActivity" />
         <activity
