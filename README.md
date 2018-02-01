@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="460" height="300" src="https://raw.githubusercontent.com/davidmarinangeli/ErmesAndroid/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png">
+</p>
+
 # Ermes
 
 Ermes è un'app Android che permette di organizzare partite amatoriali e di aggiungere alla mappa nuovi campi da gioco pubblici per diversi sport.
@@ -56,19 +60,26 @@ Una delle caratteristiche delle partite è la lista degli oggetti mancanti.
 Il creatore della partita può aggiungerli al momento della creazione della partita e ogni partecipante potrà poi specificare, se può, quali può
 portare.
 
-### Dialog Flow
+### DialogFlow
 
-E' possibile creare una partita semplicemente parlando al telefono: dopo aver toccato l'apposita icona nella schermata della creazione dell'evento,
-l'applicazione riempirà i campi con quello che avrà ascoltato.
+Una funzione aggiuntiva di Ermes, ancora in **beta**, è la possibilità di creare una partita semplicemente dettando alcuni campi necessari vocalmente.
+I campi attualmente supportati sono: 
+* Sport
+* Data
+* Ora
+* Numero giocatori
+* Visibilità partita
+
+Per utilizzare questa funzione si può cliccare il bottone di Google Assistant blu in alto nella schermata di "Creazione partita" e aspettare il feedback "Sto ascoltando".
 
 Esempio
 
 ```
-_Crea una partita privata di calcetto domani alle 18:00 per 10 persone_
+Crea una partita privata di calcetto domani alle 18:00 per 10 persone
 ```
 oppure
 ```
-_Aggiungi un evento pubblico di basket il 28 ottobre alle 20 con 5 giocatori_
+Aggiungi un evento pubblico di basket il 28 ottobre alle 20 con 5 giocatori
 ```
 
 Altri campi come il luogo e gli oggetti mancanti sono ancora in fase di sviluppo/test e per il momento vanno riempiti a mano.
@@ -123,8 +134,6 @@ Richieste di amicizia e inviti alle partite possono essere accettati o rifiutati
 ### Utenti anonimi
 
 Gli utenti che non hanno effettuato il login possono navigare all'interno dell'applicazione, senza poter interagire in alcun modo con essa.
-
-## Deployment
 
 ### Librerie utilizzate
 
