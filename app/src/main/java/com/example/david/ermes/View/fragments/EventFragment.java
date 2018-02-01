@@ -101,6 +101,8 @@ public class EventFragment extends Fragment {
     private User currentUser;
     private Notification inviteNotification;
 
+    private boolean finished;
+
     public EventFragment() {
     }
 
@@ -110,6 +112,8 @@ public class EventFragment extends Fragment {
 
         Bundle args = getArguments();
         match = args.getParcelable("event");
+
+        finished = System.currentTimeMillis() > match.getDate().getTime();
 
         manageUserCase();
     }
@@ -280,7 +284,10 @@ public class EventFragment extends Fragment {
 
 
         join.setOnClickListener(view1 -> {
-            if (userCase.equals(PRIVATE_PARTECIPANT) ||
+            if (finished) {
+                Snackbar.make(view, "La partita è già cominciata o terminata",
+                        Snackbar.LENGTH_LONG).show();
+            } else if (userCase.equals(PRIVATE_PARTECIPANT) ||
                     userCase.equals(PUBLIC_PARTECIPANT)) {
                 new MaterialDialog.Builder(this.getContext())
                         .title("Sei sicuro di voler abbandonare la partita?")
@@ -490,6 +497,12 @@ public class EventFragment extends Fragment {
         } else {
             join.setVisibility(View.VISIBLE);
             delete_match.setVisibility(View.GONE);
+        }
+
+        if (finished) {
+            join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.inactive)));
+            invite.setVisibility(View.GONE);
+            invite_team.setVisibility(View.GONE);
         }
     }
 
