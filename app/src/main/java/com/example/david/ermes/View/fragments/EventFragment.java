@@ -478,31 +478,31 @@ public class EventFragment extends Fragment {
                 missing_stuff_button.setVisibility(View.VISIBLE);
                 break;
             case PRIVATE_PARTECIPANT:
-                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_busy_white_24dp));
+                join.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_event_busy_white_24dp));
                 invite.setVisibility(View.GONE);
                 invite_team.setVisibility(View.GONE);
                 missing_stuff_button.setVisibility(View.VISIBLE);
                 break;
             case PRIVATE_GUEST:
-                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_available_white_24dp));
+                join.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_event_available_white_24dp));
                 invite.setVisibility(View.GONE);
                 invite_team.setVisibility(View.GONE);
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
             case PUBLIC_PARTECIPANT:
-                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_busy_white_24dp));
+                join.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_event_busy_white_24dp));
                 invite.setVisibility(View.VISIBLE);
                 invite_team.setVisibility(View.VISIBLE);
                 missing_stuff_button.setVisibility(View.VISIBLE);
                 break;
             case PUBLIC_GUEST:
-                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_available_white_24dp));
+                join.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_event_available_white_24dp));
                 invite.setVisibility(View.VISIBLE);
                 invite_team.setVisibility(View.VISIBLE);
                 missing_stuff_button.setVisibility(View.GONE);
                 break;
             case NOT_PARTECIPANT:
-                join.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_available_white_24dp));
+                join.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_event_available_white_24dp));
                 invite.setVisibility(View.GONE);
                 invite_team.setVisibility(View.GONE);
                 missing_stuff_button.setVisibility(View.GONE);
@@ -548,9 +548,12 @@ public class EventFragment extends Fragment {
     }
 
     private void updateUI() {
-        manageUserCase();
-        updateLabels();
-        manageItemsByUserCase();
+
+        if (getActivity() != null) {
+            manageUserCase();
+            updateLabels();
+            manageItemsByUserCase();
+        }
     }
 
     public void updateMatch(Match match) {
