@@ -51,6 +51,8 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
     private String clientID = "663865499839-k726rla8ijgek2u3je8vp8il59dm2bd2.apps.googleusercontent.com";
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
+    private static final int RC_SIGN_UP = 9005;
+    private static final int GOOGLE_RC_SIGN_UP = 9006;
     private static final String TAG = "SignInActivity";
 
     @Override
@@ -123,7 +125,7 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.signupbutton:
                 Intent signupactivity = new Intent(this, SignUpActivity.class);
-                startActivity(signupactivity);
+                startActivityForResult(signupactivity, RC_SIGN_UP);
             default:
                 break;
         }
@@ -136,6 +138,7 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithEmail:success");
                         DatabaseManager.get().setLogged(true);
+                        finish();
                     } else {
                         DatabaseManager.get().setLogged(false);
                         // If sign in fails, display a message to the user.
@@ -170,6 +173,18 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                 // ...
                 Log.d("errore", result.getStatus().getStatusMessage() + "");
             }
+        } else if (requestCode == RC_SIGN_UP) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Errore", Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == GOOGLE_RC_SIGN_UP) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Errore", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -197,14 +212,14 @@ public class MainSignInActivity extends AppCompatActivity implements View.OnClic
                                 extras.putString("photoURL", String.valueOf(user.getPhotoUrl()));
 
                                 signupactivity.putExtras(extras);
-                                startActivity(signupactivity);
+                                startActivityForResult(signupactivity, GOOGLE_RC_SIGN_UP);
                             } else {
                                 current.setName(user.getDisplayName());
                                 current.setEmail(user.getEmail());
                                 current.setPhotoURL(String.valueOf(user.getPhotoUrl()));
 
-                                current.save(object1 -> finish());
                                 DatabaseManager.get().setLogged(true);
+                                current.save(object1 -> finish());
                             }
                         });
 
