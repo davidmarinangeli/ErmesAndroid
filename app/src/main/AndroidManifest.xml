@@ -63,7 +63,7 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".View.activities.MainSignInActivity"
-            android:label="@string/title_activity_login"
+            android:label="Accedi ad Ermes"
             android:theme="@style/AppTheme" />
         <activity android:name=".View.activities.NotificationsActivity" />
         <activity android:name=".View.activities.FriendsActivity" />
