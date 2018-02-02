@@ -30,19 +30,16 @@ import java.util.List;
 
 public class PickFriendsAdapter extends RecyclerView.Adapter<PickFriendsAdapter.PickFriendsViewHolder> {
 
-    private final PickFriendsActivity pickactivity;
     private List<User> friendship_list = new ArrayList<>();
     private List<User> invited_friends = new ArrayList<>();
     private Match result_match;
     private Team result_team;
     private Context context;
-    private int who_i_can_invite = 0;
 
     private int team_activity_code = 0;
 
-    public PickFriendsAdapter(PickFriendsActivity from, Context context) {
+    public PickFriendsAdapter(Context context) {
         this.context = context;
-        this.pickactivity = from;
     }
 
     @Override
@@ -65,7 +62,6 @@ public class PickFriendsAdapter extends RecyclerView.Adapter<PickFriendsAdapter.
     public void refreshList(List<User> friends_list, Match match) {
         friendship_list = friends_list;
         result_match = match;
-        who_i_can_invite = PickFriendsActivity.peopleICanInvite(result_match);
         team_activity_code = 0;
         notifyDataSetChanged();
     }
@@ -96,7 +92,6 @@ public class PickFriendsAdapter extends RecyclerView.Adapter<PickFriendsAdapter.
         CheckBox invite_checkbox;
         TextView friend_name;
         ImageView friend_image;
-        //final int[] final_invited_list = {who_i_can_invite};
 
         public PickFriendsViewHolder(View itemView) {
             super(itemView);
@@ -110,25 +105,8 @@ public class PickFriendsAdapter extends RecyclerView.Adapter<PickFriendsAdapter.
                 if (result_match != null) {
                     if (!invite_checkbox.isChecked()) {
                         invited_friends.remove(friendship_list.get(getAdapterPosition()));
-                        pickactivity.editFreeSlot(object -> {
-                            TextView maxplayers = (TextView) object;
-                            who_i_can_invite++;
-                            maxplayers.setText(who_i_can_invite + "");
-                        });
-
                     } else {
-
-                        if (invited_friends.size() <= who_i_can_invite) {
-                            invited_friends.add(friendship_list.get(getAdapterPosition()));
-                            pickactivity.editFreeSlot(object -> {
-                                TextView maxplayers = (TextView) object;
-                                who_i_can_invite--;
-                                maxplayers.setText(who_i_can_invite + "");
-                            });
-                        } else {
-                            Snackbar.make(itemView, "Puoi invitare al massimo " + result_match.getMaxPlayers() + " giocatori", Snackbar.LENGTH_LONG);
-                            invite_checkbox.setChecked(false);
-                        }
+                        invited_friends.add(friendship_list.get(getAdapterPosition()));
                     }
                 } else if (result_team != null) {
                     String user_id = friendship_list.get(getAdapterPosition()).getUID();

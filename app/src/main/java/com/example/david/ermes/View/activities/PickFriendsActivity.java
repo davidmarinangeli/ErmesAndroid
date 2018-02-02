@@ -21,6 +21,7 @@ import com.example.david.ermes.Model.models.Notification;
 import com.example.david.ermes.Model.models.Team;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.Model.repository.FriendshipRepository;
+import com.example.david.ermes.Model.repository.MatchRepository;
 import com.example.david.ermes.Model.repository.UserRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.PickFriendsAdapter;
@@ -36,7 +37,6 @@ public class PickFriendsActivity extends AppCompatActivity {
     private PickFriendsAdapter pickFriendsAdapter;
     private LinearLayoutManager linearLayoutManager;
     private TextView no_friends;
-    private TextView max_players;
     private ImageButton spunta_done;
     private Match result_match;
     private Team result_team;
@@ -45,9 +45,7 @@ public class PickFriendsActivity extends AppCompatActivity {
     private boolean invite_match;
     private boolean invite_team;
     private int activity_request_code;
-
-    private TextView can_invite_label;
-    private TextView people_label;
+    private boolean saved;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +53,8 @@ public class PickFriendsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pick_friends);
 
         progressDialog = new ProgressDialog(this);
-        can_invite_label = findViewById(R.id.can_invite_label);
-        people_label = findViewById(R.id.people_players);
+        saved = false;
 
-        max_players = findViewById(R.id.remaining_invitation);
         no_friends = findViewById(R.id.no_friends);
         toolbar = findViewById(R.id.create_event_toolbar);
         spunta_done = findViewById(R.id.spunta_done);
@@ -75,27 +71,21 @@ public class PickFriendsActivity extends AppCompatActivity {
         invite_team = result_team != null;
 
         linearLayoutManager = new LinearLayoutManager(this);
-        pickFriendsAdapter = new PickFriendsAdapter(PickFriendsActivity.this,this);
+        pickFriendsAdapter = new PickFriendsAdapter(this);
         friendsrecyclerview = findViewById(R.id.pick_friends_recycler);
         friendsrecyclerview.setAdapter(pickFriendsAdapter);
         friendsrecyclerview.setNestedScrollingEnabled(false);
         friendsrecyclerview.setLayoutManager(linearLayoutManager);
         initList();
 
-        if (invite_match) {
-            max_players.setText(String.valueOf(peopleICanInvite(result_match)));
-        } else {
-            max_players.setVisibility(View.GONE);
-        }
-
         spunta_done.setOnClickListener(view -> {
             progressDialog.show();
 
             if (invite_match) {
                 pickFriendsAdapter.saveFriendsList(object -> {
-                    if (object != null) {
-                        List<User> invited_friends = (List<User>) object;
+                    List<User> invited_friends = (List<User>) object;
 
+                    if (invited_friends != null && !invited_friends.isEmpty()) {
                         for (User user : invited_friends) {
                             if (!result_match.getPartecipants().contains(user.getUID()) &&
                                     !result_match.getPending().contains(user.getUID())) {
@@ -120,6 +110,10 @@ public class PickFriendsActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             finish();
                         });
+                    } else {
+                        setResult(RESULT_CANCELED);
+                        progressDialog.dismiss();
+                        finish();
                     }
                 });
             } else if (invite_team) {
@@ -139,10 +133,6 @@ public class PickFriendsActivity extends AppCompatActivity {
 
         setNoFriendsState();
 
-    }
-
-    public void editFreeSlot(FirebaseCallback firebaseCallback) {
-        firebaseCallback.callback(max_players);
     }
 
     public void initList() {
@@ -197,9 +187,6 @@ public class PickFriendsActivity extends AppCompatActivity {
 
     private void setMoreThanZeroFriendsState() {
         spunta_done.setVisibility(View.VISIBLE);
-        can_invite_label.setVisibility(View.VISIBLE);
-        max_players.setVisibility(View.VISIBLE);
-        people_label.setVisibility(View.VISIBLE);
 
         no_friends.setVisibility(View.GONE);
 
@@ -208,9 +195,6 @@ public class PickFriendsActivity extends AppCompatActivity {
 
     private void setNoFriendsState() {
         spunta_done.setVisibility(View.GONE);
-        can_invite_label.setVisibility(View.GONE);
-        max_players.setVisibility(View.GONE);
-        people_label.setVisibility(View.GONE);
 
         no_friends.setText("Nessun amico");
         no_friends.setVisibility(View.VISIBLE);
@@ -223,10 +207,6 @@ public class PickFriendsActivity extends AppCompatActivity {
 
         no_friends.setText("Nessun utente loggato");
         no_friends.setVisibility(View.VISIBLE);
-    }
-
-    public static int peopleICanInvite(Match result_match) {
-        return (result_match.getMaxPlayers())-(result_match.getPartecipants().size())-(result_match.getPending().size());
     }
 
     private int fetch_friends_count = 0;

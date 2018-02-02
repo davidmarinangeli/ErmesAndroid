@@ -34,26 +34,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:id="@+id/can_invite_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/puoi_invitare_ancora"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
-
-    <TextView
-        android:id="@+id/people_players"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/giocatori"
-        app:layout_constraintBottom_toBottomOf="@+id/remaining_invitation"
-        app:layout_constraintStart_toEndOf="@+id/remaining_invitation"
-        app:layout_constraintTop_toTopOf="@+id/remaining_invitation" />
-
 
     <TextView
         android:id="@+id/no_friends"
@@ -64,29 +44,16 @@
         android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="italic"
-        app:layout_constraintTop_toBottomOf="@+id/can_invite_label" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pick_friends_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/can_invite_label" />
-
-    <TextView
-        android:id="@+id/remaining_invitation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/can_invite_label"
-        app:layout_constraintStart_toEndOf="@+id/can_invite_label"
-        app:layout_constraintTop_toTopOf="@+id/can_invite_label"
-        tools:text="6" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
 
 </android.support.constraint.ConstraintLayout>

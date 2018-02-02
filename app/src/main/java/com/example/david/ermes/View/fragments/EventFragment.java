@@ -89,6 +89,7 @@ public class EventFragment extends Fragment {
     private CardView profileCardView;
 
     private Match match;
+    private Match match_from_intent;
     private User matchCreator;
 
     private Toolbar toolbar;
@@ -102,6 +103,7 @@ public class EventFragment extends Fragment {
     private Notification inviteNotification;
 
     private boolean finished;
+    private int free_slots;
 
     public EventFragment() {
     }
@@ -111,7 +113,13 @@ public class EventFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        match = args.getParcelable("event");
+        match_from_intent = args.getParcelable("event");
+        match = match_from_intent;
+
+        MatchRepository.getInstance().fetchMatchById(match_from_intent.getId(), object -> {
+            updateMatch((Match) object);
+            updateUI();
+        });
 
         finished = System.currentTimeMillis() > match.getDate().getTime();
 
@@ -153,6 +161,8 @@ public class EventFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        free_slots = match.getMaxPlayers() - match.getPartecipants().size();
 
         toolbar = view.findViewById(R.id.event_toolbar);
         toolbar.setTitle("");
@@ -289,6 +299,9 @@ public class EventFragment extends Fragment {
             if (finished) {
                 Snackbar.make(view, "La partita è già cominciata o terminata",
                         Snackbar.LENGTH_LONG).show();
+            } else if (free_slots <= 0) {
+                Snackbar.make(view, "Il numero massimo di partecipanti è già stato raggiunto",
+                        Snackbar.LENGTH_LONG).show();
             } else if (userCase.equals(PRIVATE_PARTECIPANT) ||
                     userCase.equals(PUBLIC_PARTECIPANT)) {
                 new MaterialDialog.Builder(this.getContext())
@@ -310,15 +323,20 @@ public class EventFragment extends Fragment {
             } else if (userCase.equals(UNAVAILABLE)) {
                 Snackbar.make(view, "Registrati per partecipare alla partita", Snackbar.LENGTH_SHORT).show();
             } else {
-                match.addPartecipant(User.getCurrentUserId());
-                match.save(object -> {
-                    updateUI();
-                    Snackbar.make(view, "Buona partita!", Snackbar.LENGTH_SHORT).show();
-                });
+                if (match.getPartecipants().size() < match.getMaxPlayers()) {
+                    match.addPartecipant(User.getCurrentUserId());
+                    match.save(object -> {
+                        updateUI();
+                        Snackbar.make(view, "Buona partita!", Snackbar.LENGTH_SHORT).show();
+                    });
 
-                if (inviteNotification != null) {
-                    inviteNotification.setRead(true);
-                    inviteNotification.save(object -> initAlreadyInvitedLabel());
+                    if (inviteNotification != null) {
+                        inviteNotification.setRead(true);
+                        inviteNotification.save(object -> initAlreadyInvitedLabel());
+                    }
+                } else {
+                    Snackbar.make(view, "Il numero massimo di partecipanti è stato raggiunto",
+                            Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -345,7 +363,7 @@ public class EventFragment extends Fragment {
         hourofevent.setText(TimeUtils.getFormattedHourMinute(c));
         participant.setText(String.valueOf(match.getPartecipants().size()));
         pending.setText(String.valueOf(match.getPending().size()));
-        freeslots.setText(String.valueOf(match.getMaxPlayers() - match.getPartecipants().size()));
+        freeslots.setText(String.valueOf(free_slots));
 
         // ** GESTIONE VISIBILITA' OGGETTI IN BASE ALL'ACCOUNT LOGGATO **
         manageItemsByUserCase();
@@ -439,13 +457,15 @@ public class EventFragment extends Fragment {
     }
 
     private void updateLabels() {
+        free_slots = match.getMaxPlayers() - match.getPartecipants().size();
+
         participant.setText(String.valueOf(match.getPartecipants().size()));
-        freeslots.setText(String.valueOf(match.getMaxPlayers() - match.getPending().size()
-                - match.getPartecipants().size()));
+        freeslots.setText(String.valueOf(free_slots));
         pending.setText(String.valueOf(match.getPending().size()));
     }
 
     private void manageItemsByUserCase() {
+        free_slots = match.getMaxPlayers() - match.getPartecipants().size();
 
         switch (userCase) {
             case CREATOR:
@@ -501,7 +521,7 @@ public class EventFragment extends Fragment {
             delete_match.setVisibility(View.GONE);
         }
 
-        if (finished) {
+        if (finished || free_slots <= 0) {
             join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.inactive)));
             invite.setVisibility(View.GONE);
             invite_team.setVisibility(View.GONE);
