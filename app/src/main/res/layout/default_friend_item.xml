@@ -87,13 +87,15 @@
 
         <Button
             android:id="@+id/friendship_request_button"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Notification.Info"
+            android:padding="5dp"
+            android:textColor="@color/colorAccentDark"
+            app:layout_constraintBottom_toBottomOf="@+id/friend_image"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/friend_image"
             tools:text="Chiedi\namicizia" />
 
     </android.support.constraint.ConstraintLayout>

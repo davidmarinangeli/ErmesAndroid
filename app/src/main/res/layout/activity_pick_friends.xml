@@ -1,92 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.david.ermes.View.activities.PickFriendsActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/create_event_toolbar"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-            <ImageButton
-                android:id="@+id/spunta_done"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="end"
-                android:layout_margin="4dp"
-                android:background="@null"
-                android:padding="12dp"
-                android:src="@drawable/ic_done_white_24dp"
-                android:tint="@color/white" />
-        </android.support.v7.widget.Toolbar>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/create_event_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
 
-
-    </android.support.design.widget.AppBarLayout>
-
-    <TextView
-        android:id="@+id/can_invite_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/puoi_invitare_ancora"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
-
-    <TextView
-        android:id="@+id/people_players"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/giocatori"
-        app:layout_constraintBottom_toBottomOf="@+id/remaining_invitation"
-        app:layout_constraintStart_toEndOf="@+id/remaining_invitation"
-        app:layout_constraintTop_toTopOf="@+id/remaining_invitation" />
+                <ImageButton
+                    android:id="@+id/spunta_done"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="end"
+                    android:layout_margin="4dp"
+                    android:background="@null"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_done_white_24dp"
+                    android:tint="@color/white" />
+            </android.support.v7.widget.Toolbar>
 
 
-    <TextView
-        android:id="@+id/no_friends"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/nessun_amico"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:textStyle="italic"
-        app:layout_constraintTop_toBottomOf="@+id/can_invite_label" />
+        </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/pick_friends_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/can_invite_label" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/remaining_invitation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/can_invite_label"
-        app:layout_constraintStart_toEndOf="@+id/can_invite_label"
-        app:layout_constraintTop_toTopOf="@+id/can_invite_label"
-        tools:text="6" />
+            <TextView
+                android:id="@+id/can_invite_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/puoi_invitare_ancora"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/people_players"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/giocatori"
+            app:layout_constraintBottom_toBottomOf="@+id/remaining_invitation"
+            app:layout_constraintStart_toEndOf="@+id/remaining_invitation"
+            app:layout_constraintTop_toTopOf="@+id/remaining_invitation" />
+
+        <TextView
+            android:id="@+id/remaining_invitation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/can_invite_label"
+            app:layout_constraintStart_toEndOf="@+id/can_invite_label"
+            app:layout_constraintTop_toTopOf="@+id/can_invite_label"
+            tools:text="6" />
+
+        </android.support.constraint.ConstraintLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/no_friends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/nessun_amico"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            app:layout_constraintTop_toBottomOf="@+id/can_invite_label" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/pick_friends_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/can_invite_label"
+            app:layout_constraintVertical_bias="0.0" />
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

@@ -77,7 +77,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         // prendo l'istanza del FBAuth
         mAuth = FirebaseAuth.getInstance();
+
         born_date_calendar = Calendar.getInstance();
+        born_date_calendar.clear();
 
         toolbar = findViewById(R.id.signup_toolbar);
 
