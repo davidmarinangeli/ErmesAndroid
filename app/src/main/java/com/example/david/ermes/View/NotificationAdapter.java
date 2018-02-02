@@ -198,7 +198,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     break;
                 case TEAM_ADDED:
                 case USER_LEAVE_TEAM:
-                    icon.setImageResource(R.drawable.ic_group_work_black_40dp);
+                    icon.setImageResource(R.drawable.team_icon) ;
 
                     already_reply.setVisibility(View.GONE);
                     setButtonsVisible(View.GONE);

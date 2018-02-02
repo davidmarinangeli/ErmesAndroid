@@ -242,6 +242,7 @@ public class UserListPresenter {
 
                         users_temp.set(CURRENT_INDEX, user);
 
+
                         SportRepository.getInstance().fetchSportById(user.getIdFavSport(),
                                 object2 -> {
                                     String s = object2 != null ? ((Sport) object2).getName() : null;
