@@ -360,16 +360,17 @@
 
                         <ImageView
                             android:id="@+id/account_team_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_marginBottom="8dp"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
+                            android:scaleType="fitCenter"
                             android:tint="@color/colorAccent"
                             card_view:layout_constraintBottom_toBottomOf="parent"
-                            card_view:layout_constraintLeft_toLeftOf="parent"
+                            card_view:layout_constraintStart_toStartOf="parent"
                             card_view:layout_constraintTop_toTopOf="parent"
-                            card_view:srcCompat="@drawable/ic_group_work_black_24dp" />
+                            card_view:srcCompat="@drawable/team_icon" />
 
                         <TextView
                             android:id="@+id/account_team_label"
