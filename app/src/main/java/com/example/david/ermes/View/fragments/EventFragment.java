@@ -433,6 +433,7 @@ public class EventFragment extends Fragment {
 
         Bundle extras = new Bundle();
         extras.putStringArrayList("users", (ArrayList<String>) list);
+        extras.putLong("date", match.getDate().getTime());
         extras.putString(MatchUsersActivity.ACTIVITY_TYPE_KEY, activityType);
 
         if (currentUser != null) {

@@ -1,6 +1,7 @@
 package com.example.david.ermes.View.activities;
 
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -43,6 +44,7 @@ public class MatchUsersActivity extends AppCompatActivity {
 
     private List<String> userIdList;
     private User currentUser;
+    private long date;
     private String activity_type;
 
     private Integer userCount;
@@ -72,6 +74,7 @@ public class MatchUsersActivity extends AppCompatActivity {
 
         currentUser = getIntent().getExtras().getParcelable("user");
         userIdList = getIntent().getExtras().getStringArrayList("users");
+        date = getIntent().getExtras().getLong("date");
         activity_type = getIntent().getExtras().getString(ACTIVITY_TYPE_KEY, "type");
         already_show_odd_partecipant_dialog = false;
 
@@ -90,9 +93,21 @@ public class MatchUsersActivity extends AppCompatActivity {
         switch (activity_type) {
             case PARTECIPANTS_TYPE:
                 toolbar.setTitle("Partecipanti (" + userIdList.size() + ")");
-
                 create_teams_btn.setVisibility(View.VISIBLE);
-                create_teams_btn.setOnClickListener(v -> createRandomTeams());
+
+                if (System.currentTimeMillis() >= date) {
+                    create_teams_btn.setBackgroundTintList(
+                            ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+
+                    create_teams_btn.setOnClickListener(v -> createRandomTeams());
+                } else {
+                    create_teams_btn.setBackgroundTintList(
+                            ColorStateList.valueOf(getResources().getColor(R.color.inactive)));
+
+                    create_teams_btn.setOnClickListener(v ->
+                        Snackbar.make(container, "Aspetta che la partita inizi!",
+                                Snackbar.LENGTH_LONG).show());
+                }
                 break;
             case INVITED_TYPES:
                 toolbar.setTitle("Invitati (" + userIdList.size() + ")");
