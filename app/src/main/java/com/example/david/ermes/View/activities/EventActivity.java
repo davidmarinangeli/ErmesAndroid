@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import com.example.david.ermes.Model.models.Match;
+import com.example.david.ermes.Model.repository.MatchRepository;
 import com.example.david.ermes.R;
 import com.example.david.ermes.View.fragments.EventFragment;
 
@@ -38,9 +39,17 @@ public class EventActivity extends AppCompatActivity {
         eventFragment.setArguments(args);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.event_container, eventFragment).commit();
-
+            getSupportFragmentManager().beginTransaction().add(R.id.event_container, eventFragment)
+                    .commit();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        MatchRepository.getInstance().fetchMatchById(currentMatch.getId(),
+                object -> eventFragment.updateMatch((Match) object));
     }
 
     @Override
@@ -51,8 +60,8 @@ public class EventActivity extends AppCompatActivity {
             switch (requestCode) {
                 case INVITE_FRIEND_CODE:
                 case TeamsActivity.PICK_CODE:
-                    Match saved_match = data.getParcelableExtra("new_match");
-                    eventFragment.updateMatch(saved_match);
+//                    Match saved_match = data.getParcelableExtra("new_match");
+//                    eventFragment.updateMatch(saved_match);
                     break;
             }
         }

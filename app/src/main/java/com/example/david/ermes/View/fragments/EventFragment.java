@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.david.ermes.Model.db.DatabaseManager;
+import com.example.david.ermes.Model.db.FirebaseCallback;
 import com.example.david.ermes.Model.models.Location;
 import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.MissingStuffElement;
@@ -43,6 +44,7 @@ import com.example.david.ermes.View.activities.PickFriendsActivity;
 import android.support.design.widget.FloatingActionButton;
 
 import com.example.david.ermes.View.activities.TeamsActivity;
+import com.google.firebase.auth.FirebaseUser;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -89,7 +91,6 @@ public class EventFragment extends Fragment {
     private CardView profileCardView;
 
     private Match match;
-    private Match match_from_intent;
     private User matchCreator;
 
     private Toolbar toolbar;
@@ -113,13 +114,7 @@ public class EventFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        match_from_intent = args.getParcelable("event");
-        match = match_from_intent;
-
-        MatchRepository.getInstance().fetchMatchById(match_from_intent.getId(), object -> {
-            updateMatch((Match) object);
-            updateUI();
-        });
+        match = args.getParcelable("event");
 
         finished = System.currentTimeMillis() > match.getDate().getTime();
 
@@ -299,7 +294,8 @@ public class EventFragment extends Fragment {
             if (finished) {
                 Snackbar.make(view, "La partita è già cominciata o terminata",
                         Snackbar.LENGTH_LONG).show();
-            } else if (free_slots <= 0) {
+            } else if (free_slots <= 0 && !userCase.equals(PUBLIC_PARTECIPANT) &&
+                    !userCase.equals(PRIVATE_PARTECIPANT)) {
                 Snackbar.make(view, "Il numero massimo di partecipanti è già stato raggiunto",
                         Snackbar.LENGTH_LONG).show();
             } else if (userCase.equals(PRIVATE_PARTECIPANT) ||
@@ -436,22 +432,29 @@ public class EventFragment extends Fragment {
         extras.putLong("date", match.getDate().getTime());
         extras.putString(MatchUsersActivity.ACTIVITY_TYPE_KEY, activityType);
 
-        if (currentUser != null) {
+        fetchCurrentUser(object -> {
+            if (currentUser != null) {
+                extras.putParcelable("user", currentUser);
+                intent.putExtras(extras);
+                startActivity(intent);
+            } else {
+                Snackbar.make(getView(), "Registrati per visualizzare questo contenuto",
+                        Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
 
-            extras.putParcelable("user", currentUser);
-            intent.putExtras(extras);
-            startActivity(intent);
+    private void fetchCurrentUser(FirebaseCallback firebaseCallback) {
+        if (currentUser != null) {
+            if (firebaseCallback != null) {
+                firebaseCallback.callback(currentUser);
+            }
         } else {
             UserRepository.getInstance().getUser(object -> {
                 currentUser = (User) object;
 
-                if (currentUser != null) {
-                    extras.putParcelable("user", currentUser);
-                    intent.putExtras(extras);
-                    startActivity(intent);
-                } else {
-                    Snackbar.make(getView(), "Registrati per visualizzare questo contenuto",
-                            Snackbar.LENGTH_SHORT).show();
+                if (firebaseCallback != null) {
+                    firebaseCallback.callback(currentUser);
                 }
             });
         }
@@ -522,11 +525,15 @@ public class EventFragment extends Fragment {
             delete_match.setVisibility(View.GONE);
         }
 
-        if (finished || free_slots <= 0) {
-            join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.inactive)));
-            invite.setVisibility(View.GONE);
-            invite_team.setVisibility(View.GONE);
-        }
+        fetchCurrentUser(object -> {
+            if (currentUser != null &&
+                    (finished || (free_slots <= 0 && !match.getPartecipants().contains(currentUser.getUID())))
+                    ) {
+                join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.inactive)));
+                invite.setVisibility(View.GONE);
+                invite_team.setVisibility(View.GONE);
+            }
+        });
     }
 
     private boolean areAllMissingItemsChecked() {
