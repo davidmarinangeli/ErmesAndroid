@@ -34,11 +34,6 @@ import java.util.Random;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.FriendViewHolder> {
 
-    public enum ListType {
-        GENERIC, FRIENDS
-    }
-
-    private int refreshCount = 0;
     private ProgressDialog progressDialog;
 
     private List<User> userList;

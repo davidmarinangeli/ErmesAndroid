@@ -1,6 +1,6 @@
 package com.example.david.ermes.View;
 
-import android.app.ProgressDialog;
+import com.example.david.ermes.View.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -124,8 +124,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             already_reply = itemView.findViewById(R.id.already_reply);
 
             mDialog = new ProgressDialog(context);
-            mDialog.setMessage("Attendi...");
-            mDialog.setCancelable(false);
 
             item = itemView;
 

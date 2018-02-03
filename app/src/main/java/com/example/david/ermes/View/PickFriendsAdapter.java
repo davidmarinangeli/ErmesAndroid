@@ -2,7 +2,6 @@ package com.example.david.ermes.View;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.example.david.ermes.Model.models.Match;
 import com.example.david.ermes.Model.models.Team;
 import com.example.david.ermes.Model.models.User;
 import com.example.david.ermes.R;
-import com.example.david.ermes.View.activities.PickFriendsActivity;
 import com.example.david.ermes.View.activities.TeamActivity;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
