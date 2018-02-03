@@ -1,6 +1,7 @@
 package com.example.david.ermes.View;
 
 import com.example.david.ermes.View.ProgressDialog;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -196,7 +197,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     break;
                 case TEAM_ADDED:
                 case USER_LEAVE_TEAM:
-                    icon.setImageResource(R.drawable.team_icon) ;
+                    icon.setImageResource(R.drawable.team_icon);
 
                     already_reply.setVisibility(View.GONE);
                     setButtonsVisible(View.GONE);
@@ -216,49 +217,37 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     item.setActivated(false);
                     mDialog.show();
 
-                    if (matches.get(position) != null) {
-                        startMatchActivity(position);
-                    } else {
-                        fetchMatch(notifications.get(position).getIdMatch(), position, object -> {
-                            mDialog.dismiss();
-                            item.setActivated(true);
+                    fetchMatch(notifications.get(position).getIdMatch(), position, object -> {
+                        mDialog.dismiss();
+                        item.setActivated(true);
 
-                            if (object != null) {
-                                startMatchActivity(position);
-                            } else wrongSnackbar(item);
-                        });
-                    }
+                        if (object != null) {
+                            startMatchActivity(position);
+                        } else wrongSnackbar(item);
+                    });
                     break;
                 case FRIENDSHIP_REQUEST:
                     item.setActivated(false);
                     mDialog.show();
 
-                    if (users.get(position) != null) {
-                        startUserActivity(position);
-                    } else {
-                        fetchUser(notifications.get(position).getIdCreator(), position, object -> {
-                            mDialog.dismiss();
-                            item.setActivated(true);
+                    fetchUser(notifications.get(position).getIdCreator(), position, object -> {
+                        mDialog.dismiss();
+                        item.setActivated(true);
 
-                            if (object != null) {
-                                startUserActivity(position);
-                            } else wrongSnackbar(item);
-                        });
-                    }
+                        if (object != null) {
+                            startUserActivity((User) object);
+                        } else wrongSnackbar(item);
+                    });
                     break;
                 case FRIENDSHIP_ACCEPTED:
                     mDialog.show();
                     item.setActivated(false);
 
-                    if (users.get(position) != null) {
-                        readFriendshipAccepted(position);
-                    } else {
-                        fetchUser(notifications.get(position).getIdCreator(), position, object -> {
-                            if (object != null) {
-                                readFriendshipAccepted(position);
-                            } else wrongSnackbar(item);
-                        });
-                    }
+                    fetchUser(notifications.get(position).getIdCreator(), position, object -> {
+                        if (object != null) {
+                            readFriendshipAccepted(position, (User) object);
+                        } else wrongSnackbar(item);
+                    });
                     break;
                 case TEAM_ADDED:
                 case USER_LEAVE_TEAM:
@@ -279,19 +268,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             switch (notifications.get(position).getType()) {
                 case MATCH_INVITE_USER:
                     item.setActivated(false);
-                    Match match = matches.get(position);
 
-                    if (match != null) {
-                        acceptMatchInvitation(position);
-                    } else {
-                        fetchMatch(notifications.get(position).getIdMatch(), position, object -> {
-                            item.setActivated(true);
+                    fetchMatch(notifications.get(position).getIdMatch(), position, object -> {
+                        item.setActivated(true);
 
-                            if (object != null) {
-                                acceptMatchInvitation(position);
-                            } else wrongSnackbar(item);
-                        });
-                    }
+                        if (object != null) {
+                            acceptMatchInvitation(position);
+                        } else wrongSnackbar(item);
+                    });
                     break;
                 case FRIENDSHIP_REQUEST:
                     mDialog.show();
@@ -312,17 +296,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     item.setActivated(false);
                     mDialog.show();
 
-                    if (matches.get(position) != null && DatabaseManager.get().isLogged()) {
-                        declineMatchInvitation(position);
-                    } else {
-                        fetchMatch(notifications.get(position).getIdMatch(), position, object -> {
-                            item.setActivated(true);
+                    fetchMatch(notifications.get(position).getIdMatch(), position, object -> {
+                        item.setActivated(true);
 
-                            if (object != null) {
-                                declineMatchInvitation(position);
-                            } else wrongSnackbar(item);
-                        });
-                    }
+                        if (object != null) {
+                            declineMatchInvitation(position);
+                        } else wrongSnackbar(item);
+                    });
                     break;
                 case FRIENDSHIP_REQUEST:
                     mDialog.show();
@@ -403,28 +383,42 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
 
         private void fetchUser(String id, int position, FirebaseCallback firebaseCallback) {
-            UserRepository.getInstance().fetchUserById(id, object -> {
-                users.set(position, (User) object);
-
+            if (users.get(position) != null) {
                 if (firebaseCallback != null) {
-                    firebaseCallback.callback(object);
+                    firebaseCallback.callback(users.get(position));
                 }
-            });
+            } else {
+                UserRepository.getInstance().fetchUserById(id, object -> {
+                    users.set(position, (User) object);
+
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(object);
+                    }
+                });
+            }
         }
 
         private void fetchMatch(String id, int position, FirebaseCallback firebaseCallback) {
-            MatchRepository.getInstance().fetchMatchById(id, object -> {
-                matches.set(position, (Match) object);
-
+            if (matches.get(position) != null) {
                 if (firebaseCallback != null) {
-                    firebaseCallback.callback(object);
+                    firebaseCallback.callback(matches.get(position));
                 }
-            });
+            } else {
+                MatchRepository.getInstance().fetchMatchById(id, object -> {
+                    matches.set(position, (Match) object);
+
+                    if (firebaseCallback != null) {
+                        firebaseCallback.callback(object);
+                    }
+                });
+            }
         }
 
         private void fetchTeam(String id, int position, FirebaseCallback firebaseCallback) {
             if (teams.get(position) != null) {
-                firebaseCallback.callback(teams.get(position));
+                if (firebaseCallback != null) {
+                    firebaseCallback.callback(teams.get(position));
+                }
             } else {
                 TeamRepository.getInstance().fetchTeamById(id, object -> {
                     Team team = (Team) object;
@@ -437,12 +431,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }
         }
 
-        private void startUserActivity(int position) {
+        private void startUserActivity(User user) {
             mDialog.dismiss();
             item.setActivated(true);
             Intent accountActivity = new Intent(context, AccountActivity.class);
             Bundle extras = new Bundle();
-            extras.putParcelable("user", users.get(position));
+            extras.putParcelable("user", user);
             accountActivity.putExtras(extras);
             context.startActivity(accountActivity);
         }
@@ -487,14 +481,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             });
         }
 
-        private void readFriendshipAccepted(int position) {
+        private void readFriendshipAccepted(int position, User user) {
             notifications.get(position).setRead(true);
             notifications.get(position).save(object -> {
                 mDialog.dismiss();
                 item.setActivated(true);
                 notifyDataSetChanged();
 
-                startUserActivity(position);
+                startUserActivity(user);
             });
         }
 

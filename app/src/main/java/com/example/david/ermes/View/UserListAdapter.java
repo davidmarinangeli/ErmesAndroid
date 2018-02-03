@@ -173,13 +173,18 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Friend
 
             this.itemView = itemView;
             this.itemView.setOnClickListener(view -> {
-                Intent accountActivity = new Intent(context, AccountActivity.class);
+                if (userList.get(getAdapterPosition()) == null) {
+                    Toast.makeText(context, "Attendi lo scaricamento dei dati, riprova più tardi",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Intent accountActivity = new Intent(context, AccountActivity.class);
 
-                Bundle extras = new Bundle();
-                extras.putParcelable("user", userList.get(getAdapterPosition()));
+                    Bundle extras = new Bundle();
+                    extras.putParcelable("user", userList.get(getAdapterPosition()));
 
-                accountActivity.putExtras(extras);
-                context.startActivity(accountActivity);
+                    accountActivity.putExtras(extras);
+                    context.startActivity(accountActivity);
+                }
             });
 
             friendshipRequestButton.setOnClickListener(view -> {
