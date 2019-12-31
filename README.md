@@ -7,6 +7,10 @@
 Ermes è un'app Android che permette di organizzare partite amatoriali e di aggiungere alla mappa nuovi campi da gioco pubblici per diversi sport.
 E' stata sviluppata per l'esame di Linguaggi di Programmazione per sistemi mobili e tablet (A. A. 2016/17) per l'Università degli Studi di Trento.
 
+Sotto puoi trovare un video che abbiamo registrato per l'esame, in cui spieghiamo le funzioni principali dell'app.
+
+[![Ermes](https://img.youtube.com/vi/wW6gEjOrKO0/1.jpg)](https://www.youtube.com/watch?v=wW6gEjOrKO0)
+
 
 ## Cosa fa Ermes? 
 
