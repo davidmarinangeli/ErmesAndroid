@@ -12,7 +12,7 @@ Sotto puoi trovare un video che abbiamo registrato per l'esame, in cui spieghiam
 [![Ermes](https://img.youtube.com/vi/wW6gEjOrKO0/1.jpg)](https://www.youtube.com/watch?v=wW6gEjOrKO0)
 
 
-## Cosa fa Ermes? 
+## A cosa serve Ermes? 
 
 Crea una community di sportivi tramite l'organizzazione di partite, richieste di amicizia e creazione di team.
 
